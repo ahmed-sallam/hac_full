@@ -1,0 +1,45 @@
+<div class="relative"  >
+    @if (showOptions) {
+        <div class="bg-white absolute top-12 right-0 left-0  pb-4 rounded shadow-md drop-shadow-md max-h-44 overflow-y-auto z-50 "
+        >
+            <ul class="relative">
+                @for (item of searchOptions; track item['id']) {
+                    <li (click)="showOptionsd(false); onItemSeclected(item)"
+                        class="px-4 py-2.5 border-b hover:bg-secondary/5">
+                        {{ item['productNumber'] }}
+                        {{ ' - ' }}
+                        {{ language == 'ar' ? item['mainBrand']['nameAr'] : item['mainBrand']['nameEn'] }}
+                        {{ ' - ' }}
+                        {{ language == 'ar' ? item['subBrand']['nameAr'] : item['subBrand']['nameEn'] }}
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+    <input (click)="showOptionsd(true)" (keyup)="search($event)" (focusout)="fOut()"
+           [value]="inputValue"
+           [placeholder]="'Enter Product Number' | translate : language"
+           class="bg-secondary/5 border-0  text-secondary/90 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " type="text">
+    <div class="absolute end-2 top-2">
+
+        @if (inputValue.length > 0) {
+            <svg
+                    (click)=" reset()"
+                    class="w-5 h-5 text-secondary/70" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M6 18 18 6m0 12L6 6"/>
+            </svg>
+        } @else {
+            <svg
+                    (click)="showOptionsd(!showOptions)"
+                    aria-hidden="true" class="w-5 h-5 text-secondary/70 " fill="none"
+                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="m19 9-7 7-7-7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"/>
+            </svg>
+        }
+    </div>
+
+
+</div>

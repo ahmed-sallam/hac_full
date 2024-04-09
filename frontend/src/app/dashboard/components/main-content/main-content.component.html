@@ -1,0 +1,27 @@
+<main class="w-full rounded-s-xl rounded-b-none bg-white shadow-md drop-shadow-md shadow-secondary/5">
+    <!--    Start Header  -->
+    <div class="flex items-center justify-between px-8 py-12 border-b border-secondary/15 mb-4">
+        <h3 class="font-bold text-4xl">{{ headerText }}</h3>
+        <ng-content select="[headerActions]"></ng-content>
+    </div>
+    <ng-content select="[headerSlot]"></ng-content>
+
+    <!--     End Header  -->
+
+    <!--    Start Content  -->
+    @if(loader){
+        <div class="h-full min-h-96 w-full flex items-center justify-center flex-col p-10">
+            <app-loader></app-loader>
+        </div>
+    }@else{
+    <!--    If No Data  -->
+    @if (noData) {
+        <app-empty-div [noDataMessage]="noDataMessage"/>
+    } @else {
+        <!--    If Data  -->
+        <ng-content select="[contentWithData]"></ng-content>
+    }
+    }
+    <!--    End Content  -->
+
+</main>

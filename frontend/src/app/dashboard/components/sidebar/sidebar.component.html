@@ -1,0 +1,9 @@
+@if (showSidebar$| async){
+    <div class="h-full w-64 px-6 pt-24 shadow relative top-0 start-0" style="background-color: #fff">
+        @for (link of links; track $index) {
+            <app-sidebar-link [linkText]="link.text | translate : language.lang" [icon]="link.icon" [path]="link.path" [nestedLinks]="link.nestedLinks" [language]="language">
+            </app-sidebar-link>
+        }
+    </div>
+
+}

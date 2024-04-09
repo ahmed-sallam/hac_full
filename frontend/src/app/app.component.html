@@ -1,0 +1,10 @@
+@if (selectLanguage$ | async; as language) {
+    <div [dir]="language.dir" [lang]="language.lang" class="relative">
+        <router-outlet/>
+        <app-toast
+        [sccess]="showSuccessToast$ | async"
+        [error]="showErrorToast$ | async"
+        [warning]="showWarningToast$ | async"
+        />
+    </div>
+}

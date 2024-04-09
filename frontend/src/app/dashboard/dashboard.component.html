@@ -1,0 +1,11 @@
+@if (selectLanguage$ | async; as language){
+<div class="w-screen h-screen bg-accent/5">
+  <app-navbar [language]="language" />
+  <div class="relative flex flex-row w-full h-full">
+    <app-sidebar [language]="language" />
+    <div class="w-full px-8 pb-8 overflow-x-auto overflow-y-auto pt-28">
+      <router-outlet />
+    </div>
+  </div>
+</div>
+}

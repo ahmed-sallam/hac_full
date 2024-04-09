@@ -1,0 +1,187 @@
+@if (selectLanguage$ | async; as language) {
+<app-main-content
+  [language]="language"
+  [headerText]="'Brands' | translate : language.lang"
+  [noDataMessage]="'There is no data to show' | translate : language?.lang"
+  [noData]="false"
+>
+  <div headerActions>
+    <button
+      [routerLink]="'create'"
+      class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70"
+    >
+      {{ "Add Brand" | translate : language.lang }}
+    </button>
+  </div>
+  <div headerSlot>
+    <app-search-input
+      [placeholder]="'Search' | translate : language?.lang"
+      (searchChanged)="onSearchChanged($event)"
+      [value]="searchName"
+    />
+  </div>
+  <div contentWithData class="relative w-full h-full p-8 min-h-max">
+    <div class="relative my-4 overflow-x-auto overflow-y-auto">
+      <table class="w-full text-sm text-left rtl:text-right">
+        <thead class="text-xs uppercase text-secondary/50">
+          <tr>
+            @for (col of tableColumns; track $index) {
+            <th scope="col" class="px-6 py-3 min-w-40">
+              {{ col | translate : language.lang }}
+            </th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of brands; track item.id) {
+
+          <tr
+            class="bg-white border-b cursor-pointer border-secondary/15 hover:bg-secondary/5 text-secondary/80"
+            [routerLink]="'' + item.id"
+          >
+            <td class="px-6 py-4">
+              {{ $index + 1 }}
+            </td>
+            <td class="px-6 py-4">
+              {{ language.lang == "ar" ? item.nameAr : item.nameEn }}
+            </td>
+            <td class="px-6 py-4">
+              {{ item.updatedAt | date : "dd/MM/yyyy" }}
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!--            If there are more than one page -->
+    @if (true) {
+    <div class="flex items-center my-8 me-4 ms-auto w-fit">
+      @if (language.dir == 'ltr') {
+
+      <div
+        class="px-2 py-1 border rounded border-secondary/15 me-1"
+        [ngClass]="
+          brandsResponse.first
+            ? 'bg-primary/20 '
+            : 'hover:bg-primary/80 cursor-pointer'
+        "
+        (click)="onPageChanged(brandsResponse.first ? -1 : currentPage - 1)"
+      >
+        <svg
+          class="w-6 h-6 text-secondary/50"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m15 19-7-7 7-7"
+          />
+        </svg>
+      </div>
+      } @else {
+      <div
+        class="px-2 py-1 border rounded border-secondary/15 me-1"
+        [ngClass]="
+          brandsResponse.first
+            ? 'bg-primary/20 '
+            : 'hover:bg-primary/80 cursor-pointer'
+        "
+        (click)="onPageChanged(brandsResponse.first ? -1 : currentPage - 1)"
+      >
+        <svg
+          class="w-6 h-6 text-secondary/50"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m9 5 7 7-7 7"
+          />
+        </svg>
+      </div>
+      } @for (i of generatePageArray(); track $index) {
+
+      <div
+        class="px-3 py-1 border rounded border-secondary/15 me-1"
+        [ngClass]="
+          pageable && +pageable.pageNumber == $index
+            ? 'bg-primary/80 '
+            : ' hover:bg-primary/80 cursor-pointer'
+        "
+        (click)="onPageChanged($index)"
+      >
+        {{ $index + 1 }}
+      </div>
+
+      } @if (language.dir == 'ltr') {
+
+      <div
+        class="px-2 py-1 border rounded border-secondary/15 me-1"
+        [ngClass]="
+          brandsResponse.last
+            ? 'bg-primary/20 '
+            : 'hover:bg-primary/80 cursor-pointer'
+        "
+        (click)="onPageChanged(brandsResponse.last ? -1 : +currentPage + 1)"
+      >
+        <svg
+          class="w-6 h-6 text-secondary/50"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m9 5 7 7-7 7"
+          />
+        </svg>
+      </div>
+
+      } @else {
+
+      <div
+        class="px-2 py-1 border rounded border-secondary/15 me-1"
+        [ngClass]="
+          brandsResponse.last
+            ? 'bg-primary/20 '
+            : 'hover:bg-primary/80 cursor-pointer'
+        "
+        (click)="onPageChanged(brandsResponse.last ? -1 : +currentPage + 1)"
+      >
+        <svg
+          class="w-6 h-6 text-secondary/50"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m15 19-7-7 7-7"
+          />
+        </svg>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</app-main-content>
+}

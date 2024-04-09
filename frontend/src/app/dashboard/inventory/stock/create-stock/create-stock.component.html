@@ -1,0 +1,140 @@
+@if (selectLanguage$ | async; as language) {
+    <app-main-content [language]="language" [headerText]="'Add opening balance' | translate: language?.lang"
+                      [noDataMessage]="'There is no data to show' | translate: language?.lang" [noData]="false">
+        <div headerActions>
+            <button
+                    (click)="cancelCreateStore()"
+                    class="rounded-lg border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
+                {{ 'Cancel' | translate: language?.lang }}
+            </button>
+            <button
+                    (click)="onSubmitForm()"
+
+                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                {{ 'Save' | translate: language?.lang }}
+            </button>
+        </div>
+        <div contentWithData class="h-full min-h-max w-full p-8 relative">
+
+            <form [formGroup]="formGroup">
+                <div class="flex flex-wrap items-start justify-start gap-3 ">
+                    <div class="w-full max-w-md">
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                            > {{ 'Product' | translate: language?.lang }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            <app-select-with-search
+                                    [language]="language.lang"
+                                    (searchInput)="searchProducts($event)"
+                                    [searchOptions]="productOptions$ | async"
+                                    (selectedItem)="onItemSelected($event,'productId')"
+                                    [product]="true"
+                                    [inputValue]="productNumber$ | async"
+                            />
+
+                            @if (formGroup.get('productId')?.touched && formGroup.get('productId')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Product" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                            > {{ 'Store' | translate: language?.lang }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            <app-select-with-search
+                                    [language]="language.lang"
+                                    (searchInput)="searchStores($event)"
+                                    [searchOptions]="storeOptions$ | async"
+                                    (selectedItem)="onItemSelected($event,'storeId')"
+                            />
+                            @if (formGroup.get('storeId')?.touched && formGroup.get('storeId')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Store" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                            > {{ 'Location' | translate: language?.lang }}</label>
+
+                            <app-select-with-search
+                                    [language]="language.lang"
+                                    [searchOptions]="selectedStore ? selectedStore.locations: []"
+                                    (selectedItem)="onItemSelected($event,'locationId')"
+                            />
+
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    for="quantity"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Product Number" | translate : language.lang }}
+                                <span class="text-danger">*</span>
+                            </label
+                            >
+                            <input
+                                    formControlName="quantity"
+                                    type="number"
+                                    min="0"
+                                    id="quantity"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            />
+                            @if (formGroup.get('quantity')?.touched && formGroup.get('quantity')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Quantity" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    @if(selectedProduct){
+
+                    <div class="w-full max-w-md flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Product Number' | translate : language.lang }}:</p>
+                            <p>{{ selectedProduct.productNumber }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Description' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? selectedProduct.descriptionAr : selectedProduct.descriptionEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Unit' | translate : language.lang }}:</p>
+                            <p>{{ selectedProduct.unit }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Machine art' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? selectedProduct.machinePart.nameAr : selectedProduct.machinePart.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Main Brand' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? selectedProduct.mainBrand.nameAr : selectedProduct.mainBrand.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Sub Brand' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? selectedProduct.subBrand.nameAr : selectedProduct.subBrand.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Country' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? selectedProduct.country.nameAr : selectedProduct.country.nameEn }}</p>
+                        </div>
+
+                    </div>
+                    }
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </app-main-content>
+}

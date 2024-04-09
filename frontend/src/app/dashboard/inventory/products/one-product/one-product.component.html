@@ -1,0 +1,270 @@
+@if (selectLanguage$ | async; as language) {
+    <app-main-content
+            [language]="language"
+            [headerText]="('Product' | translate : language.lang) + ': '+product?.productNumber"
+            [noDataMessage]="'There is no data to show' | translate : language?.lang"
+            [noData]="false"
+            [loader]="loader$ | async"
+    >
+        <div headerActions>
+            <button
+                    [routerLink]="['edit',1]"
+                    class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70"
+            >
+                {{ "Edit " | translate : language.lang }}
+            </button>
+
+        </div>
+
+        @if (product) {
+            <div contentWithData class="relative w-full h-full p-8 min-h-max">
+                <div class="w-full flex gap-3 justify-start items-start">
+                    <!--                Images -->
+                    <div class="w-full max-w-md flex flex-col items-center justify-start gap-2 full">
+                        @if (imageLoading$|async) {
+                            <div class="w-full relative flex  justify-center items-center  h-[368px]">
+                                <app-loader/>
+                            </div>
+                        } @else {
+
+                            <div class="flex-1">
+                                <img [src]="selectedImage " class="w-full  h-80"/>
+                            </div>
+                            <div class="flex items-center justify-center gap-2 w-full">
+                                <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer"  (click)="onImageSelected(product.image)">
+                                    <img [src]="product.image" class="h-20 w-auto   "
+                                          alt="Product Image"/>
+                                    <div class="text-sm p-2 rounded hover:bg-secondary/10 underline">{{ "Product Image" | translate: language.lang }}</div>
+                                </div>
+                                <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer" (click)="onImageSelected(product.partImage)">
+                                    <img [src]="product.partImage" class="h-20  w-auto "
+                                          alt="Part Image"/>
+                                    <div class="text-sm p-2 rounded hover:bg-secondary/10 underline">{{ "Machine Part Image" | translate: language.lang }}</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <!--                info -->
+                    <div class="w-full max-w-md flex flex-col gap-2">
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Product Number' | translate : language.lang }}:</p>
+                            <p>{{ product.productNumber }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Description' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.descriptionAr : product.descriptionEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Unit' | translate : language.lang }}:</p>
+                            <p>{{ product.unit }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Machine art' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.machinePart.nameAr : product.machinePart.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Main Brand' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.mainBrand.nameAr : product.mainBrand.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Sub Brand' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.subBrand.nameAr : product.subBrand.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Country' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.country.nameAr : product.country.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Is Original' | translate : language.lang }}:</p>
+                            @if (product.isOriginal) {
+                                <svg
+                                        class="w-6 h-6 text-green-500"
+                                        style="color: green !important"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            fill-rule="evenodd"
+                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                            clip-rule="evenodd"
+                                    />
+                                </svg>
+
+                            } @else {
+                                <svg
+                                        style="color: red !important"
+                                        class="w-6 h-6 text-red-500"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            fill-rule="evenodd"
+                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                            clip-rule="evenodd"
+                                    />
+                                </svg>
+
+                            }
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Active' | translate : language.lang }}:</p>
+                            @if (product.isActive) {
+                                <svg
+                                        class="w-6 h-6 text-green-500"
+                                        style="color: green !important"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            fill-rule="evenodd"
+                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                            clip-rule="evenodd"
+                                    />
+                                </svg>
+
+                            } @else {
+                                <svg
+                                        style="color: red !important"
+                                        class="w-6 h-6 text-red-500"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            fill-rule="evenodd"
+                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                            clip-rule="evenodd"
+                                    />
+                                </svg>
+
+                            }
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Last updated' | translate : language.lang }}:</p>
+                            <p>{{ product.updatedAt | date : "dd/MM/yyyy" }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Minimum Quantity' | translate : language.lang }}:</p>
+                            <p>{{ product.minQuantity }}</p>
+                        </div>
+                    </div>
+                </div>
+                <!--                Others -->
+                <div class="mt-16 ">
+                    <!--                    tabs headers -->
+                    <div class=" flex items-center justify-start gap-1">
+                        @for (item of tabsHeader; track $index) {
+                            @if (item == 'Set Items') {
+                                @if (product.unit == 'SET') {
+                                    <div
+                                            (click)="onTabSelect($index)"
+                                            class="py-4 min-w-28 text-center cursor-pointer
+                                    font-semibold hover:text-primary hover:bg-primary/5 hover:border-b-2 hover:border-e
+                                    border-primary"
+                                            [ngClass]="{'  bg-primary/5  border-b-2 border-e text-primary/80': selectedTab == $index}"
+                                    >{{ item | translate : language.lang }}
+                                    </div>
+                                }
+                            } @else {
+                                <div
+                                        (click)="onTabSelect($index)"
+                                        class="py-4 min-w-28 text-center cursor-pointer
+                                    font-semibold hover:text-primary hover:bg-primary/5 hover:border-b-2 hover:border-e
+                                    border-primary"
+                                        [ngClass]="{'  bg-primary/5  border-b-2 border-e text-primary/80': selectedTab == $index}"
+                                >{{ item | translate : language.lang }}
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <hr/>
+                    <!--                    tabs content -->
+                    <div class="py-4">
+                        <!--                  same items  -->
+                        @if (selectedTab == 0) {
+                            @if (product.sameItems.length > 0) {
+                                <app-one-product-table
+                                        [tableColumns]="tableColumns"
+                                        [language]="language.lang"
+                                        [products]="product.sameItems"
+                                        (goToProduct)="goToItem($event)"
+                                />
+                            } @else {
+                                <app-empty-div
+                                        [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
+                            }
+                        }
+<!--                        Alternatives-->
+                        @if (selectedTab == 1) {
+                            @if (product.alternatives.length > 0) {
+                                <app-one-product-table
+                                        [tableColumns]="tableColumns"
+                                        [language]="language.lang"
+                                        [products]="product.alternatives"
+                                        (goToProduct)="goToItem($event)"
+                                />
+
+                            } @else {
+                                <app-empty-div
+                                        [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
+                            }
+                        }
+<!--                        Set items -->
+                        @if (selectedTab == 2) {
+                            @if (product.setItems.length > 0) {
+                                <app-one-product-table
+                                        [tableColumns]="tableColumns"
+                                        [language]="language.lang"
+                                        [products]="product.setItems"
+                                        (goToProduct)="goToItem($event)"
+                                />
+
+                            } @else {
+                                <app-empty-div
+                                        [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
+                            }
+                        }
+                        <!--                        Stock -->
+                        @if (selectedTab == 3) {
+                            @if (stock.length > 0) {
+                                <div class="overflow-x-auto w-full ">
+                                    @for(item of stock; track $index){
+
+                                    <div class="flex w-full gap-1.5 items-center justify-start  border-secondary/10 border-b my-2">
+                                        <div class="font-semibold">{{language.lang == "ar" ? item[0]['storeNameAr'] : item[0]['storeNameEn']  + ': ' }} ({{getStoreTotalStock(item)}}) </div>
+<!--                                        <div class="flex flex-col items-start justify-start gap-1">-->
+                                            @for(i of item; track $index){
+                                                <div class="flex gap-1 ms-3">
+                                                    <div class="flex gap-1 p-1.5 " >
+                                                    <div >{{language.lang == "ar" ? i['locationNameAr'] : i['locationNameEn'] }}</div>
+                                                        <div class="font-semibold rounded px-2 bg-secondary/5">{{i['quantity']}}</div>
+                                                    </div>
+                                                </div>
+                                            }
+<!--                                        </div>-->
+                                    </div>
+                                    }
+                                </div>
+
+                            } @else {
+                                <app-empty-div
+                                        [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
+                            }
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        }
+
+    </app-main-content>
+}

@@ -1,0 +1,57 @@
+@if (selectLanguage$ | async; as language){
+    <app-main-content [language]="language" [headerText]="'Countries' | translate : language.lang" [noDataMessage]="'There is no data to show' | translate: language?.lang" [noData]="false">
+<!--        <div headerActions>-->
+<!--            <button-->
+<!--                    [routerLink]="'create'"-->
+<!--                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70">-->
+<!--                {{'Add machine part' | translate: language.lang}}</button>-->
+<!--        </div>-->
+        <div headerSlot>
+            <app-search-input
+                    [placeholder]="'Search' | translate : language?.lang"
+                    (searchChanged)="onSearchChanged($event)"
+                    [value]="searchName"
+            />
+        </div>
+        <div contentWithData class="h-full min-h-max w-full p-8 relative" >
+
+            <div class="relative overflow-x-auto overflow-y-auto my-4 max-w-md">
+                <table class="w-full text-sm text-left rtl:text-right  ">
+                    <thead class="text-xs text-secondary/50 uppercase  ">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 w-20" >
+                           #
+                        </th>
+
+                        <th scope="col" class="px-6 py-3 max-w-40">
+                            {{'Name' | translate: language.lang}}
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @for ( item of countries; track $index){
+
+                            <tr class="bg-white border-b border-secondary/15  hover:bg-secondary/5 text-secondary/80 ">
+
+                                <td class="px-6 py-4">
+                                    {{$index + 1}}
+                                </td>
+                                <td class="px-6 py-4">
+                                    {{language.lang == 'ar' ? item.nameAr : item.nameEn }}
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+
+
+
+        </div>
+
+    </app-main-content>
+}
+
+

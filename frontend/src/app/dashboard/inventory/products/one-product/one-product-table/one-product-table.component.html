@@ -1,0 +1,84 @@
+<div class="relative my-4 overflow-x-auto overflow-y-auto">
+    <table class="w-full text-sm text-left rtl:text-right">
+        <thead class="text-xs uppercase text-secondary/50">
+        <tr>
+            @if(products[0].quantity){
+                <th scope="col" class="px-6 py-3 min-w-40">
+                    {{ "quantity" | translate : language }}
+                </th>
+            }
+            @for (col of tableColumns; track $index) {
+                <th scope="col" class="px-6 py-3 min-w-40">
+                    {{ col | translate : language }}
+                </th>
+            }
+        </tr>
+        </thead>
+        <tbody>
+            @for ( item of products; track item.id){
+
+                <tr
+                        class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80"
+                        (click)="goToItem(item.id)"
+                >
+                    @if(item.quantity){
+                        <th scope="col" class="px-6 py-3 min-w-40">
+                            {{ item.quantity }}
+                        </th>
+                    }
+                    <td class="px-6 py-4">
+                        {{ item.productNumber }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ language == "ar" ? item.mainBrand.nameAr :item.mainBrand.nameEn }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ language == "ar" ? item.subBrand.nameAr :item.subBrand.nameEn }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ language == "ar" ? item.country.nameAr :item.country.nameEn }}
+                    </td>
+                    <td class="px-6 py-4">
+                        @if (item.isOriginal) {
+                            <svg
+                                    class="w-6 h-6 text-green-500"
+                                    style="color: green !important"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                            >
+                                <path
+                                        fill-rule="evenodd"
+                                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                        clip-rule="evenodd"
+                                />
+                            </svg>
+
+                        }@else {
+                            <svg
+                                    style="color: red !important"
+                                    class="w-6 h-6 text-red-500"
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor"
+                                    viewBox="0 0 24 24"
+                            >
+                                <path
+                                        fill-rule="evenodd"
+                                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                        clip-rule="evenodd"
+                                />
+                            </svg>
+
+                        }
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ item.unit }}
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

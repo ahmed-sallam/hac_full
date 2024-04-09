@@ -1,0 +1,55 @@
+@if (selectLanguage$ | async; as language){
+
+    <div class="h-screen w-screen bg-accent/5">
+  <div class="w-ful max-w-md mx-auto flex items-center justify-center h-full" >
+    <div class="p-4 rounded-xl shadow-2xl  w-full" style="background-color: #fff">
+      <div class="flex items-center justify-center p-2 ">
+        <img
+          ngSrc="assets/images/logo.png"
+          width="300"
+          height="76"
+          alt="High Apility Company"
+        />
+      </div>
+      <form (ngSubmit)="onSubmit()" #form="ngForm" class="mt-6">
+        <div class="mb-5">
+          <label
+            for="email"
+            class="block mb-2 text-sm font-medium text-secondary/90"
+          >{{ "Email" | translate : language.lang }}</label
+          >
+          <input
+            type="email"
+            id="email"
+            class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+            placeholder="name@flowbite.com"
+            required
+          />
+        </div>
+        <div class="mb-5">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-secondary/90 "
+          >{{ "Password" | translate : language.lang }}</label
+          >
+          <input
+            type="password"
+            id="password"
+            class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+            required
+          />
+        </div>
+        <div class="w-full">
+          <button
+            type="submit"
+            class="text-white bg-primary/80 hover:bg-primary focus:ring-4 focus:outline-none focus:ring-primary/30 font-medium rounded-lg block w-2/3 mx-auto px-5 py-2.5 text-center "
+          >
+              {{ "Login" | translate : language.lang }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+}
