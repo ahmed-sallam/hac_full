@@ -39,7 +39,6 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public void create(CreateInventory createInventory) throws Exception {
         try {
-            System.out.println("ffff " + createInventory);
             Product product = productService.getProductOrThrow(createInventory.productId());
             Store store = storeService.getOrElseThrow(createInventory.storeId());
             Inventory inventory;
@@ -52,7 +51,6 @@ public class InventoryServiceImpl implements InventoryService {
             inventory = new Inventory(createInventory.quantity(), product, store, null);
             inventoryRepository.save(inventory);
         } catch (DataIntegrityViolationException e) {
-            System.out.println("Errorrrrrrr " + e);
             throw new DuplicateRecordException("Duplicate inventory record");
         }
     }

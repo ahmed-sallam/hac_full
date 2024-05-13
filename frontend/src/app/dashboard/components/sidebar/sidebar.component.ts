@@ -58,6 +58,11 @@ export class SidebarComponent {
                     path: 'inventory/brands',
                 },
                 {
+                    icon: `M7.8 2c-.5 0-1 .2-1.3.6A2 2 0 0 0 6 3.9V21a1 1 0 0 0 1.6.8l4.4-3.5 4.4 3.5A1 1 0 0 0 18 21V3.9c0-.5-.2-1-.5-1.3-.4-.4-.8-.6-1.3-.6H7.8Z`,
+                    text: 'Machinery',
+                    path: 'inventory/machinery',
+                },
+                {
                     icon: `M8 8v8m0-8h8M8 8H6a2 2 0 1 1 2-2v2Zm0 8h8m-8 0H6a2 2 0 1 0 2 2v-2Zm8 0V8m0 8h2a2 2 0 1 1-2 2v-2Zm0-8h2a2 2 0 1 0-2-2v2Z`,
                     text: 'Machine Parts',
                     path: 'inventory/machine-parts',

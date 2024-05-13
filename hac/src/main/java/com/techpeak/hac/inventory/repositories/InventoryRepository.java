@@ -12,14 +12,17 @@ import java.util.List;
 
 public interface InventoryRepository extends JpaRepository<Inventory,Long> {
 
-    @Query("SELECT i FROM Inventory i  WHERE  LOWER(i.product.productNumber) LIKE %:productNumber% ")
+    @Query("SELECT i FROM Inventory i JOIN FETCH i.product p  WHERE  LOWER(p.productNumber) LIKE %:productNumber%  ORDER BY p.productNumber ASC ")
     Page<Inventory> findByProductNumberContainingIgnoreCase(
             @Param("productNumber") String productNumber,
             Pageable pageable
     );
+    @Query("SELECT i, SUM(i.quantity) as totalInventory FROM Inventory i JOIN i.product p WHERE  LOWER(p.productNumber) LIKE %:productNumber% GROUP BY i.quantity ORDER BY p.mainBrand.nameEn ASC, p.subBrand.nameEn ASC")
+    Page<Inventory> findByProductNumberContainingIgnoreCaseGroupByProduct(
+            @Param("productNumber") String productNumber,
+            Pageable pageable
+    ); // todo complete this and use it as main query to send data ready to frontend.
 
-//    @Query("SELECT i FROM Inventory i  WHERE i.product.id = :id")
-//    List<Inventory> findAllByProduct( @Param("id") Long id);
 
     @Query("SELECT NEW com.techpeak.hac.inventory.dtos.InventoryShortResponse(i.id, i.quantity, i.store.nameAr, i.store.nameEn,  COALESCE(l.nameAr, ''), COALESCE(l.nameEn, '')) FROM Inventory i LEFT JOIN i.location l WHERE i.product.id = :id")
     List<InventoryShortResponse> findAllByProductShort(@Param("id") Long id);

@@ -19,4 +19,6 @@ public class CreateProductSet  {
     @NotNull
     private Long productId;
     private Long productSetId;
+    @NotNull
+    private Boolean isRestricted;
 }

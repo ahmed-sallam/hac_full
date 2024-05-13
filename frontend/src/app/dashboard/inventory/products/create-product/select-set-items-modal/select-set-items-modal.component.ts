@@ -26,7 +26,7 @@ export class SelectSetItemsModalComponent implements OnInit {
     ngOnInit(): void {
         this.addNewField();
     }
-
+    isRestricted: boolean = false;
     productsService: ProductsService = inject(ProductsService)
 
     @Output() hideModal: EventEmitter<any> = new EventEmitter<any>()
@@ -91,7 +91,7 @@ export class SelectSetItemsModalComponent implements OnInit {
             alert('Please add a quantity for all fields') // todo: change to toast
             return
         }
-        console.log('products', this.products)
+        this.products = this.products.map((i)=> ({...i, isRestricted:this.isRestricted}))
         this.submitProductSet.emit(this.products)
     }
 }

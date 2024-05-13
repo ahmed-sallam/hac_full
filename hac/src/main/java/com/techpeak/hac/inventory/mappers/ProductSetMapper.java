@@ -10,6 +10,7 @@ public class ProductSetMapper {
         ProductSet productSet = ProductSet
                 .builder()
                 .quantity(createProductSet.getQuantity())
+                .isRestricted(createProductSet.getIsRestricted())
                 .build();
         return productSet;
     }
@@ -22,7 +23,8 @@ public class ProductSetMapper {
                 productSet.getIsActive(),
                 productSet.getProduct(),
                 productSet.getProductSet(),
-                productSet.getQuantity()
+                productSet.getQuantity(),
+                productSet.getIsRestricted()
         );
     }
     private static ProductsSetResponseSetOnly toDtoSetOnly(ProductSet productSet) {
@@ -33,7 +35,8 @@ public class ProductSetMapper {
                 productSet.getIsActive(),
                 productSet.getProduct().getId(),
                 productSet.getProductSet(),
-                productSet.getQuantity()
+                productSet.getQuantity(),
+                productSet.getIsRestricted()
         );
     }
 }

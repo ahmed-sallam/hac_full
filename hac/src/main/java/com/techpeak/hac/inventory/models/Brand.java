@@ -31,4 +31,5 @@ public class Brand extends BaseEntity{
   private Long mainBrand;
   @OneToMany(mappedBy = "mainBrand", fetch = FetchType.EAGER)
   private Set<Brand> subBrands = new HashSet<>();
+
 }

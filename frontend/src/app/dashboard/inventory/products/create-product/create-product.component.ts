@@ -22,6 +22,12 @@ import {CreateProduct} from "../interfaces/CreateProduct";
 import {Router} from "@angular/router";
 import {SelectSetItemsModalComponent} from "./select-set-items-modal/select-set-items-modal.component";
 import {SelectAlternativeModalComponent} from "./select-alternatice-modal/select-alternative-modal.component";
+import {MachineryService} from "../../machinery/machinery.service";
+import {
+    MachineryModelEntity,
+    MachineryResponse,
+    MachineryTypeEntity
+} from "../../machinery/interfaces/MachineryResponse";
 
 @Component({
     selector: 'app-create-product',
@@ -51,6 +57,7 @@ export class CreateProductComponent implements OnInit {
         this.getMachineParts()
         this.getBrands()
         this.getCountryOptions()
+        this.getMachinery()
     }
 
 
@@ -61,6 +68,7 @@ export class CreateProductComponent implements OnInit {
     countriesService: CountriesService = inject(CountriesService);
     filesService: FilesService = inject(FilesService);
     productsService: ProductsService = inject(ProductsService)
+    machineryService: MachineryService = inject(MachineryService)
 
     router: Router = inject(Router)
 
@@ -70,8 +78,11 @@ export class CreateProductComponent implements OnInit {
     countryOptions$!: Observable<Country[]>;
     countryOptionsBefore$!: Observable<Country[]>;
     subBrandOptions$!: Observable<BrandEntity[]>;
+    machineryOptions$ !: Observable<MachineryTypeEntity[]>;
+    machineryModelOptions$ !: Observable<MachineryModelEntity[]>;
     productSets: any[] = []
     alternatives: any[] = [];
+    related: any[] = [];
     formGroup: FormGroup = new FormGroup({
         productNumber: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
         ]),
@@ -84,12 +95,18 @@ export class CreateProductComponent implements OnInit {
         partImage: new FormControl('', [Validators.required
         ]),
         minQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+        sellQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+        sellIndividual: new FormControl(0, [Validators.required, Validators.min(0)]),
+        buyQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+        buyIndividual: new FormControl(0, [Validators.required, Validators.min(0)]),
         isOriginal: new FormControl(true, []),
         unit: new FormControl('PIECE', []),
         machinePart: new FormControl('', [Validators.required]),
         mainBrand: new FormControl('', [Validators.required]),
         subBrand: new FormControl('', [Validators.required]),
         country: new FormControl('', [Validators.required]),
+        machineryType: new FormControl('', [Validators.required]),
+        machineryModel: new FormControl('', [Validators.required]),
 
 
     });
@@ -99,8 +116,10 @@ export class CreateProductComponent implements OnInit {
         'SET'
     ]
     refreshSubBrand: boolean = true;
+    refreshMachineryModel: boolean = true;
     showSelectSetItemsModal: boolean = false;
     showSelectAlternatives: boolean = false;
+    showSelectRelated: boolean = false;
     showSuccessModal: boolean = false;
 
 
@@ -126,12 +145,19 @@ export class CreateProductComponent implements OnInit {
             product.productSets = this.productSets.map((p: any) => {
                 return {
                     productId: p.productId,
-                    quantity: p.quantity
+                    quantity: p.quantity,
+                    isRestricted: p.isRestricted
                 }
             })
             product.alternatives = this.alternatives.map((p: any) => {
                 return {
                     product2Number: p.productNumber,
+                }
+            })
+            product.related = this.related.map((p: any) => {
+                return {
+                    product2Number: p.productNumber,
+                    isRestricted: p.isRestricted
                 }
             })
             this.addProduct(product)
@@ -193,6 +219,29 @@ export class CreateProductComponent implements OnInit {
             isActive
         ).pipe(
             map((res: BrandsResponse) => {
+                console.log("res1", res)
+                return res.content
+            }),
+            catchError((err) => {
+                console.log("err", err)
+                return []
+            })
+        )
+    }
+
+    getMachinery(
+        page: number = 0,
+        size: number = 15,
+        name: string = '',
+        isActive: boolean = true
+    ) {
+        this.machineryOptions$ = this.machineryService.getMachinery(
+            page,
+            size,
+            name,
+            isActive
+        ).pipe(
+            map((res: MachineryResponse) => {
                 console.log("res1", res)
                 return res.content
             }),
@@ -267,16 +316,16 @@ export class CreateProductComponent implements OnInit {
         if ($event == null) {
             this.formGroup.get(key)?.setValue('')
             if (key == 'mainBrand') {
-                this.subBrandOptions$ = new Observable<BrandEntity[]>()
-                this.formGroup.get('subBrand')?.setValue('')
-                this.refreshSubBrand = !this.refreshSubBrand
-                setTimeout(() => {
-                    this.refreshSubBrand = !this.refreshSubBrand
-                }, 5);
+                this.resetSubBrandOptions()
+                this.resetMachineryModelOptions()
+            }
+            if (key == 'machineryType') {
+                this.resetMachineryModelOptions()
             }
         } else {
             this.formGroup.get(key)?.setValue($event.id)
             if (key == 'mainBrand') {
+                this.resetSubBrandOptions()
                 this.subBrandOptions$ = this.brandOptions$.pipe(
                     map((res: BrandEntity[]) => {
                         return res.filter((b: BrandEntity) => {
@@ -284,8 +333,57 @@ export class CreateProductComponent implements OnInit {
                         }).map((b: BrandEntity) => b.subBrands).flat()
                     })
                 )
+                if (this.formGroup.get('machineryType')?.value != '') {
+                    this.resetMachineryModelOptions()
+                    this.machineryModelOptions$ = this.machineryOptions$.pipe(
+                        map((res: MachineryTypeEntity[]) => {
+                            return res.filter((i: MachineryTypeEntity) =>
+                                i.id == this.formGroup.get('machineryType')?.value
+                            ).map((b: MachineryTypeEntity) =>
+                                b.machineryModels
+                            ).flat().filter(
+                                (i2: MachineryModelEntity) =>
+                                    i2.brand?.id == this.formGroup.get('mainBrand')?.value
+                            )
+                        })
+                    );
+                }
+            }
+
+            if (key == 'machineryType') {
+                this.resetMachineryModelOptions()
+                this.machineryModelOptions$ = this.machineryOptions$.pipe(
+                    map((res: MachineryTypeEntity[]) => {
+                        return res.filter((i: MachineryTypeEntity) =>
+                            i.id == this.formGroup.get('machineryType')?.value
+                        ).map((b: MachineryTypeEntity) =>
+                            b.machineryModels
+                        ).flat().filter(
+                            (i2: MachineryModelEntity) =>
+                                i2.brand?.id == this.formGroup.get('mainBrand')?.value
+                        )
+                    })
+                );
             }
         }
+    }
+
+    resetSubBrandOptions() {
+        this.subBrandOptions$ = new Observable<BrandEntity[]>()
+        this.formGroup.get('subBrand')?.setValue('')
+        this.refreshSubBrand = !this.refreshSubBrand
+        setTimeout(() => {
+            this.refreshSubBrand = !this.refreshSubBrand
+        }, 5);
+    }
+
+    resetMachineryModelOptions() {
+        this.machineryModelOptions$ = new Observable<MachineryModelEntity[]>()
+        this.formGroup.get('machineryModel')?.setValue('')
+        this.refreshMachineryModel = !this.refreshMachineryModel
+        setTimeout(() => {
+            this.refreshMachineryModel = !this.refreshMachineryModel
+        }, 5);
     }
 
     searchMachineParts($event: string) {
@@ -294,6 +392,10 @@ export class CreateProductComponent implements OnInit {
 
     searchBrands($event: string) {
         this.getBrands(0, 15, $event.trim(), true);
+    }
+
+    searchMachinery($event: string) {
+        this.getMachinery(0, 15, $event.trim(), true);
     }
 
     searchCountries($event: string) {
@@ -320,6 +422,10 @@ export class CreateProductComponent implements OnInit {
         this.alternatives = $event;
         this.showSelectAlternatives = false
     }
+    onSubmitRelated($event: any[]) {
+        this.related = $event;
+        this.showSelectRelated = false
+    }
 
     hideSelectSetItemsModal() {
         this.showSelectSetItemsModal = false
@@ -330,6 +436,10 @@ export class CreateProductComponent implements OnInit {
         this.showSelectAlternatives = false
         this.alternatives = []
     }
+    hideSelectRelated() {
+        this.showSelectRelated = false
+        this.related = []
+    }
 
     cancelCreateProduct() {
         this.formGroup.reset();
@@ -338,7 +448,7 @@ export class CreateProductComponent implements OnInit {
 
     goToAddStock() {
         this.router.navigate(['/dashboard/inventory/stock/create'], {
-            queryParams:{productId:this.newProductId}
+            queryParams: {productId: this.newProductId}
         })
     }
 }

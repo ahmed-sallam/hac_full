@@ -20,9 +20,20 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void createBrand(CreateBrand createBrand) {
         Brand brand = BrandMapper.toEntity(createBrand);
-        if (createBrand.getBrandId()!= null)
+        if (createBrand.getBrandId()!= null) {
             brand.setMainBrand(getBrandOrThrow(createBrand.getBrandId()).getId());
-        brandRepository.save(brand);
+            brandRepository.save(brand);
+        } else {
+        brand = brandRepository.save(brand);
+            Brand genuinBrnad =  Brand.builder()
+                    .nameAr("أصلي")
+                    .nameEn("Genuine")
+                    .code("GG")
+                    .mainBrand(brand.getId())
+                    .build();
+        brandRepository.save(genuinBrnad);
+        }
+
     }
 
     @Override

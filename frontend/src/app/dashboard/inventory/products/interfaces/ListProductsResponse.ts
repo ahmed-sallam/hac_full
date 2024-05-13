@@ -1,3 +1,5 @@
+import {MachineryModelEntity, MachineryTypeEntity} from "../../machinery/interfaces/MachineryResponse";
+
 export interface ListProductsResponse {
     content: ProductEntity[]
     pageable: Pageable
@@ -31,8 +33,17 @@ export interface ProductEntity {
     updatedAt: any
     sameItems: ProductEntity[]
     alternatives: ProductEntity[]
+    related: ProductEntity[]
     setItems: ProductEntity[]
     quantity?: number
+    machineryModel: MachineryModelEntity
+    machineryType: MachineryTypeEntity
+    sellQuantity: number
+    sellIndividual: number
+    buyQuantity: number
+    buyIndividual: number
+    totalInventory: number
+
 }
 
 export interface MachinePart {

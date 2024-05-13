@@ -28,5 +28,17 @@ public class BrandMapper {
                 brand.getUpdatedAt()
         );
     }
+    public static MainBrand toDtoWithoutSubBrands(Brand brand) {
+        return new MainBrand(
+                brand.getId(),
+                brand.getNameAr(),
+                brand.getNameEn(),
+                brand.getCode(),
+//                brand.getSubBrands(),
+                brand.getIsActive(),
+                brand.getCreatedAt(),
+                brand.getUpdatedAt()
+        );
+    }
 
 }

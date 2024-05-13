@@ -24,4 +24,7 @@ public class ProductSet  extends BaseEntity {
     private Product productSet;
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+
+    @Column(name="is_restricted",nullable = false )
+    private Boolean isRestricted = false;
 }

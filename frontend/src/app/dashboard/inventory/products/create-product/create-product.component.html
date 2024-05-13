@@ -164,6 +164,90 @@
                             }
                         </div>
                         <div class="mb-5 max-w-96">
+                            <label
+                                    for="minQuantity"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Sell Quantity Limit" | translate : language.lang }} <span
+                                    class="text-danger">*</span></label
+                            >
+                            <input
+                                    formControlName="sellQuantity"
+                                    type="number"
+                                    id="sellQuantity"
+                                    min="0"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            />
+                            @if (formGroup.get('sellQuantity')?.touched && formGroup.get('sellQuantity')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Sell Quantity Limit" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    for="sellIndividual"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Sell individual rate" | translate : language.lang }} <span
+                                    class="text-danger">*</span></label
+                            >
+                            <input
+                                    formControlName="sellIndividual"
+                                    type="number"
+                                    id="sellIndividual"
+                                    min="0"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            />
+                            @if (formGroup.get('sellIndividual')?.touched && formGroup.get('sellIndividual')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Sell individual rate" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    for="buyQuantity"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Buy Quantity Limit" | translate : language.lang }} <span
+                                    class="text-danger">*</span></label
+                            >
+                            <input
+                                    formControlName="buyQuantity"
+                                    type="number"
+                                    id="buyQuantity"
+                                    min="0"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            />
+                            @if (formGroup.get('buyQuantity')?.touched && formGroup.get('buyQuantity')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Buy Quantity Limit" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    for="buyIndividual"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Buy individual rate" | translate : language.lang }} <span
+                                    class="text-danger">*</span></label
+                            >
+                            <input
+                                    formControlName="buyIndividual"
+                                    type="number"
+                                    id="buyIndividual"
+                                    min="0"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            />
+                            @if (formGroup.get('buyIndividual')?.touched && formGroup.get('buyIndividual')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Buy individual rate" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
                             <label class="inline-flex items-center cursor-pointer">
                                 <input
                                         formControlName="isOriginal"
@@ -199,22 +283,14 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="mb-5 max-w-96 flex gap-2">
+                        @if (showSelectSetItemsModal) {
+                            <app-select-set-items-modal
+                                    (hideModal)="hideSelectSetItemsModal()"
+                                    (submitProductSet)="onSubmitProductSet($event)"
+                                    [language]="language.lang"/>
+                        }
 
-                            <div class="w-full flex items-center ps-4 border bg-withe border-primary/70 rounded cursor-pointer hover:bg-primary/20"
-                                 (click)="showSelectAlternatives = true">
-                                <label
-                                       class="w-full py-4  text-lg font-semibold  text-primary text-center cursor-pointer">
-                                    {{ "Add Alternatives" | translate : language.lang }}
-                                    @if (alternatives.length > 0) {
 
-                                        <br/>
-                                        {{ alternatives.length }} {{ "Products" | translate : language.lang }}
-                                    }
-
-                                </label>
-                            </div>
-                        </div>
 
                     </div>
                     <div class="flex flex-col w-full max-w-md">
@@ -263,6 +339,7 @@
                                         [language]="language.lang"
                                         [searchOptions]="subBrandOptions$ | async"
                                         (selectedItem)="onItemSelected($event,'subBrand')"
+                                        [inputValue]=""
                                 />
                             }
                             @if (formGroup.get('subBrand')?.touched && formGroup.get('subBrand')?.errors) {
@@ -273,6 +350,48 @@
                             }
 
                         </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                            > {{ 'Machinery' | translate: language?.lang }}</label>
+                            <app-select-with-search
+                                    [language]="language.lang"
+                                    (searchInput)="searchMachinery($event)"
+                                    [searchOptions]="machineryOptions$ | async"
+                                    (selectedItem)="onItemSelected($event,'machineryType')"
+                            />
+                            @if (formGroup.get('machineryType')?.touched && formGroup.get('machineryType')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Machinery" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96">
+                            <label
+                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                            > {{ 'Machinery Model' | translate: language?.lang }}</label>
+                            <!--                                    (searchInput)="searchBrands($event)"-->
+                            @if (refreshMachineryModel) {
+
+                                <app-select-with-search
+                                        [language]="language.lang"
+                                        [searchOptions]="machineryModelOptions$ | async"
+                                        (selectedItem)="onItemSelected($event,'machineryModel')"
+                                        [inputValue]=""
+                                />
+                            }
+                            @if (formGroup.get('machineryModel')?.touched && formGroup.get('machineryModel')?.errors) {
+                                <p class="text-xs text-danger ">
+                                    {{ "Machinery Model" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+
+                        </div>
+
+
+
                         <div class="mb-5 max-w-96">
                             <label
                                     class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
@@ -290,18 +409,73 @@
                                 </p>
                             }
                         </div>
-                        @if (showSelectSetItemsModal) {
-                            <app-select-set-items-modal
-                                    (hideModal)="hideSelectSetItemsModal()"
-                                    (submitProductSet)="onSubmitProductSet($event)"
-                                    [language]="language.lang"/>
-                        }
+                        <div class="mb-5 max-w-96 flex gap-2">
+
+                            <div class="w-full flex items-center ps-4 border bg-withe border-primary/70 rounded cursor-pointer hover:bg-primary/20"
+                                 (click)="showSelectAlternatives = true">
+                                <label
+                                        class="w-full py-4  text-lg font-semibold  text-primary text-center cursor-pointer">
+                                    {{ "Add Alternatives" | translate : language.lang }}
+                                    @if (alternatives.length > 0) {
+
+                                        <br/>
+                                        {{ alternatives.length }} {{ "Products" | translate : language.lang }}
+                                    }
+
+                                </label>
+                            </div>
+                        </div>
+
                         @if (showSelectAlternatives) {
                             <app-select-alternative-modal
                                     (hideModal)="hideSelectAlternatives()"
                                     (submitProductSet)="onSubmitAlternatives($event)"
                                     [language]="language.lang"/>
                         }
+
+                        <div class="mb-5 max-w-96 flex gap-2">
+
+                            <div class="w-full flex items-center ps-4 border bg-withe border-primary/70 rounded cursor-pointer hover:bg-primary/20"
+                                 (click)="showSelectRelated = true">
+                                <label
+                                        class="w-full py-4  text-lg font-semibold  text-primary text-center cursor-pointer">
+                                    {{ "Add Related Items" | translate : language.lang }}
+                                    @if (related.length > 0) {
+                                        <br/>
+                                        {{ related.length }} {{ "Products" | translate : language.lang }}
+                                    }
+                                </label>
+                            </div>
+                        </div>
+
+                        @if (showSelectRelated) {
+                            <app-select-alternative-modal
+                                    (hideModal)="hideSelectRelated()"
+                                    (submitProductSet)="onSubmitRelated($event)"
+                                    [language]="language.lang"
+                                    [showIsRestricted] = 'true'
+                            />
+                        }
+
+
+                        <!--                        <div class="mb-5 max-w-96">-->
+<!--                            <label-->
+<!--                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"-->
+<!--                            > {{ 'Country' | translate: language?.lang }}</label>-->
+<!--                            <app-select-with-search-->
+<!--                                    [language]="language.lang"-->
+<!--                                    (searchInput)="searchCountries($event)"-->
+<!--                                    [searchOptions]="countryOptions$ | async"-->
+<!--                                    (selectedItem)="onItemSelected($event,'country')"-->
+<!--                            />-->
+<!--                            @if (formGroup.get('country')?.touched && formGroup.get('country')?.errors) {-->
+<!--                                <p class="text-xs text-danger ">-->
+<!--                                    {{ "Country" | translate : language.lang }}-->
+<!--                                    {{ "has errors" | translate : language.lang }}-->
+<!--                                </p>-->
+<!--                            }-->
+<!--                        </div>-->
+
                     </div>
                 </div>
             </form>
@@ -316,25 +490,25 @@
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
-<!--                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">-->
-<!--                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">-->
-<!--                        Terms of Service-->
-<!--                    </h3>-->
-<!--                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">-->
-<!--                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">-->
-<!--                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>-->
-<!--                        </svg>-->
-<!--                        <span class="sr-only">Close modal</span>-->
-<!--                    </button>-->
-<!--                </div>-->
+                <!--                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">-->
+                <!--                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">-->
+                <!--                        Terms of Service-->
+                <!--                    </h3>-->
+                <!--                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="default-modal">-->
+                <!--                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">-->
+                <!--                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>-->
+                <!--                        </svg>-->
+                <!--                        <span class="sr-only">Close modal</span>-->
+                <!--                    </button>-->
+                <!--                </div>-->
                 <!-- Modal body -->
                 <div class="p-4 md:p-5 space-y-4 ">
                     <p class=" leading-relaxed text-secondary/50  w-full text-center py-12 text-2xl">
-                        {{'Product added successfully' | translate : language.lang}}
-                        <br />
-                        {{'Add opening balance' | translate : language.lang}}
+                        {{ 'Product added successfully' | translate : language.lang }}
+                        <br/>
+                        {{ 'Add opening balance' | translate : language.lang }}
 
-               </p>
+                    </p>
                     <div class="flex w-full items-center justify-center">
                         <button
                                 (click)="goToAddStock()"
@@ -350,10 +524,10 @@
                     </div>
                 </div>
                 <!-- Modal footer -->
-<!--                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">-->
-<!--                    <button data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>-->
-<!--                    <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>-->
-<!--                </div>-->
+                <!--                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">-->
+                <!--                    <button data-modal-hide="default-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">I accept</button>-->
+                <!--                    <button data-modal-hide="default-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Decline</button>-->
+                <!--                </div>-->
             </div>
         </div>
     </div>

@@ -1,0 +1,42 @@
+services:
+  postgres:
+    container_name: hacdb
+    image: postgres
+    environment:
+      POSTGRES_USER: hac
+      POSTGRES_PASSWORD: pass123
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: hac
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - 5432:5432
+    networks:
+      - hac-network
+    restart: unless-stopped
+  hac-api:
+    container_name: hac-api
+    image: hac/hac:0.0.1
+    ports:
+      - 8080:8080
+    networks:
+      hac-network:
+    depends_on:
+      - postgres
+  hac-ui:
+    container_name: hac-ui
+    image: hac/hac-ui:0.0.3
+    ports:
+      - 3000:80
+    networks:
+      - hac-network
+    depends_on:
+      - hac-api
+
+
+volumes:
+  postgres:
+    driver: local
+networks:
+  hac-network:
+    driver: bridge

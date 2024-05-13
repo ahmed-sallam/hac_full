@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +44,6 @@ public class StoreLocationServiceImpl implements StoreLocationService {
     public List<StoreLocationResponse> list() {
         return storeLocationRepository.findAll().stream()
                 .map(StoreLocationMapper::toStoreLocationResponse)
-                .collect(java.util.stream.Collectors.toList());
+                .collect(Collectors.toList());
     }
 }

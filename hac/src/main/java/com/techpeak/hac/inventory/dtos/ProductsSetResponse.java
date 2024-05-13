@@ -8,5 +8,5 @@ public record ProductsSetResponse(
         Long id, LocalDateTime createdAt,
         LocalDateTime updatedAt, Boolean isActive,
         Product product, Product productSet,
-        Integer quantity) {
+        Integer quantity, Boolean isRestricted) {
 }

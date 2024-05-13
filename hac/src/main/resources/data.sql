@@ -253,7 +253,10 @@ INSERT INTO brands (name_ar, name_en, code, main_brand_id, created_at, updated_a
 VALUES
     ('كاتربيلر', 'Caterpillar', 'CAT', NULL, NOW(), NOW(), TRUE),
     ('كوماتسو', 'komatsu', 'KOM', NULL, NOW(), NOW(), TRUE),
-    ('S3L2', 'S3L2', 'S3L2', NULL, NOW(), NOW(), TRUE),
-    ('اف بي ديزل', 'FP-Diesel', 'Code2', 1, NOW(), NOW(), TRUE),
-    ('علامة تجارية 3', 'Brand 3', 'Code3', 2, NOW(), NOW(), TRUE),
-    ('S3L2', 'S3L2', 'S3L2', 3, NOW(), NOW(), TRUE);
+    ('دوسان', 'Doosan', 'Doos', NULL, NOW(), NOW(), TRUE),
+    ('أصلي', 'Genuine', 'GG', 1, NOW(), NOW(), TRUE),
+    ('أصلي', 'Genuine', 'GG', 2, NOW(), NOW(), TRUE),
+    ('أصلي', 'Genuine', 'GG', 3, NOW(), NOW(), TRUE),
+    ('اف بي ديزل', 'FP-Diesel', 'FP', 1, NOW(), NOW(), TRUE),
+    ('Dsg', 'Dsg', 'Dsg', 1, NOW(), NOW(), TRUE),
+    ('Dsm', 'Dsm', 'Dsm', 3, NOW(), NOW(), TRUE);

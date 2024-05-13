@@ -31,14 +31,16 @@
                                 <img [src]="selectedImage " class="w-full  h-80"/>
                             </div>
                             <div class="flex items-center justify-center gap-2 w-full">
-                                <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer"  (click)="onImageSelected(product.image)">
+                                <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer"
+                                     (click)="onImageSelected(product.image)">
                                     <img [src]="product.image" class="h-20 w-auto   "
-                                          alt="Product Image"/>
+                                         alt="Product Image"/>
                                     <div class="text-sm p-2 rounded hover:bg-secondary/10 underline">{{ "Product Image" | translate: language.lang }}</div>
                                 </div>
-                                <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer" (click)="onImageSelected(product.partImage)">
+                                <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer"
+                                     (click)="onImageSelected(product.partImage)">
                                     <img [src]="product.partImage" class="h-20  w-auto "
-                                          alt="Part Image"/>
+                                         alt="Part Image"/>
                                     <div class="text-sm p-2 rounded hover:bg-secondary/10 underline">{{ "Machine Part Image" | translate: language.lang }}</div>
                                 </div>
                             </div>
@@ -53,6 +55,14 @@
                         <div class="flex items-center gap-2">
                             <p class="font-semibold min-w-32">{{ 'Description' | translate : language.lang }}:</p>
                             <p>{{ language.lang == 'ar' ? product.descriptionAr : product.descriptionEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2 ">
+                            <p class="font-semibold min-w-32">{{ 'Stock (total)' | translate : language.lang }}:</p>
+                            <p [class]=" ( product.minQuantity == product.totalInventory ? 'bg-secondary/20 ':  product.minQuantity > product.totalInventory ? ' bg-danger/20 ':product.minQuantity < product.totalInventory ? ' bg-green-200 ':' bg-secondary/20 ') + ' rounded p-1'"><span class="font-semibold">
+                                {{ product.totalInventory || 0 }}</span>  {{ product.unit }}
+<!-- todo handle new product without stock balance -->
+                            </p>
+<!--                            todo add alert for quantity changes-->
                         </div>
                         <div class="flex items-center gap-2">
                             <p class="font-semibold min-w-32">{{ 'Unit' | translate : language.lang }}:</p>
@@ -73,6 +83,14 @@
                         <div class="flex items-center gap-2">
                             <p class="font-semibold min-w-32">{{ 'Country' | translate : language.lang }}:</p>
                             <p>{{ language.lang == 'ar' ? product.country.nameAr : product.country.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Machinery' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.machineryType?.nameAr : product.machineryType?.nameEn }}</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Machinery Model' | translate : language.lang }}:</p>
+                            <p>{{ language.lang == 'ar' ? product.machineryModel?.nameAr : product.machineryModel?.nameEn }}</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <p class="font-semibold min-w-32">{{ 'Is Original' | translate : language.lang }}:</p>
@@ -154,6 +172,31 @@
                             <p class="font-semibold min-w-32">{{ 'Minimum Quantity' | translate : language.lang }}:</p>
                             <p>{{ product.minQuantity }}</p>
                         </div>
+
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Sell Quantity Limit' | translate : language.lang }}
+                                :</p>
+                            <p>{{ product.sellQuantity + ' ' + ('items' | translate : language.lang) }} </p>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Sell individual rate' | translate : language.lang }}
+                                :</p>
+                            <p>{{ product.sellIndividual }}</p>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Buy Quantity Limit' | translate : language.lang }}
+                                :</p>
+                            <p>{{ product.buyQuantity + ' ' + ('items' | translate : language.lang) }}</p>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <p class="font-semibold min-w-32">{{ 'Buy individual rate' | translate : language.lang }}
+                                :</p>
+                            <p>{{ product.buyIndividual }}</p>
+                        </div>
+
                     </div>
                 </div>
                 <!--                Others -->
@@ -202,7 +245,7 @@
                                         [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
                             }
                         }
-<!--                        Alternatives-->
+                        <!--                        Alternatives-->
                         @if (selectedTab == 1) {
                             @if (product.alternatives.length > 0) {
                                 <app-one-product-table
@@ -217,7 +260,7 @@
                                         [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
                             }
                         }
-<!--                        Set items -->
+                        <!--                        Set items -->
                         @if (selectedTab == 2) {
                             @if (product.setItems.length > 0) {
                                 <app-one-product-table
@@ -232,25 +275,42 @@
                                         [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
                             }
                         }
-                        <!--                        Stock -->
+                        <!--                        Related -->
                         @if (selectedTab == 3) {
+                            @if (product.related.length > 0) {
+                                <app-one-product-table
+                                        [tableColumns]="tableColumns"
+                                        [language]="language.lang"
+                                        [products]="product.related"
+                                        (goToProduct)="goToItem($event)"
+                                />
+
+                            } @else {
+                                <app-empty-div
+                                        [noDataMessage]="'There is no data to show' | translate : language?.lang"/>
+                            }
+                        }
+                        <!--                        Stock -->
+                        @if (selectedTab == 4) {
                             @if (stock.length > 0) {
                                 <div class="overflow-x-auto w-full ">
-                                    @for(item of stock; track $index){
+                                    @for (item of stock; track $index) {
 
-                                    <div class="flex w-full gap-1.5 items-center justify-start  border-secondary/10 border-b my-2">
-                                        <div class="font-semibold">{{language.lang == "ar" ? item[0]['storeNameAr'] : item[0]['storeNameEn']  + ': ' }} ({{getStoreTotalStock(item)}}) </div>
-<!--                                        <div class="flex flex-col items-start justify-start gap-1">-->
-                                            @for(i of item; track $index){
+                                        <div class="flex w-full gap-1.5 items-center justify-start  border-secondary/10 border-b my-2">
+                                            <div class="font-semibold">{{ language.lang == "ar" ? item[0]['storeNameAr'] : item[0]['storeNameEn'] + ': ' }}
+                                                ({{ getStoreTotalStock(item) }})
+                                            </div>
+                                            <!--                                        <div class="flex flex-col items-start justify-start gap-1">-->
+                                            @for (i of item; track $index) {
                                                 <div class="flex gap-1 ms-3">
-                                                    <div class="flex gap-1 p-1.5 " >
-                                                    <div >{{language.lang == "ar" ? i['locationNameAr'] : i['locationNameEn'] }}</div>
-                                                        <div class="font-semibold rounded px-2 bg-secondary/5">{{i['quantity']}}</div>
+                                                    <div class="flex gap-1 p-1.5 ">
+                                                        <div>{{ language.lang == "ar" ? i['locationNameAr'] : i['locationNameEn'] }}</div>
+                                                        <div class="font-semibold rounded px-2 bg-secondary/5">{{ i['quantity'] }}</div>
                                                     </div>
                                                 </div>
                                             }
-<!--                                        </div>-->
-                                    </div>
+                                            <!--                                        </div>-->
+                                        </div>
                                     }
                                 </div>
 

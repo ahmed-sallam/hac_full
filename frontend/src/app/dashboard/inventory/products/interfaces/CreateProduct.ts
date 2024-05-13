@@ -11,6 +11,20 @@ export interface CreateProduct {
     mainBrand: number
     subBrand: number
     country: number
-    productSets:any
-    alternatives:any
+    productSets?: any | ProductSet[]
+    alternatives?: any,
+    related?: any,
+    machineryType: number,
+    machineryModel: number,
+    sellQuantity?: number,
+    sellIndividual?: number,
+    buyQuantity?: number,
+    buyIndividual?: number,
+}
+
+export interface ProductSet {
+    quantity: number
+    productId: number
+    productSetId: number
+    isRestricted: boolean
 }

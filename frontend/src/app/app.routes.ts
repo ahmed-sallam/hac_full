@@ -84,13 +84,25 @@ export const routes: Routes = [
         loadComponent: () => import('./dashboard/inventory/products/one-product/one-product.component').then((c)=>c.OneProductComponent)
       },
       {
+        path:'inventory/machinery',
+        loadComponent: () => import('./dashboard/inventory/machinery/machinery.component').then((c)=>c.MachineryComponent)
+      },
+      {
+        path:'inventory/machinery/create',
+        loadComponent: () => import('./dashboard/inventory/machinery/create-machine/create-machine.component').then((c)=>c.CreateMachineComponent)
+      },
+      {
+        path:'inventory/machinery/:id',
+        loadComponent: () => import('./dashboard/inventory/machinery/one-machine/one-machine.component').then((c)=>c.OneMachineComponent)
+      },
+      {
         path:'sales',
         loadComponent: () => import('./dashboard/sales/sales.component').then((c)=>c.SalesComponent)
       },
       {
         path:'purchases',
         loadComponent: () => import('./dashboard/purchases/purchases.component').then((c)=>c.PurchasesComponent)
-      }
+      },
     ]
   },
   {

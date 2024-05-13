@@ -3,32 +3,18 @@ server:
 spring:
   application:
     name: 'hac-erp'
-  datasource:
-    url: jdbc:postgresql://localhost:5432/hac
-#    url: jdbc:postgresql://hacdb:5432/hac
-#    url: jdbc:postgresql://15.185.253.101:5455/hac
-    username: hac
-    password: hac12536478
-#    username: postgres
-#    password: postgres
-#    driverClassName: org.postgresql.Driver
-#    username: sa
-#    password: ''
-#    url: jdbc:h2:./data/hac-erp
-#    driverClassName: org.h2.Driver
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-#        dialect: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
+  profiles:
+    active: dev
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
 springdoc:
   api-docs:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+  default-produces-media-type: application/json
 #  h2:
 #    console:
 #      enabled: true

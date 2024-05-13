@@ -1,6 +1,6 @@
 <div class="mb-5 max-w-md">
     <div class=" p-1.5  space-y-2 border rounded shadow drop-shadow">
-        <div class="p-4 border-b ">{{ 'Select Product Alternatives' | translate : language }}</div>
+        <div class="p-4 border-b ">{{ 'Select Product / s' | translate : language }}</div>
         <div class="w-full  flex items-center gap-1.5 justify-start   text-secondary/50">
             <div class="px-3 py-2   ">{{ '#'  }}</div>
             <div class="flex-1 w-full">{{ 'Product Number' | translate : language }}</div>
@@ -38,6 +38,23 @@
                       stroke-width="2"/>
             </svg>
         </div>
+
+        @if (showIsRestricted){
+
+            <div class="mb-5 max-w-96">
+                <label class="inline-flex items-center cursor-pointer">
+                    <input
+                            id="isRestricted"
+                            [(ngModel)]="isRestricted"
+                            type="checkbox" class="sr-only peer">
+                    <div
+                            class="relative w-11 h-6 bg-secondary/5 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-secondary/70 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-secondary/30 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-secondary/60 peer-checked:bg-primary/60"></div>
+                    <span class="ms-3 text-sm font-medium  ">{{ "Is Restricted" | translate : language }}</span>
+                </label>
+            </div>
+        }
+
+
         <div class="flex items-center justify-end w-full p-4">
             <button class="px-6 py-2 bg-primary text-white rounded-lg ml-4 border border-primary hover:bg-primary/70" (click)="saveProducts()">
                 {{ 'Save Alternatives'| translate : language}}

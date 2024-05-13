@@ -17,7 +17,7 @@ export interface BrandEntity {
     nameAr: string
     nameEn: string
     code: any
-    subBrands: SubBrand[]
+    subBrands: SubBrand[]|any
     isActive: boolean
     createdAt: string
     updatedAt?: string

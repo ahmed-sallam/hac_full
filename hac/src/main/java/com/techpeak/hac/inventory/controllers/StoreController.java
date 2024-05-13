@@ -5,6 +5,7 @@ import com.techpeak.hac.inventory.dtos.CreateStoreLocation;
 import com.techpeak.hac.inventory.dtos.StoreResponse;
 import com.techpeak.hac.inventory.services.StoreLocationService;
 import com.techpeak.hac.inventory.services.StoreService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/stores")
 @RequiredArgsConstructor
+@Tag(name = "stores")
 public class StoreController {
     private final StoreService storeService;
     private final StoreLocationService storeLocationService;

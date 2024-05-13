@@ -13,6 +13,7 @@ public interface ProductService {
 
     Page<ProductResponse> listWithPages(Pageable pageRequest, Boolean isActive, String number);
     List<ProductResponse> list( Boolean isActive, String number, Boolean exactMatch);
+    List<ProductResponse> listWithTotalInventory( Boolean isActive, String number);
 
     Product getProductOrThrow(Long id);
 

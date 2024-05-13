@@ -57,6 +57,7 @@ export class OneProductComponent implements OnInit {
         'Same Items',
         'Alternative',
         'Set Items',
+        'Related',
         'Stock'
     ]
     tableColumns: string[] = [
@@ -66,6 +67,7 @@ export class OneProductComponent implements OnInit {
         'Country',
         'Is Original',
         'Unit',
+        'Stock'
     ];
 
     selectedTab: number = 0;

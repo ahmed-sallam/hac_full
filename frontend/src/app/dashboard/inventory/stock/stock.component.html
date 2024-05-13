@@ -27,6 +27,7 @@
 
 
                 <div class="relative my-4 overflow-x-auto overflow-y-auto">
+
                     <table class="w-full text-sm text-left rtl:text-right">
                         <thead class="text-xs uppercase text-secondary/50">
                         <tr>
@@ -38,40 +39,109 @@
                         </tr>
                         </thead>
                         <tbody>
-                            @for (item of stock; track item.id) {
-
+                            @for (group of stockGrouped; track group[0]) {
                                 <tr
-                                        class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80 cursor-pointer"
+                                        class="bg-white border-b border-secondary/15 bg-secondary/30 hover:bg-secondary/50 text-secondary/80 cursor-pointer"
+
                                 >
-<!--                                        [routerLink]="'' + item.id"-->
+                                    <td class="px-6 py-4">
 
-                                    <td class="px-6 py-4">
-                                        {{ item.product.productNumber }}
+                                        {{ group[0] }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ language.lang == "ar" ? item.product.mainBrand.nameAr : item.product.mainBrand.nameEn }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ language.lang == "ar" ? item.product.subBrand.nameAr : item.product.subBrand.nameEn }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ language.lang == "ar" ? item.product.country.nameAr : item.product.country.nameEn }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ language.lang == "ar" ? item.store.nameAr : item.store.nameEn }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ item.location ? (language.lang == "ar" ? item.location.nameAr : item.location.nameEn): ''}}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ item.qunatity}}
                                     </td>
-
-
                                 </tr>
+                                @for (item of group[1]; track item.id) {
+                                    <tr
+                                            class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80 cursor-pointer"
+                                    >
+
+                                        <td class="px-6 py-4">
+                                            {{ item.product.productNumber }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ language.lang == "ar" ? item.product.mainBrand.nameAr : item.product.mainBrand.nameEn }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ language.lang == "ar" ? item.product.subBrand.nameAr : item.product.subBrand.nameEn }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ language.lang == "ar" ? item.product.country.nameAr : item.product.country.nameEn }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ language.lang == "ar" ? item.store.nameAr : item.store.nameEn }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ item.location ? (language.lang == "ar" ? item.location.nameAr : item.location.nameEn) : '' }}
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ item.qunatity }}
+                                        </td>
+
+
+                                    </tr>
+                                }
                             }
+
                         </tbody>
                     </table>
+
+
+                    <!--                    <table class="w-full text-sm text-left rtl:text-right">-->
+                    <!--                        <thead class="text-xs uppercase text-secondary/50">-->
+                    <!--                        <tr>-->
+                    <!--                            @for (col of tableColumns; track $index) {-->
+                    <!--                                <th scope="col" class="px-6 py-3 min-w-40">-->
+                    <!--                                    {{ col | translate : language.lang }}-->
+                    <!--                                </th>-->
+                    <!--                            }-->
+                    <!--                        </tr>-->
+                    <!--                        </thead>-->
+                    <!--                        <tbody>-->
+                    <!--                            @for (item of stock; track item.id) {-->
+
+                    <!--                                <tr-->
+                    <!--                                        class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80 cursor-pointer"-->
+                    <!--                                >-->
+                    <!--&lt;!&ndash;                                        [routerLink]="'' + item.id"&ndash;&gt;-->
+
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ item.product.productNumber }}-->
+                    <!--                                    </td>-->
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ language.lang == "ar" ? item.product.mainBrand.nameAr : item.product.mainBrand.nameEn }}-->
+                    <!--                                    </td>-->
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ language.lang == "ar" ? item.product.subBrand.nameAr : item.product.subBrand.nameEn }}-->
+                    <!--                                    </td>-->
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ language.lang == "ar" ? item.product.country.nameAr : item.product.country.nameEn }}-->
+                    <!--                                    </td>-->
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ language.lang == "ar" ? item.store.nameAr : item.store.nameEn }}-->
+                    <!--                                    </td>-->
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ item.location ? (language.lang == "ar" ? item.location.nameAr : item.location.nameEn): ''}}-->
+                    <!--                                    </td>-->
+                    <!--                                    <td class="px-6 py-4">-->
+                    <!--                                        {{ item.qunatity}}-->
+                    <!--                                    </td>-->
+
+
+                    <!--                                </tr>-->
+                    <!--                            }-->
+                    <!--                        </tbody>-->
+                    <!--                    </table>-->
                 </div>
 
                 <!--            If there are more than one page -->

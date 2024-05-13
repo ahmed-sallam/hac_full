@@ -69,7 +69,8 @@ export class SelectAlternativeModalComponent implements OnInit {
   // closeModal() {
   //
   // }
-
+  @Input() showIsRestricted: boolean = false;
+  isRestricted: boolean = false;
   saveProducts() {
     if (this.products.length < 1) {
       alert('Please add at least 1 products') // todo: change to toast
@@ -82,7 +83,7 @@ export class SelectAlternativeModalComponent implements OnInit {
       return
     }
 
-    console.log('products', this.products)
+    this.products = this.products.map((i)=> ({...i, isRestricted:this.isRestricted}))
     this.submitProductSet.emit(this.products)
   }
 }

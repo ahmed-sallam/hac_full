@@ -31,6 +31,7 @@ public class ProductSetServiceImpl implements ProductSetService {
         ProductSet entity = ProductSetMapper.toEntity(createProductSet);
         entity.setProduct(productService.getProductOrThrow(createProductSet.getProductId()));
         entity.setProductSet(productService.getProductOrThrow(createProductSet.getProductSetId()));
+        entity.setIsRestricted(createProductSet.getIsRestricted());
         productSetRepository.save(entity);
     }
 

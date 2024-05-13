@@ -24,6 +24,7 @@ public class AlternativesServicesImpl implements AlternativesServices {
         return alternatives;
     }
 
+
     @Override
     public void create(CreateAlternative alternative) {
         alternativesRepository.save(Alternative.builder()

@@ -8,10 +8,11 @@ import {LangState} from '../../../state/reducers/lang.reducer';
 import {Pageable} from "../stores/interfaces/StoreResponse";
 import {StockEntity, StockResponse} from "./interfaces/StockResponse";
 import {StockService} from "./stock.service";
-import {AsyncPipe, NgClass} from "@angular/common";
+import {AsyncPipe, KeyValuePipe, NgClass} from "@angular/common";
 import {MainContentComponent} from "../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../pipes/translate.pipe";
 import {SearchInputComponent} from "../../components/search-input/search-input.component";
+import {groupBy, flatMap} from "lodash-es";
 
 @Component({
     selector: 'app-stock',
@@ -22,7 +23,8 @@ import {SearchInputComponent} from "../../components/search-input/search-input.c
         TranslatePipe,
         RouterLink,
         SearchInputComponent,
-        NgClass
+        NgClass,
+        KeyValuePipe
     ],
     templateUrl: './stock.component.html',
     styles: ``
@@ -51,6 +53,7 @@ export class StockComponent implements OnInit {
     currentPage!: number;
     pageSize!: number;
     productNumber: string = '';
+    stockGrouped!: any | { key: StockEntity[] };//Dictionary<StockEntity[]> | Dictionary<Array<StockEntity[][keyof StockEntity[]]>>;
 
 
     ngOnInit(): void {
@@ -73,6 +76,10 @@ export class StockComponent implements OnInit {
                 this.stockResponse = data;
                 this.pageable = data.pageable;
                 this.stock = data.content;
+                this.stockGrouped = groupBy(data.content, "product.productNumber")
+                console.log(this.stockGrouped)
+                this.stockGrouped = flatMap(this.stockGrouped, (v, k)=>[[k, [...v]]])
+                console.log(this.stockGrouped)
             });
     }
 
@@ -106,4 +113,6 @@ export class StockComponent implements OnInit {
         });
         this.getData();
     }
+
+    protected readonly groupBy = groupBy;
 }

@@ -8,6 +8,7 @@ import com.techpeak.hac.inventory.mappers.ProductMapper;
 import com.techpeak.hac.inventory.models.Alternative;
 import com.techpeak.hac.inventory.models.Product;
 import com.techpeak.hac.inventory.models.ProductSet;
+import com.techpeak.hac.inventory.models.Related;
 import com.techpeak.hac.inventory.repositories.ProductRepository;
 import com.techpeak.hac.inventory.services.*;
 import jakarta.transaction.Transactional;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -31,17 +33,23 @@ public class ProductServiceImpl implements ProductService {
     private final CountryService countryService;
     private final ProductSetService productSetService;
     private final AlternativesServices alternativesServices;
+    private final RelatedServices relatedServices;
+    private final MachineryTypeService machineryTypeService;
+    private final MachineryModelService machineryModelService;
 
     @Override
     @Transactional
     public Long create(ProductRequest productRequest) {
         boolean isSet = productRequest.getUnit().equals(ProductUnit.SET);
         List<Map<String, String>> alternatives = productRequest.getAlternatives();
+        List<CreateRelated> relateds = productRequest.getRelated();
         Product entity = ProductMapper.toEntity(productRequest);
         entity.setMachinePart(machinePartService.getMachinePartOrThrow(productRequest.getMachinePart()));
         entity.setMainBrand(brandService.getBrandOrThrow(productRequest.getMainBrand()));
         entity.setSubBrand(brandService.getBrandOrThrow(productRequest.getSubBrand()));
         entity.setCountry(countryService.getCountryOrThrow(productRequest.getCountry()));
+        entity.setMachineryType(machineryTypeService.getOrElseThrow(productRequest.getMachineryType()));
+        entity.setMachineryModel((machineryModelService.getOrElseThrow(productRequest.getMachineryModel())));
         Product saved = productRepository.save(entity);
 
         if (isSet) {
@@ -63,13 +71,20 @@ public class ProductServiceImpl implements ProductService {
                 ;
             }
         }
+        if (!relateds.isEmpty()) {
+            for (CreateRelated related : relateds) {
+                relatedServices
+                        .create(new CreateRelated(entity.getProductNumber(), related.getProduct2Number(), related.getIsRestricted()));
+            }
+        }
         return saved.getId();
     }
 
     @Override
     public Page<ProductResponse> listWithPages(Pageable pageRequest, Boolean isActive, String number) {
-        Page<Product> all = productRepository.findByIsActiveAndProductNumberContainingIgnoreCase(isActive, number, pageRequest);
-        return all.map(ProductMapper::toDto);
+        Page<Object[]> all = productRepository.findByIsActiveAndProductNumberContainingIgnoreCase(isActive, number, pageRequest);
+        return all.map(ProductMapper::toDtoWithTotalInventory);
+
     }
 
     @Override
@@ -80,6 +95,13 @@ public class ProductServiceImpl implements ProductService {
                         : productRepository.searchByProductNumber(isActive, number);
         return all.stream().map(ProductMapper::toDto).toList();
     }
+    @Override
+    public List<ProductResponse> listWithTotalInventory(Boolean isActive, String number) {
+        List<Object[]> all =
+                 productRepository.findByIsActiveAndProductNumberContainingIgnoreCaseWithTotalInventory(isActive, number);
+
+        return all.stream().map(ProductMapper::toDtoWithTotalInventory).toList();
+    }
 
     @Override
     public Product getProductOrThrow(Long id) {
@@ -89,19 +111,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductResponse get(Long id) {
+    public   ProductResponse get(Long id) {
         Product product = getProductOrThrow(id);
-        ProductResponse dto = ProductMapper.toDto(product);
+        List<Object[]> o = this.productRepository.findProductWithTotalInventory(id);
+        ProductResponse dto = ProductMapper.toDtoWithTotalInventory(o.get(0));
 //        Set<ProductsSetResponse> productsSetResponses = product.getSetItems().stream().map(ProductSetMapper::toDto).collect(Collectors.toSet());
         List<ProductSetItemResponse> setProductsResponse = getProductSetItemResponses(product);
         dto.setSetItems(setProductsResponse);
         List<Alternative> alternatives = alternativesServices.listByProductNumber(product.getProductNumber());
         List<ProductResponse> alternativesProducts = alternatives.stream().filter(a -> !a.getProduct1Number().equals(product.getProductNumber()))
-                .map(a -> list(true, a.getProduct1Number(), true)).flatMap(List::stream).collect(Collectors.toList());
+                .map(a -> listWithTotalInventory(true, a.getProduct1Number())).flatMap(List::stream).collect(Collectors.toList());
         alternativesProducts.addAll(alternatives.stream().filter(a -> !a.getProduct2Number().equals(product.getProductNumber()))
-                .map(a -> list(true, a.getProduct2Number(), true)).flatMap(List::stream).toList());
+                .map(a -> listWithTotalInventory(true, a.getProduct2Number())).flatMap(List::stream).toList());
         dto.setAlternatives(alternativesProducts);
-        dto.setSameItems(list(true, product.getProductNumber(), true).stream().filter(p -> !p.getId().equals(id)).toList());
+        List<Related> relateds = relatedServices.listByProductNumber(product.getProductNumber());
+        List<ProductResponse> relatedProducts = relateds.stream().filter(a -> !a.getProduct1Number().equals(product.getProductNumber()))
+                .map(a -> listWithTotalInventory(true, a.getProduct1Number())).flatMap(List::stream).collect(Collectors.toList());
+        relatedProducts.addAll(relateds.stream().filter(a -> !a.getProduct2Number().equals(product.getProductNumber()))
+                .map(a -> listWithTotalInventory(true, a.getProduct2Number())).flatMap(List::stream).toList());
+        dto.setRelated(relatedProducts);
+        dto.setSameItems(listWithTotalInventory(true, product.getProductNumber()).stream().filter(p -> !p.getId().equals(id)).toList());
         return dto;
     }
 

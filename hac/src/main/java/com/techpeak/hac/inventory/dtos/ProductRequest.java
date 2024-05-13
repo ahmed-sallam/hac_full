@@ -35,6 +35,15 @@ public class ProductRequest {
     @Min(0)
     private Integer minQuantity;
 
+    @Min(0)
+    private Integer sellQuantity;
+    @Min(0)
+    private Integer sellIndividual;
+    @Min(0)
+    private Integer buyQuantity;
+    @Min(0)
+    private Integer buyIndividual;
+
     @NotNull
     private Boolean isOriginal;
 
@@ -53,6 +62,13 @@ public class ProductRequest {
     @NotNull
     private Long country;
 
+    @NotNull
+    private Long machineryType;
+    @NotNull
+    private Long machineryModel;
+
+
     private List<CreateProductSet> productSets;
     private List<Map<String, String>> alternatives;
+    private List<CreateRelated> related;
 }

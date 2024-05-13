@@ -19,9 +19,9 @@ public abstract class BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(updatable = false, name = "created_at")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt; // Better to use UTC
     @Column(insertable = false, name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt; // Better to use UTC
     @Column(name = "is_active")
     private Boolean isActive = true;
 
