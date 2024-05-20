@@ -29,5 +29,5 @@ public class Store  extends BaseEntity {
   @OneToMany(mappedBy = "store", fetch = FetchType.EAGER)
   @ToString.Exclude
   private Set<StoreLocation> locations= new HashSet<>();
-
+// todo add store type virtual or physical and related updates
 }

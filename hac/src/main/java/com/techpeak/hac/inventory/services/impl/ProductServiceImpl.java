@@ -17,10 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
         List<Map<String, String>> alternatives = productRequest.getAlternatives();
         List<CreateRelated> relateds = productRequest.getRelated();
         Product entity = ProductMapper.toEntity(productRequest);
+
         entity.setMachinePart(machinePartService.getMachinePartOrThrow(productRequest.getMachinePart()));
         entity.setMainBrand(brandService.getBrandOrThrow(productRequest.getMainBrand()));
         entity.setSubBrand(brandService.getBrandOrThrow(productRequest.getSubBrand()));
@@ -113,7 +111,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public   ProductResponse get(Long id) {
         Product product = getProductOrThrow(id);
-        List<Object[]> o = this.productRepository.findProductWithTotalInventory(id);
+        List<Object[]> o = this.productRepository.findByIdWithTotalInventory(id);
         ProductResponse dto = ProductMapper.toDtoWithTotalInventory(o.get(0));
 //        Set<ProductsSetResponse> productsSetResponses = product.getSetItems().stream().map(ProductSetMapper::toDto).collect(Collectors.toSet());
         List<ProductSetItemResponse> setProductsResponse = getProductSetItemResponses(product);

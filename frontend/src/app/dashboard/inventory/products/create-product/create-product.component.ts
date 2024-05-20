@@ -52,6 +52,8 @@ export class CreateProductComponent implements OnInit {
     productImageUrl!: string | any;
     partImageUrl!: string | any;
     private newProductId: number | any;
+    tempProductImage: any;
+    tempPartImage: any;
 
     ngOnInit(): void {
         this.getMachineParts()
@@ -269,9 +271,24 @@ export class CreateProductComponent implements OnInit {
     onProductImageChange($event: Event | any) {
         this.imageValidator($event.target.files[0]) ? this.formGroup.get('image')?.setErrors({'invalidFileType': true}) : this.formGroup.get('image')?.setErrors(null)
         console.log("onProductImageChange", $event.target.files[0]['type'])
+      this.loadProductImageToPreview($event.target.files[0])
         this.uploadImage($event.target.files[0], 'product')
     }
 
+    loadProductImageToPreview(file: File): void {
+        const reader: FileReader = new FileReader();
+         reader.onload = (e: any) => {
+             this.tempProductImage =  e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+    loadPartImageToPreview(file: File): void {
+        const reader: FileReader = new FileReader();
+         reader.onload = (e: any) => {
+             this.tempPartImage =  e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
     uploadImage(file: File, into: string) {
         this.filesService.uploadImage(file, 'products')
             .subscribe(
@@ -306,6 +323,7 @@ export class CreateProductComponent implements OnInit {
 
     onMachinePartImageChange($event: Event | any) {
         this.imageValidator($event.target.files[0]) ? this.formGroup.get('partImage')?.setErrors({'invalidFileType': true}) : this.formGroup.get('partImage')?.setErrors(null)
+        this.loadPartImageToPreview($event.target.files[0])
 
         console.log("onMachinePartImageChange", $event)
         this.uploadImage($event.target.files[0], 'part')

@@ -32,8 +32,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("isActive") boolean isActive,
             @Param("productNumber") String productNumber
     );
-    @Query("SELECT p, SUM(i.quantity) AS totalInventory FROM Product p LEFT JOIN Inventory i ON p.id = i.product.id WHERE p.id = :productId GROUP BY p.id")
-    List<Object[]> findProductWithTotalInventory(@Param("productId") Long productId);
+    @Query("SELECT p ,   COALESCE(SUM(i.quantity), 0)  AS totalInventory   FROM Product p LEFT JOIN FETCH Inventory i ON p.id = i.product.id WHERE p.id = :productId GROUP BY p.id")
+    List<Object[]> findByIdWithTotalInventory(@Param("productId") Long productId);
 
 
 

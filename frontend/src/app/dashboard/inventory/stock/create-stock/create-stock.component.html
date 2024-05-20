@@ -3,7 +3,7 @@
                       [noDataMessage]="'There is no data to show' | translate: language?.lang" [noData]="false">
         <div headerActions>
             <button
-                    (click)="cancelCreateStore()"
+                    (click)="cancelCreateStock()"
                     class="rounded-lg border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
                 {{ 'Cancel' | translate: language?.lang }}
             </button>
@@ -25,13 +25,19 @@
                             > {{ 'Product' | translate: language?.lang }}
                                 <span class="text-danger">*</span>
                             </label>
-                            <app-select-with-search
+<!--                            <app-select-with-search-->
+<!--                                    [language]="language.lang"-->
+<!--                                    (searchInput)="searchProducts($event)"-->
+<!--                                    [searchOptions]="productOptions$ | async"-->
+<!--                                    (selectedItem)="onItemSelected($event,'productId')"-->
+<!--                                    [product]="true"-->
+<!--                                    [inputValue]="productNumber$ | async"-->
+<!--                            />-->
+                            <app-select-product-with-search
                                     [language]="language.lang"
                                     (searchInput)="searchProducts($event)"
                                     [searchOptions]="productOptions$ | async"
-                                    (selectedItem)="onItemSelected($event,'productId')"
-                                    [product]="true"
-                                    [inputValue]="productNumber$ | async"
+                                    (selectedItem)="onItemSelected($event, 'productId')"
                             />
 
                             @if (formGroup.get('productId')?.touched && formGroup.get('productId')?.errors) {
@@ -41,59 +47,66 @@
                                 </p>
                             }
                         </div>
-                        <div class="mb-5 max-w-96">
-                            <label
-                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
-                            > {{ 'Store' | translate: language?.lang }}
-                                <span class="text-danger">*</span>
-                            </label>
-                            <app-select-with-search
-                                    [language]="language.lang"
-                                    (searchInput)="searchStores($event)"
-                                    [searchOptions]="storeOptions$ | async"
-                                    (selectedItem)="onItemSelected($event,'storeId')"
-                            />
-                            @if (formGroup.get('storeId')?.touched && formGroup.get('storeId')?.errors) {
-                                <p class="text-xs text-danger ">
-                                    {{ "Store" | translate : language.lang }}
-                                    {{ "has errors" | translate : language.lang }}
-                                </p>
-                            }
-                        </div>
-                        <div class="mb-5 max-w-96">
-                            <label
-                                    class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
-                            > {{ 'Location' | translate: language?.lang }}</label>
+                        @if (showStoreLocationQuantityInput){
+                           @if (showStoreInput){
+                               <div class="mb-5 max-w-96">
+                                   <label
+                                           class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                                   > {{ 'Store' | translate: language?.lang }}
+                                       <span class="text-danger">*</span>
+                                   </label>
+                                   <app-select-with-search
+                                           [language]="language.lang"
+                                           (searchInput)="searchStores($event)"
+                                           [searchOptions]="storeOptions"
+                                           (selectedItem)="onItemSelected($event,'storeId')"
 
-                            <app-select-with-search
-                                    [language]="language.lang"
-                                    [searchOptions]="selectedStore ? selectedStore.locations: []"
-                                    (selectedItem)="onItemSelected($event,'locationId')"
-                            />
+                                   />
+                                   @if (formGroup.get('storeId')?.touched && formGroup.get('storeId')?.errors) {
+                                       <p class="text-xs text-danger ">
+                                           {{ "Store" | translate : language.lang }}
+                                           {{ "has errors" | translate : language.lang }}
+                                       </p>
+                                   }
+                               </div>
+                           }
+                            @if (showLocationInput){
+                                <div class="mb-5 max-w-96">
+                                    <label
+                                            class="block mb-2 text-sm font-medium text-secondary/90 dark:text-white"
+                                    > {{ 'Location' | translate: language?.lang }}</label>
 
-                        </div>
-                        <div class="mb-5 max-w-96">
-                            <label
-                                    for="quantity"
-                                    class="block mb-2 text-sm font-medium text-secondary/90"
-                            >{{ "Product Number" | translate : language.lang }}
-                                <span class="text-danger">*</span>
-                            </label
-                            >
-                            <input
-                                    formControlName="quantity"
-                                    type="number"
-                                    min="0"
-                                    id="quantity"
-                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
-                            />
-                            @if (formGroup.get('quantity')?.touched && formGroup.get('quantity')?.errors) {
-                                <p class="text-xs text-danger ">
-                                    {{ "Quantity" | translate : language.lang }}
-                                    {{ "has errors" | translate : language.lang }}
-                                </p>
+                                    <app-select-with-search
+                                            [language]="language.lang"
+                                            [searchOptions]="selectedStore ? selectedStore.locations: []"
+                                            (selectedItem)="onItemSelected($event,'locationId')"
+                                    />
+
+                                </div>
                             }
-                        </div>
+                            <div class="mb-5 max-w-96">
+                                <label
+                                        for="quantity"
+                                        class="block mb-2 text-sm font-medium text-secondary/90"
+                                >{{ "Product Number" | translate : language.lang }}
+                                    <span class="text-danger">*</span>
+                                </label
+                                >
+                                <input
+                                        formControlName="quantity"
+                                        type="number"
+                                        min="0"
+                                        id="quantity"
+                                        class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                                />
+                                @if (formGroup.get('quantity')?.touched && formGroup.get('quantity')?.errors) {
+                                    <p class="text-xs text-danger ">
+                                        {{ "Quantity" | translate : language.lang }}
+                                        {{ "has errors" | translate : language.lang }}
+                                    </p>
+                                }
+                            </div>
+                        }
                     </div>
                     @if(selectedProduct){
 

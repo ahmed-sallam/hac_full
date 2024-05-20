@@ -90,20 +90,27 @@
                                     formControlName="image"
                                     class="block w-full text-sm  border-0 border-secondary/30 rounded-lg cursor-pointer bg-secondary/5 focus:outline-none "
                                     id="image" type="file"
+                                    accept="image/*"
                                     (change)="onProductImageChange($event)"
                             >
                             @if (formGroup.get('image')?.value != '' && formGroup.get('image')?.value != null) {
+                                <div class="flex w-full items-center justify-center pt-2">
+                                    <img [src]="tempProductImage" class="h-64 w-auto  "
+                                         alt="Product Image"/>
+                                </div>
                                 <div class="flex items-center justify-start gap-1.5 text-xs">
                                     @if (productImageUploadProgress == 100) {
                                         {{ "completed" | translate : language.lang }}
                                     } @else {
                                         {{ "uploading..." | translate : language.lang }}
                                     }
+
                                     <div class="w-full bg-secondary/10 rounded-full h-1.5 my-2  flex-1">
                                         <div class="bg-primary/80 h-1.5 rounded-full "
                                              [style]="'width: '+productImageUploadProgress+'%'"></div>
                                     </div>
                                 </div>
+
                             }
 
                             @if (formGroup.get('image')?.touched && formGroup.get('image')?.errors) {
@@ -120,9 +127,14 @@
                                     formControlName="partImage"
                                     class="block w-full text-sm  border-0 border-secondary/30 rounded-lg cursor-pointer bg-secondary/5 focus:outline-none "
                                     id="partImage" type="file"
+                                    accept="image/*"
                                     (change)="onMachinePartImageChange($event)"
                             >
                             @if (formGroup.get('partImage')?.value != '' && formGroup.get('partImage')?.value != null) {
+                                <div class="flex w-full items-center justify-center pt-2">
+                                    <img [src]="tempPartImage" class="h-64 w-auto   "
+                                         alt="Part Image"/>
+                                </div>
                                 <div class="flex items-center justify-start gap-1.5 text-xs">
                                     @if (partImageUploadProgress == 100) {
                                         {{ "completed" | translate : language.lang }}

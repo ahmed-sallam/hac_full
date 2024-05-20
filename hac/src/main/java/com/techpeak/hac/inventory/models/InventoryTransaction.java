@@ -33,6 +33,13 @@ public class InventoryTransaction extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private StoreLocation location;
+    @ManyToOne
+    @JoinColumn(name = "des_store_id", nullable = false)
+    private Store desiStore;
+
+    @ManyToOne
+    @JoinColumn(name = "des_location_id")
+    private StoreLocation desLocation;
 
     @Column( name = "transaction_date")
     private LocalDateTime transactionDate; // Better to use UTC

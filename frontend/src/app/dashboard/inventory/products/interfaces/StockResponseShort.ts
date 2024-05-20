@@ -7,4 +7,6 @@ export interface StockResponseShort {
     storeNameEn: string
     locationNameAr?: string
     locationNameEn?: string
+    storeId?: number
+    locationID?: number
 }

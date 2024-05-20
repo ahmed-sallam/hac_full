@@ -16,6 +16,10 @@ import {StoresService} from "../../stores/stores.service";
 import {StoreEntity, StoreResponse} from "../../stores/interfaces/StoreResponse";
 import {ProductsService} from "../../products/products.service";
 import {ListProductsResponse, ProductEntity} from "../../products/interfaces/ListProductsResponse";
+import {
+    SelectProductWithSearchComponent
+} from "../../products/create-product/select-product-with-search/select-product-with-search.component";
+import {StockResponseShort} from "../../products/interfaces/StockResponseShort";
 
 @Component({
     selector: 'app-create-stock',
@@ -25,7 +29,8 @@ import {ListProductsResponse, ProductEntity} from "../../products/interfaces/Lis
         MainContentComponent,
         TranslatePipe,
         ReactiveFormsModule,
-        SelectWithSearchComponent
+        SelectWithSearchComponent,
+        SelectProductWithSearchComponent
     ],
     templateUrl: './create-stock.component.html',
     styles: ``
@@ -40,13 +45,19 @@ export class CreateStockComponent implements OnInit {
     router: Router = inject(Router)
 
     storeService: StoresService = inject(StoresService)
-    storeOptions$!: Observable<StoreEntity[]>;
+    storeOptionsNotFiltered: StoreEntity[] = [];
+    storeOptions: StoreEntity[] = [];
     productService: ProductsService = inject(ProductsService)
     productOptions$!: Observable<ProductEntity[]>
     selectedStore!: StoreEntity;
     selectedProduct!: ProductEntity | any;
+    showStoreLocationQuantityInput: boolean = false;
 
     productNumber$ = new BehaviorSubject<string>('')
+    // storeId$ = new BehaviorSubject<string>('')
+    // locationId$ = new BehaviorSubject<string>('')
+     showLocationInput: boolean = true;
+     showStoreInput: boolean = true;
 
     ngOnInit(): void {
         this.initPageParams()
@@ -99,18 +110,19 @@ export class CreateStockComponent implements OnInit {
         this.router.navigate(['/dashboard/inventory/stock'])
     }
 
-    cancelCreateStore() {
+    cancelCreateStock() {
         this.formGroup.reset();
+        this.showStoreLocationQuantityInput = false;
         this.goBack()
     }
 
     getStores(
         page: number = 0,
-        size: number = 15,
+        size: number = 1000,
         name: string = '',
         isActive: boolean = true
     ) {
-        this.storeOptions$ = this.storeService.getStores(
+          this.storeService.getStores(
             page,
             size,
             name,
@@ -119,10 +131,15 @@ export class CreateStockComponent implements OnInit {
             map((res: StoreResponse) => {
                 return res.content
             }),
-            catchError((err) => {
+            catchError((err: any) => {
                 return []
             })
-        )
+        ).subscribe({
+            next: (res: any)=>{
+                this.storeOptions = res;
+                this.storeOptionsNotFiltered = res;
+            }
+        })
     }
 
     getProducts(
@@ -162,23 +179,67 @@ export class CreateStockComponent implements OnInit {
     }
 
     searchProducts($event: string) {
+        console.log("Search Event", $event)
         this.getProducts(0, 15, $event.trim(), true);
     }
 
     onItemSelected($event: any, key: string) {
         if ($event == null) {
-            this.selectedProduct = $event
-            this.productNumber$.next('')
-            return
-        }
+            if (key == 'productId'){
+                this.selectedProduct = $event;
+                this.showStoreLocationQuantityInput = false;
+                this.formGroup.reset()
+                this.formGroup.get('quantity')?.setValue(0)
+                this.productNumber$.next('');
+                return
+            }
+            if(key == 'storeId'){
+                this.formGroup.get('storeId')?.reset();
+                this.formGroup.get('locationId')?.reset();
+                this.showLocationInput = !this.showLocationInput
+                this.showStoreInput = !this.showStoreInput
+                setTimeout(()=>{
+                    this.showLocationInput = !this.showLocationInput
+                    this.showStoreInput = !this.showStoreInput
+
+                }, 1)
+            }
+            if(key == 'locationId'){
+                this.formGroup.get('locationId')?.reset()
+                this.showLocationInput = !this.showLocationInput
+                setTimeout(()=>{
+                    this.showLocationInput = !this.showLocationInput
+                }, 1)
+            }
+        }else{
         this.formGroup.get(key)?.setValue($event.id)
+        }
         if (key == 'storeId') {
             this.selectedStore = $event
-        } else if (key == 'productId') {
+        }
+
+        else if (key == 'productId') {
             console.log("eee", $event)
             this.selectedProduct = $event
             this.productNumber$.next($event.productNumber)
+            // filter stores
+            this.getProductStockInfo(this.selectedProduct.id)
         }
+    }
+
+    getProductStockInfo(id: number){
+        this.stockService.getProductStockShort(id).subscribe(
+            {
+                next:(res: StockResponseShort[])=>{
+                    this.filterStoreData(res);
+                    this.showStoreLocationQuantityInput = true;
+                }
+            }
+        )
+    }
+    filterStoreData (data : StockResponseShort[]){
+        const storeIds = data.map(i=>i.storeId)
+        this.storeOptions = this.storeOptionsNotFiltered.filter(i=>!storeIds.includes(i.id))
     }
 
 }

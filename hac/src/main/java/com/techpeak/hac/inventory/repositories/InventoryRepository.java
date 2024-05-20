@@ -24,6 +24,6 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
     ); // todo complete this and use it as main query to send data ready to frontend.
 
 
-    @Query("SELECT NEW com.techpeak.hac.inventory.dtos.InventoryShortResponse(i.id, i.quantity, i.store.nameAr, i.store.nameEn,  COALESCE(l.nameAr, ''), COALESCE(l.nameEn, '')) FROM Inventory i LEFT JOIN i.location l WHERE i.product.id = :id")
+    @Query("SELECT NEW com.techpeak.hac.inventory.dtos.InventoryShortResponse(i.id, i.quantity, i.store.nameAr, i.store.nameEn,  COALESCE(l.nameAr, ''), COALESCE(l.nameEn, ''), i.store.id, i.location.id) FROM Inventory i LEFT JOIN i.location l WHERE i.product.id = :id")
     List<InventoryShortResponse> findAllByProductShort(@Param("id") Long id);
 }

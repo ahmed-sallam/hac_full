@@ -2,13 +2,16 @@ server:
   port: 8080
 spring:
   application:
-    name: 'hac-erp'
+    name: "hac-erp"
   profiles:
     active: dev
-
   servlet:
     multipart:
       max-file-size: 50MB
+app:
+  jwt-secret: "KpmEgF/39ZnTZK63C5y7DOJKYN0f5Iwf0YwFYMQyyYY="
+  jwt-expiration-milliseconds: 604800000
+
 springdoc:
   api-docs:
     path: /api-docs

@@ -58,8 +58,8 @@
                         </div>
                         <div class="flex items-center gap-2 ">
                             <p class="font-semibold min-w-32">{{ 'Stock (total)' | translate : language.lang }}:</p>
-                            <p [class]=" ( product.minQuantity == product.totalInventory ? 'bg-secondary/20 ':  product.minQuantity > product.totalInventory ? ' bg-danger/20 ':product.minQuantity < product.totalInventory ? ' bg-green-200 ':' bg-secondary/20 ') + ' rounded p-1'"><span class="font-semibold">
-                                {{ product.totalInventory || 0 }}</span>  {{ product.unit }}
+                            <p [class]=" ( product.minQuantity == product.totalInventory ? 'bg-primary/20 ':  product.minQuantity > product.totalInventory ? ' bg-danger/20 ':product.minQuantity < product.totalInventory ? ' bg-green-200 ':' bg-secondary/20 ') + ' rounded p-1'"><span class="font-semibold">
+                                {{ product.totalInventory }}</span>  {{ product.unit  }}
 <!-- todo handle new product without stock balance -->
                             </p>
 <!--                            todo add alert for quantity changes-->
