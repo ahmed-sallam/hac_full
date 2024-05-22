@@ -1,3 +1,15 @@
+INSERT INTO users (id, username, password) VALUES
+    (1, 'admin','51327167245ea3fc5ec6c1a9ee44a4202647a30904cf86b6798080bf84912ed6');
+
+INSERT INTO roles (id, name) VALUES (1,'ADMIN'),(2,'USER');
+
+INSERT INTO users_roles VALUES (1,2);
+INSERT INTO purchase_expenses_titles (name_ar, name_en)
+VALUES
+    ('مصاريف شحن','Shipping expenses'),
+    ('مصاريف تخليص جمركي','Customs clearance expenses'),
+    ('مصاريف اخرى','Other expenses');
+
 INSERT INTO countries (name_ar, name_en)
 VALUES
     ('أفغانستان', 'Afghanistan'),

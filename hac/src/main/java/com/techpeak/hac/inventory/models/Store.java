@@ -16,10 +16,10 @@ import java.util.Set;
 @ToString
 @Builder
 public class Store  extends BaseEntity {
-  @org.hibernate.annotations.Index(name = "idx_name_ar", columnNames = "LOWER(name_ar)")
+  @org.hibernate.annotations.Index(name = "idx_stores_name_ar", columnNames = "LOWER(name_ar)")
   @Column(name = "name_ar", length = 25, nullable = false)
   private String nameAr;
-  @org.hibernate.annotations.Index(name = "idx_name_en", columnNames = "LOWER(name_en)")
+  @org.hibernate.annotations.Index(name = "idx_stores_name_en", columnNames = "LOWER(name_en)")
   @Column(name = "name_en", length = 25, nullable = false)
   private String nameEn;
   @Column(name = "city_ar", length = 25, nullable = false)

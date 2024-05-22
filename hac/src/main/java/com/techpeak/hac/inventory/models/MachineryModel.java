@@ -14,10 +14,10 @@ import lombok.*;
 @ToString
 @Builder
 public class MachineryModel extends BaseEntity {
-    @org.hibernate.annotations.Index(name = "idx_name_ar", columnNames = "LOWER(name_ar)")
+    @org.hibernate.annotations.Index(name = "idx_machinery_model_name_ar", columnNames = "LOWER(name_ar)")
     @Column(name = "name_ar", length = 25, nullable = false)
     private String nameAr;
-    @org.hibernate.annotations.Index(name = "idx_name_en", columnNames = "LOWER(name_en)")
+    @org.hibernate.annotations.Index(name = "idx_machinery_model_name_en", columnNames = "LOWER(name_en)")
     @Column(name = "name_en", length = 25, nullable = false)
     private String nameEn;
     @ManyToOne

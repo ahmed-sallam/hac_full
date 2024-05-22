@@ -6,5 +6,7 @@ public enum TransactionType {
     PURCHASE,
     ADJUSTMENT,
     PURCHASE_RETURN,
-    SALE_RETURN
+    SALE_RETURN,
+    OPENING_BALANCE,
+    SCRAP
 }

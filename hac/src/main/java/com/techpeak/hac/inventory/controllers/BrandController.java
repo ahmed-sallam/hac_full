@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/v1/brands")
 @RequiredArgsConstructor
@@ -19,13 +21,13 @@ public class BrandController {
     private final BrandService brandService;
 
     @PostMapping
-    public ResponseEntity<?> createBrand(@RequestBody CreateBrand createBrand) {
+    public ResponseEntity<String> createBrand(@RequestBody CreateBrand createBrand) {
         brandService.createBrand(createBrand);
-        return ResponseEntity.created(null).build();
+        return ResponseEntity.created(URI.create("")).build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBrand(@PathVariable("id") Long id, @RequestBody CreateBrand updateBrand) {
+    public ResponseEntity<String> updateBrand(@PathVariable("id") Long id, @RequestBody CreateBrand updateBrand) {
         brandService.updateBrand(id, updateBrand);
         return ResponseEntity.ok().build();
     }

@@ -9,24 +9,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
-
-@Entity(name = "MaterialRequest")
-@Table(name = "material_requests",
-        indexes = {
-        @Index(name = "idx_material_requests_number", columnList = "number"),
-                @Index(name = "idx_material_requests_status", columnList = "status")
-        })
+@Entity(name = "PurchaseOrder")
+@Table(name = "purchase_orders", indexes = {@Index(name = "idx_purchase_orders_number", columnList = "number")})
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
-public class MaterialRequest extends BaseEntity {
+public class PurchaseOrder extends BaseEntity {
     private String number;
     private String notes;
     private LocalDate date;
@@ -39,9 +32,19 @@ public class MaterialRequest extends BaseEntity {
     @OneToOne
     @JoinColumn(name="internal_ref_id", nullable = false)
     private InternalRef internalRef;
+    @Column(name = "supplier_ref")
+    private String supplierRef;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany
-    private Set<MaterialRequestLine> lines = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+    @OneToMany(mappedBy = "purchaseOrder")
+    private Set<PurchaseOrderLine> lines;
+
+    @Column(name = "sub_total")
+    private Double subTotal;
+    private Double vat;
+    private Double total;
 }

@@ -9,24 +9,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
-
-@Entity(name = "MaterialRequest")
-@Table(name = "material_requests",
-        indexes = {
-        @Index(name = "idx_material_requests_number", columnList = "number"),
-                @Index(name = "idx_material_requests_status", columnList = "status")
-        })
+@Entity(name = "PurchaseInvoice")
+@Table(name = "purchase_invoices")
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
-public class MaterialRequest extends BaseEntity {
+public class PurchaseInvoice extends BaseEntity {
     private String number;
     private String notes;
     private LocalDate date;
@@ -35,13 +28,30 @@ public class MaterialRequest extends BaseEntity {
     private RequestStatus status = RequestStatus.DRAFT;
     @ManyToOne
     @JoinColumn(name="store_id" , nullable = false)
-    private Store store;
+    private Store store;//
     @OneToOne
     @JoinColumn(name="internal_ref_id", nullable = false)
     private InternalRef internalRef;
+    @Column(name = "supplier_ref")
+    private String supplierRef;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany
-    private Set<MaterialRequestLine> lines = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
+
+    @OneToMany(mappedBy = "purchaseInvoice")
+    private Set<PurchaseInvoiceExpenses> expenses;
+
+    @OneToMany(mappedBy = "purchaseInvoice")
+    private Set<PurchaseInvoiceLine> lines;
+
+    @Column(name = "sub_total")
+    private Double subTotal;
+    private Double discount;
+    private Double vat;
+    @Column(name = "total_expenses")
+    private Double totalExpenses;
+    private Double total;
 }

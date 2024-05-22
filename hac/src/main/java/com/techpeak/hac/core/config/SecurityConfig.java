@@ -3,6 +3,8 @@ package com.techpeak.hac.core.config;
 import java.util.Arrays;
 import java.util.List;
 
+import com.techpeak.hac.core.security.JwtAuthenticationFilter;
+import com.techpeak.hac.core.services.impl.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,11 +16,10 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import com.techpeak.hac.core.services.impl.UserDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,14 +27,20 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private UserDetailsServiceImpl userDetailsServiceImpl;
-
+private final JwtAuthenticationFilter jwtAuthenticationFilter;
+private final CustomUserDetailsService customerUserDetailsService;
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(r -> r.anyRequest().permitAll());
+                .authorizeHttpRequests(r -> {
+                    r.requestMatchers("/api/v1/auth/**").permitAll();
+                    r.requestMatchers("/swagger-ui/**").permitAll();
+                    r.requestMatchers("/api-docs/**").permitAll();
+                    r.anyRequest().authenticated();
+                });
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

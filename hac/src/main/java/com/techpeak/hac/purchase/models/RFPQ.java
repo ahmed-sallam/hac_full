@@ -9,24 +9,20 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
-
-@Entity(name = "MaterialRequest")
-@Table(name = "material_requests",
+@Entity(name = "RFPQ")
+@Table(name = "rfpqs", 
         indexes = {
-        @Index(name = "idx_material_requests_number", columnList = "number"),
-                @Index(name = "idx_material_requests_status", columnList = "status")
-        })
+        @Index(name = "idx_rfpqs_number", columnList = "number"),
+        @Index(name = "idx_rfpqs_status", columnList = "status"),
+})
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
-public class MaterialRequest extends BaseEntity {
+public class RFPQ extends BaseEntity {
     private String number;
     private String notes;
     private LocalDate date;
@@ -35,13 +31,14 @@ public class MaterialRequest extends BaseEntity {
     private RequestStatus status = RequestStatus.DRAFT;
     @ManyToOne
     @JoinColumn(name="store_id" , nullable = false)
-    private Store store;
+    private Store store; //
     @OneToOne
     @JoinColumn(name="internal_ref_id", nullable = false)
     private InternalRef internalRef;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany
-    private Set<MaterialRequestLine> lines = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private Supplier supplier;
 }

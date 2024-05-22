@@ -20,8 +20,7 @@ public class AlternativesServicesImpl implements AlternativesServices {
 
     @Override
     public List<Alternative> listByProductNumber(String productNumber) {
-        List<Alternative> alternatives = alternativesRepository.findAllByProductNumberContainingIgnoreCase(productNumber);
-        return alternatives;
+        return alternativesRepository.findAllByProductNumberContainingIgnoreCase(productNumber);
     }
 
 

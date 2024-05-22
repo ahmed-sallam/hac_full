@@ -18,6 +18,15 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
   default-produces-media-type: application/json
+
+sonar:
+  host:
+    url: http://localhost:9000
+  login: admin
+  password: 12536478
+  token: "sqp_da73249874332bd976a2f7b8719f7f96d96a2c74"
+  projectKey: hac
+  projectName: hac
 #  h2:
 #    console:
 #      enabled: true

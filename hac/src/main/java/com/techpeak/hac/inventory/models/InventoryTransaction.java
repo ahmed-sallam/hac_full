@@ -40,7 +40,7 @@ public class InventoryTransaction extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "des_location_id")
     private StoreLocation desLocation;
-
+// todo status
     @Column( name = "transaction_date")
     private LocalDateTime transactionDate; // Better to use UTC
 }

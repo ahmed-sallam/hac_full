@@ -25,8 +25,11 @@ public class FileServiceImpl implements FileService {
             }
 
             String originalFilename = file.getOriginalFilename();
-            String newFilename = UUID.randomUUID().toString()
-                    + originalFilename.substring(originalFilename.lastIndexOf("."));
+            if (originalFilename == null) throw new AssertionError();
+            int beginIndex = originalFilename.lastIndexOf(".");
+            String newFilename = "";
+            newFilename = UUID.randomUUID()
+                    + originalFilename.substring(beginIndex);
 
             Files.copy(file.getInputStream(), this.root.resolve(newFilename));
             return newFilename;
