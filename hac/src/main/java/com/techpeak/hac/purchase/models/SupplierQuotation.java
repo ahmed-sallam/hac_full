@@ -3,8 +3,6 @@ package com.techpeak.hac.purchase.models;
 import com.techpeak.hac.core.models.BaseEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
-import com.techpeak.hac.inventory.models.Store;
-import com.techpeak.hac.purchase.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,19 +18,22 @@ import java.util.Set;
 @ToString
 @Builder
 public class SupplierQuotation extends BaseEntity {
+    @Column(name = "notes")
     private String notes;
     private LocalDate date;
     @Column(name = "sub_total")
     private Double subTotal;
+    @Column(name = "discount")
     private Double discount;
+    @Column(name = "vat")
     private Double vat;
     @Column(name = "total_expenses")
     private Double totalExpenses;
+    @Column(name = "total")
     private Double total;
+    @Column(name = "is_local")
+    private Boolean isLocal = true;
 
-//    @Column(name="status",nullable = false )
-//    @Enumerated(EnumType.STRING)
-//    private RequestStatus status = RequestStatus.DRAFT;
     @Column(name = "supplier_ref")
     private String supplierRef;
     @OneToOne
@@ -45,8 +46,10 @@ public class SupplierQuotation extends BaseEntity {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
     @OneToMany(mappedBy = "supplierQuotation")
+    @ToString.Exclude
     private Set<SupplierQuotationExpenses> expenses;
     @OneToMany(mappedBy = "supplierQuotation")
+    @ToString.Exclude
     private Set<SupplierQuotationLine> lines;
 
 }

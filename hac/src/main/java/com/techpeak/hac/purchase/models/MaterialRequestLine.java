@@ -17,12 +17,11 @@ public class MaterialRequestLine extends BaseEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     @Column(name = "notes")
-    private Integer notes;
+    private String notes;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 //    @Column(name = "current_quantity", nullable = false)
-//    private Integer currentQuantity;
-    // make it later if needed
+//    private Integer currentQuantity;  // make it later if needed
 
 }

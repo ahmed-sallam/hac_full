@@ -43,12 +43,11 @@ public class Product extends BaseEntity {
   private Integer buyQuantity = 0;
   @Column(name="buy_individual",nullable = false )
   private Integer buyIndividual = 0;
-//  @Column(name="sell_as",nullable = false )
-//  @Enumerated(EnumType.STRING)
-//  private SellType sellAs = SellType.PIECE;
   @Column(name="unit",nullable = false )
   @Enumerated(EnumType.STRING)
   private ProductUnit unit = ProductUnit.PIECE;
+  @Column(name = "price")
+  private Double price = 0d;
 
   @ManyToOne
   @JoinColumn(name="machine_part_id", nullable = false)

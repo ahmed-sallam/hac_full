@@ -25,7 +25,7 @@ public class SupplierQuotationLine extends BaseEntity {
     @Column(name = "total")
     private Double total = 0d;
     @Column(name = "notes")
-    private Integer notes;
+    private String notes;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

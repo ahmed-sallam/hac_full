@@ -45,7 +45,7 @@ public class User extends BaseEntity implements UserDetails {
         return roles.stream()
                 .flatMap(role -> role.getPrivileges().stream())
                 .map(privilege -> new SimpleGrantedAuthority(privilege.getName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

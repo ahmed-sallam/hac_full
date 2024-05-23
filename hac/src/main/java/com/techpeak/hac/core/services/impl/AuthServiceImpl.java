@@ -11,12 +11,14 @@ import com.techpeak.hac.core.repositories.UserRepository;
 import com.techpeak.hac.core.security.JwtUtilities;
 import com.techpeak.hac.core.services.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,10 +41,10 @@ public class AuthServiceImpl implements AuthService {
             User user = new User();
             user.setUsername(registerDto.getUsername());
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
-            userRepository.save(user);
-            String token = jwtUtilities.generateToken(registerDto.getUsername());
+             userRepository.save(user);
+//            String token = jwtUtilities.generateToken(registerDto.getUsername());
 
-            return new ResponseEntity<>(new BearerToken(token, "Bearer"), HttpStatus.CREATED);
+            return new ResponseEntity<>(new BearerToken("token", "Bearer"), HttpStatus.CREATED);
         }
     }
 
@@ -56,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        String token = jwtUtilities.generateToken(user.getUsername());
+        String token = jwtUtilities.generateToken((UserDetails) user);
 
 
         return new BearerToken(token, "Bearer");
