@@ -1,6 +1,7 @@
 package com.techpeak.hac.purchase.controllers;
 
 import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.core.utils.AuthUtils;
 import com.techpeak.hac.purchase.dtos.CreateMaterialRequest;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.models.MaterialRequest;
@@ -17,15 +18,19 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping(path="/api/v1/material_requests")
+@RequestMapping(path = "/api/v1/material_requests")
 @RequiredArgsConstructor
 @Validated
 public class MaterialRequestController {
-private final MaterialRequestService materialRequestService;
-    @PostMapping
-    public ResponseEntity<Resource> create(@Valid @RequestBody CreateMaterialRequest createMaterialRequest){
+    private final MaterialRequestService materialRequestService;
 
-        MaterialRequest materialRequest = materialRequestService.create(createMaterialRequest);
+    @PostMapping
+    public ResponseEntity<Object> create(
+            @Valid @RequestBody CreateMaterialRequest createMaterialRequest) {
+
+        User user = AuthUtils.getCurrentUser();
+        MaterialRequest materialRequest = materialRequestService
+                .create(createMaterialRequest, user);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -33,9 +38,12 @@ private final MaterialRequestService materialRequestService;
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
+
     @PatchMapping("/{id}")
-    public ResponseEntity<Resource> updateStatus(@RequestBody RequestStatus status, @PathVariable("id") Long id){
+    public ResponseEntity<Resource> updateStatus(@RequestBody RequestStatus status,
+                                                 @PathVariable("id") Long id) {
         materialRequestService.updateStatus(id, status);
         return ResponseEntity.ok().build();
     }
+
 }

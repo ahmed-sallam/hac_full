@@ -261,14 +261,18 @@ VALUES
     ('موقع 4', 'Location 4', 3, NOW(), NOW(), TRUE);
 
 -- Inserting data into the brands table
-INSERT INTO brands (name_ar, name_en, code, main_brand_id, created_at, updated_at, is_active)
+INSERT INTO brands (id, name_ar, name_en, code, main_brand_id, created_at, updated_at, is_active)
 VALUES
-    ('كاتربيلر', 'Caterpillar', 'CAT', NULL, NOW(), NOW(), TRUE),
-    ('كوماتسو', 'komatsu', 'KOM', NULL, NOW(), NOW(), TRUE),
-    ('دوسان', 'Doosan', 'Doos', NULL, NOW(), NOW(), TRUE),
+    (1,'كاتربيلر', 'Caterpillar', 'CAT', NULL, NOW(), NOW(), TRUE),
+    (2,'كوماتسو', 'komatsu', 'KOM', NULL, NOW(), NOW(), TRUE),
+    (3,'دوسان', 'Doosan', 'Doos', NULL, NOW(), NOW(), TRUE),
     ('أصلي', 'Genuine', 'GG', 1, NOW(), NOW(), TRUE),
     ('أصلي', 'Genuine', 'GG', 2, NOW(), NOW(), TRUE),
     ('أصلي', 'Genuine', 'GG', 3, NOW(), NOW(), TRUE),
     ('اف بي ديزل', 'FP-Diesel', 'FP', 1, NOW(), NOW(), TRUE),
     ('Dsg', 'Dsg', 'Dsg', 1, NOW(), NOW(), TRUE),
     ('Dsm', 'Dsm', 'Dsm', 3, NOW(), NOW(), TRUE);
+
+
+DELETE FROM brands
+WHERE id > 0;

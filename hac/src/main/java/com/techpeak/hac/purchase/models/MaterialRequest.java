@@ -9,7 +9,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -36,12 +35,24 @@ public class MaterialRequest extends BaseEntity {
     @ManyToOne
     @JoinColumn(name="store_id" , nullable = false)
     private Store store;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="internal_ref_id", nullable = false)
     private InternalRef internalRef;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany
+    @OneToMany(mappedBy = "materialRequest", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<MaterialRequestLine> lines = new HashSet<>();
+
+    public void addLine(MaterialRequestLine line){
+        lines.add(line);
+    }
+
+    public void setLines(Set<MaterialRequestLine> lines) {
+        this.lines = lines;
+        for (MaterialRequestLine line : lines) {
+            line.setMaterialRequest(this);
+        }
+    }
+
 }

@@ -1,8 +1,9 @@
 package com.techpeak.hac.core.services.impl;
 
-import com.techpeak.hac.core.dtos.BearerToken;
 import com.techpeak.hac.core.dtos.LoginDto;
+import com.techpeak.hac.core.dtos.LoginResponse;
 import com.techpeak.hac.core.dtos.RegisterDto;
+import com.techpeak.hac.core.dtos.UserDto;
 import com.techpeak.hac.core.exception.BadRequestException;
 import com.techpeak.hac.core.models.Role;
 import com.techpeak.hac.core.models.User;
@@ -11,7 +12,6 @@ import com.techpeak.hac.core.repositories.UserRepository;
 import com.techpeak.hac.core.security.JwtUtilities;
 import com.techpeak.hac.core.services.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.control.MappingControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,8 +33,16 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtilities jwtUtilities;
 
+    private static UserDto getUserDto(User user) {
+        return new UserDto().builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .isActive(user.getIsActive())
+                .build();
+    }
+
     @Override
-    public ResponseEntity<BearerToken> register(RegisterDto registerDto) {
+    public ResponseEntity<LoginResponse> register(RegisterDto registerDto) {
         if (Boolean.TRUE.equals(userRepository.existsByUsername(registerDto.getUsername()))) {
             throw new BadRequestException("username is already taken !");
         } else {
@@ -43,13 +51,13 @@ public class AuthServiceImpl implements AuthService {
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
              userRepository.save(user);
 //            String token = jwtUtilities.generateToken(registerDto.getUsername());
-
-            return new ResponseEntity<>(new BearerToken("token", "Bearer"), HttpStatus.CREATED);
+            UserDto userDto = getUserDto(user);
+            return new ResponseEntity<>(new LoginResponse("token", "Bearer", userDto), HttpStatus.CREATED);
         }
     }
 
     @Override
-    public BearerToken authenticate(LoginDto loginDto) {
+    public LoginResponse authenticate(LoginDto loginDto) {
        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getUsername(),
@@ -59,9 +67,8 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         String token = jwtUtilities.generateToken((UserDetails) user);
-
-
-        return new BearerToken(token, "Bearer");
+        UserDto userDto = getUserDto(user);
+        return new LoginResponse(token, "Bearer", userDto);
     }
 
     @Override

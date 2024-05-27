@@ -15,7 +15,7 @@ public class AuthUtils {
     User user = getCurrentUser();
     return user.getId();
 }
-    private static User getCurrentUser(){
+    public static User getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
             return (User) authentication.getPrincipal();

@@ -3,6 +3,7 @@ package com.techpeak.hac.inventory.models;
 import com.techpeak.hac.core.models.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,5 +32,5 @@ public class Brand extends BaseEntity{
   private Long mainBrand;
   @OneToMany(mappedBy = "mainBrand", fetch = FetchType.EAGER)
   private Set<Brand> subBrands = new HashSet<>();
-
 }
+
