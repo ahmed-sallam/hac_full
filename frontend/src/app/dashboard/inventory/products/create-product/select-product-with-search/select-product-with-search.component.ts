@@ -23,9 +23,7 @@ export class SelectProductWithSearchComponent {
   @Input() language: string = 'en';
 
   @Input() inputValue: string=''
-
-
-
+  protected readonly setTimeout = setTimeout;
 
   showOptionsd(s:boolean) {
     this.showOptions = s;
@@ -34,9 +32,10 @@ export class SelectProductWithSearchComponent {
   search($event: KeyboardEvent) {
     this.searchInput.emit(($event.target as HTMLInputElement).value)
   }
+
   onItemSeclected(item: any) {
     // this.inputValue = item.productNumber
-    this.inputValue = item.productNumber +' '+( this.language  == 'ar' ? (item.mainBrand.nameAr ) : (item.mainBrand.nameEn ))
+    this.inputValue = item.productNumber +' '+( this.language  == 'ar' ? (item.mainBrand.nameAr + ' - '+ item.subBrand.nameAr  ) : (item.mainBrand.nameEn + ' - '+ item.subBrand.nameEn ))
     this.selectedItem.emit(item)
   }
 
@@ -45,11 +44,14 @@ export class SelectProductWithSearchComponent {
     this.selectedItem.emit(null)
   }
 
-  protected readonly setTimeout = setTimeout;
-
   fOut() {
     setTimeout(() => {
       this.showOptions = false
     }, 100)
+  }
+
+  hideAndSelect(item:any) {
+    this.onItemSeclected(item)
+    this.showOptionsd(false);
   }
 }

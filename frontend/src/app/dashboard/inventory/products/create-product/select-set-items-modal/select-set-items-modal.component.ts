@@ -1,7 +1,18 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnInit,
+    Output
+} from '@angular/core';
 import {TranslatePipe} from "../../../../../pipes/translate.pipe";
-import {SelectProductWithSearchComponent} from "../select-product-with-search/select-product-with-search.component";
-import {SelectWithSearchComponent} from "../select-with-search/select-with-search.component";
+import {
+    SelectProductWithSearchComponent
+} from "../select-product-with-search/select-product-with-search.component";
+import {
+    SelectWithSearchComponent
+} from "../select-with-search/select-with-search.component";
 import {AsyncPipe} from "@angular/common";
 import {map, Observable} from "rxjs";
 import {ProductEntity} from "../../interfaces/ListProductsResponse";
@@ -23,19 +34,17 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     styles: ``
 })
 export class SelectSetItemsModalComponent implements OnInit {
-    ngOnInit(): void {
-        this.addNewField();
-    }
     isRestricted: boolean = false;
     productsService: ProductsService = inject(ProductsService)
-
     @Output() hideModal: EventEmitter<any> = new EventEmitter<any>()
     @Output() submitProductSet: EventEmitter<any> = new EventEmitter<any>()
     @Input() language!: string;
-
-
     products: any[] = []
     products$!: Observable<ProductEntity[]> | any;
+
+    ngOnInit(): void {
+        this.addNewField();
+    }
 
     addNewField() {
         this.products.push({
@@ -52,7 +61,7 @@ export class SelectSetItemsModalComponent implements OnInit {
     onItemSelected($event: any, index: number) {
         console.log('item selected', $event)
         this.products[index].productId = $event.id
-        this.products[index].product = $event.productNumber + ' ' + (this.language == 'ar' ? ($event.mainBrand.nameAr) : ($event.mainBrand.nameEn))
+        this.products[index].product = $event.productNumber + ' ' + (this.language == 'ar' ? ($event.subBrand.nameAr) : ($event.subBrand.nameEn))
         // this.products[index].quantity = $event.quantity
         this.products$ = null
     }

@@ -4,7 +4,7 @@
         >
             <ul class="relative">
                 @for (item of searchOptions; track item['id']) {
-                    <li (click)="showOptionsd(false); onItemSeclected(item)"
+                    <li (click)="hideAndSelect(item)"
                         class="px-4 py-2.5 border-b hover:bg-secondary/5">
                         {{ item['productNumber'] }}
                         {{ ' - ' }}
@@ -16,9 +16,9 @@
             </ul>
         </div>
     }
-    <input (click)="showOptionsd(true)" (keyup)="search($event)" (focusout)="fOut()"
-           [value]="inputValue"
+    <input (click)="showOptionsd(true)" (focusout)="fOut()" (keyup)="search($event)"
            [placeholder]="'Enter Product Number' | translate : language"
+           [value]="inputValue"
            class="bg-secondary/5 border-0  text-secondary/90 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " type="text">
     <div class="absolute end-2 top-2">
 

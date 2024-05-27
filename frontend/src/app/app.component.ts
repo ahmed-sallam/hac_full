@@ -8,6 +8,7 @@ import {ToastComponent} from "./toast/toast.component";
 import {Observable} from "rxjs";
 import {ToastService} from "./toast/toast.service";
 import {initFlowbite} from "flowbite";
+import * as AuthActions from "./state/actions/auth.actions"
 
 @Component({
     selector: 'app-root',
@@ -17,16 +18,17 @@ import {initFlowbite} from "flowbite";
     styles: [],
 })
 export class AppComponent implements OnInit {
-    ngOnInit(): void {
-        initFlowbite();
-    }
-
     store = inject(Store<State>)
     toastService = inject(ToastService)
     selectLanguage$ = this.store.select(selectLanguage)
     showWarningToast$: Observable<boolean> = this.toastService.warning;
     showErrorToast$: Observable<boolean> = this.toastService.error;
     showSuccessToast$: Observable<boolean> = this.toastService.success;
+
+    ngOnInit(): void {
+        initFlowbite();
+        this.store.dispatch(AuthActions.initAuth());
+    }
 
 
 }

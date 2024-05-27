@@ -1,33 +1,52 @@
 <div class="w-full h-20 p-4 fixed top-0 left-0 right-0 flex items-center justify-between z-10 shadow"
      style="background-color: #fff">
-  <div class="flex items-center">
-      @if (showSidebar$ | async){
+    <div class="flex items-center">
+        @if (showSidebar$ | async) {
 
-    <svg
-            (click)="dashboardService.sidebarHide()"
-            class="w-6 h-6 text-secondary/80 cursor-pointer ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-         fill="none" viewBox="0 0 24 24">
-      <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
-    </svg>
-      } @else {
-          <svg
-                  (click)="dashboardService.sidebarShow()"
-                  class="w-6 h-6 text-secondary/80 cursor-pointer ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                  fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
-          </svg>
-      }
-    <img ngSrc="assets/images/logo.png" alt="High Ability Company" height="76" width="300" class="w-36 ms-8" priority/>
-  </div>
-  <div class="flex items-center">
-    <svg
-            (click)="changeLanguage(language.lang =='en' ? 'ar':'en', language.dir=='rtl'?'ltr':'rtl')"
-            class="w-6 h-6 text-secondary/80 me-6 cursor-pointer"  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-      <path stroke-linecap="round" stroke-linejoin="round" d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802" />
-    </svg>
-    <svg class="w-6 h-6 text-secondary/80 me-2 cursor-pointer" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a9 9 0 0 0 5-1.5 4 4 0 0 0-4-3.5h-2a4 4 0 0 0-4 3.5 9 9 0 0 0 5 1.5Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-    </svg>
-  </div>
+            <svg
+                    (click)="dashboardService.sidebarHide()"
+                    class="w-6 h-6 text-secondary/80 cursor-pointer ms-2"
+                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round"
+                      stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
+            </svg>
+        } @else {
+            <svg
+                    (click)="dashboardService.sidebarShow()"
+                    class="w-6 h-6 text-secondary/80 cursor-pointer ms-2"
+                    aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round"
+                      stroke-width="2" d="M5 7h14M5 12h14M5 17h10"/>
+            </svg>
+        }
+        <img alt="High Ability Company" class="w-36 ms-8" height="76"
+             ngSrc="assets/images/logo.png" priority width="300"/>
+    </div>
+    <div class="flex items-center">
+        <svg
+                (click)="changeLanguage(language.lang =='en' ? 'ar':'en', language.dir=='rtl'?'ltr':'rtl')"
+                class="w-6 h-6 text-secondary/80 me-6 cursor-pointer"
+                fill="none" stroke="currentColor" stroke-width="1.5"
+                viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="m10.5 21 5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 0 1 6-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C11.176 10.658 7.69 15.08 3 17.502m9.334-12.138c.896.061 1.785.147 2.666.257m-4.589 8.495a18.023 18.023 0 0 1-3.827-5.802"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div *ngIf="user$ | async as user" class="flex items-center justify-center min-w-14 h-14 rounded-full bg-primary text-white text-lg font-bold" id="avatar">
+            {{ user.username }}
+        </div>
+
+
+<!--            <svg aria-hidden="true"-->
+<!--                 class="w-6 h-6 text-secondary/80 me-2 cursor-pointer"-->
+<!--                 fill="none" viewBox="0 0 24 24"-->
+<!--                 xmlns="http://www.w3.org/2000/svg">-->
+<!--                <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a9 9 0 0 0 5-1.5 4 4 0 0 0-4-3.5h-2a4 4 0 0 0-4 3.5 9 9 0 0 0 5 1.5Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"-->
+<!--                      stroke="currentColor" stroke-linecap="round"-->
+<!--                      stroke-linejoin="round" stroke-width="2"/>-->
+<!--            </svg>-->
+
+    </div>
 
 </div>

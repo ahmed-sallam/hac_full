@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {DashHomeComponent} from "./dashboard/dash-home/dash-home.component";
+import {AuthGuard} from "./login/auth.guard";
 
 export const routes: Routes = [
   {
@@ -96,6 +97,10 @@ export const routes: Routes = [
         loadComponent: () => import('./dashboard/inventory/machinery/one-machine/one-machine.component').then((c)=>c.OneMachineComponent)
       },
       {
+        path:'inventory/replenishment',
+        loadComponent: () => import('./dashboard/inventory/replenishment/replenishment.component').then((c)=>c.ReplenishmentComponent)
+      },
+      {
         path:'sales',
         loadComponent: () => import('./dashboard/sales/sales.component').then((c)=>c.SalesComponent)
       },
@@ -103,7 +108,8 @@ export const routes: Routes = [
         path:'purchases',
         loadComponent: () => import('./dashboard/purchases/purchases.component').then((c)=>c.PurchasesComponent)
       },
-    ]
+    ],
+    canActivate:[AuthGuard]
   },
   {
     path:'login',

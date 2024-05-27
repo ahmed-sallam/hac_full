@@ -6,16 +6,31 @@ import {selectLanguage} from "../../../../state/selectors/lang.selectors";
 import {StockService} from "../stock.service";
 import {BehaviorSubject, catchError, map, Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AsyncPipe} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
-import {SelectWithSearchComponent} from "../../products/create-product/select-with-search/select-with-search.component";
+import {
+    SelectWithSearchComponent
+} from "../../products/create-product/select-with-search/select-with-search.component";
 import {StoresService} from "../../stores/stores.service";
-import {StoreEntity, StoreResponse} from "../../stores/interfaces/StoreResponse";
+import {
+    StoreEntity,
+    StoreResponse
+} from "../../stores/interfaces/StoreResponse";
 import {ProductsService} from "../../products/products.service";
-import {ListProductsResponse, ProductEntity} from "../../products/interfaces/ListProductsResponse";
+import {
+    ListProductsResponse,
+    ProductEntity
+} from "../../products/interfaces/ListProductsResponse";
 import {
     SelectProductWithSearchComponent
 } from "../../products/create-product/select-product-with-search/select-product-with-search.component";
@@ -58,24 +73,6 @@ export class CreateStockComponent implements OnInit {
     // locationId$ = new BehaviorSubject<string>('')
      showLocationInput: boolean = true;
      showStoreInput: boolean = true;
-
-    ngOnInit(): void {
-        this.initPageParams()
-    }
-
-
-    private initPageParams() {
-        this.activeRouter.queryParams.subscribe((params) => {
-            const productId = params['productId']
-            if (productId) {
-                this.getOneProduct(productId)
-            }
-        });
-        this.getStores()
-        this.getProducts()
-    }
-
-
     formGroup: FormGroup = new FormGroup({
         productId: new FormControl('', [Validators.required
         ]),
@@ -85,6 +82,9 @@ export class CreateStockComponent implements OnInit {
 
     });
 
+    ngOnInit(): void {
+        this.initPageParams()
+    }
 
     onSubmitForm() {
         this.formGroup.markAllAsTouched()
@@ -99,11 +99,9 @@ export class CreateStockComponent implements OnInit {
             },
             error: (r) => {
                 this.toastService.showErrorToast()
-
             }
         })
     }
-
 
     goBack() {
         // window.history.back();
@@ -237,9 +235,21 @@ export class CreateStockComponent implements OnInit {
             }
         )
     }
+
     filterStoreData (data : StockResponseShort[]){
         const storeIds = data.map(i=>i.storeId)
         this.storeOptions = this.storeOptionsNotFiltered.filter(i=>!storeIds.includes(i.id))
+    }
+
+    private initPageParams() {
+        this.activeRouter.queryParams.subscribe((params) => {
+            const productId = params['productId']
+            if (productId) {
+                this.getOneProduct(productId)
+            }
+        });
+        this.getStores()
+        this.getProducts()
     }
 
 }

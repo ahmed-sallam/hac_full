@@ -1,1 +1,216 @@
-<p>replinshment works!</p>
+@if (selectLanguage$ | async; as language) {
+    <app-main-content [language]="language"
+                      [headerText]="'Add Replenishment' | translate: language?.lang"
+                      [noDataMessage]="'There is no data to show' | translate: language?.lang"
+                      [noData]="false">
+        <div headerActions>
+            <button
+                    (click)="cancelCreateReplenishment()"
+                    class="rounded-lg border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
+                {{ 'Cancel' | translate: language?.lang }}
+            </button>
+            <button
+                    (click)="onSubmitForm()"
+                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                {{ 'Save' | translate: language?.lang }}
+            </button>
+            <!--            Delete all lines active when there are some product lines-->
+            <!--            <button-->
+            <!--                    (click)="onSubmitForm()"-->
+            <!--                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">-->
+            <!--                {{ 'Save' | translate: language?.lang }}-->
+            <!--            </button>-->
+        </div>
+
+        <div contentWithData class="h-full min-h-max w-full p-8 relative">
+
+            <form [formGroup]="formGroup">
+                <button
+                        class="rounded-lg bg-mustard text-white font-medium w-60 p-4  my-1 hover:bg-mustard/70">
+                    {{ 'Select Auto Fill' | translate: language?.lang }}
+                </button>
+                <div class="flex w-full items-start justify-start gap-1">
+                    <div class="flex flex-col max-w-md w-full">
+
+                        <div class="mb-5 max-w-96 w-full mt-2">
+                            <label
+                                    for="date"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Date" | translate : language.lang }}
+                                <span class="text-danger">*</span></label
+                            >
+                            <input
+                                    formControlName="date"
+                                    type="date"
+                                    id="date"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            />
+                            @if (formGroup.get('date')?.touched && formGroup.get('date')?.errors) {
+                                <p class="text-xs text-danger font-light">
+                                    {{ "Date" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                        <div class="mb-5 max-w-96 w-full mt-2">
+                            <label
+
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Store" | translate : language.lang }}
+                                <span class="text-danger">*</span></label
+                            >
+                            <app-select-with-search
+                                    [language]="language.lang"
+                                    (searchInput)="searchStores($event)"
+                                    [searchOptions]="storeOptions"
+                                    (selectedItem)="onStoreSelected($event)"
+
+                            />
+                            <!--                            <input-->
+                            <!--                                    formControlName="store"-->
+                            <!--                                    type="text"-->
+                            <!--                                    id="store"-->
+                            <!--                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "-->
+                            <!--                            />-->
+                            @if (formGroup.get('store')?.touched && formGroup.get('store')?.errors) {
+                                <p class="text-xs text-danger font-light">
+                                    {{ "Store" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                    </div>
+                    <div class="flex flex-col max-w-md w-full ">
+                        <div class="mb-5 max-w-96 w-full mt-2">
+                            <label
+                                    for="Notes"
+                                    class="block mb-2 text-sm font-medium text-secondary/90"
+                            >{{ "Notes" | translate : language.lang }}
+                            </label>
+                            <textarea
+                                    rows="6"
+                                    formControlName="notes"
+                                    id="notes"
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                            ></textarea>
+                            @if (formGroup.get('notes')?.touched && formGroup.get('notes')?.errors) {
+                                <p class="text-xs text-danger font-light">
+                                    {{ "Notes" | translate : language.lang }}
+                                    {{ "has errors" | translate : language.lang }}
+                                </p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full   rounded shadow-accent shadow p-2 mt-4"
+                     formArrayName="lines">
+                    <!--                Lines Header -->
+                    <div class="w-full  flex items-center gap-1.5 justify-start   text-secondary/50">
+                        <div class="px-3 py-2   ">{{ '#' }}</div>
+                        <div class=" w-[350px]">{{ 'Product' | translate : language }}</div>
+                        <div class=" w-[140px]">{{ 'Quantity' | translate : language }}</div>
+                        <div class=" w-[350px]">{{ 'Notes' | translate : language }}</div>
+                        <div class=" w-[50px]">{{ 'Action' | translate : language }}</div>
+                    </div>
+                    <!--                End Lines Header-->
+                    @if (formGroup.get('lines')) {
+
+                        @for (product of lines.controls; track $index) {
+                            <!--todo change row on error-->
+                            <div class="w-full  flex items-center gap-1.5 justify-start  mt-1 "
+                                 [formGroupName]="$index">
+                                <div class="px-3 py-2 rounded bg-secondary/5 ">{{ $index + 1 }}</div>
+                                <div class="w-[350px]">
+                                    <app-select-product-with-search
+                                            [language]="language.lang"
+                                            (searchInput)="searchProduct($event)"
+                                            [searchOptions]="products$ | async"
+                                            (selectedItem)="onItemSelected($event, $index)"
+                                    />
+
+                                </div>
+                                <div class=" w-[140px]">
+                                    <input
+                                            [formControlName]="'quantity'"
+                                            type="number"
+                                            min="1"
+                                            id="quantity"
+                                            class="bg-accent/5 border-0
+                                     text-secondary/70 text-sm rounded-lg focus:border-0
+                                     ring-transparent block w-full p-2.5  ring-0"
+                                            [placeholder]="'Quantity' | translate : language"
+                                    />
+
+
+                                </div>
+                                <div class=" w-[350px]">
+                                    <input
+                                            [formControlName]="'notes'"
+                                            type="text"
+                                            min="1"
+                                            class="bg-accent/5 border-0
+                                     text-secondary/70 text-sm rounded-lg focus:border-0
+                                     ring-transparent block w-full p-2.5  ring-0"
+                                            [placeholder]="'Notes' | translate : language"
+                                    />
+
+                                </div>
+                                <div class=" w-[50px]">
+                                    @if (lines.length > 1) {
+
+                                        <svg class="w-8 h-8 text-danger/70 cursor-pointer"
+                                             (click)="removeItem($index)"
+                                             aria-hidden="true"
+                                             xmlns="http://www.w3.org/2000/svg"
+                                             width="24" height="24"
+                                             fill="currentColor"
+                                             viewBox="0 0 24 24">
+                                            <path fill-rule="evenodd"
+                                                  d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    }
+                                </div>
+                            </div>
+                            <div class="w-full  flex items-center gap-1.5 justify-start  mt-0.5 "
+                            >
+                                <div class="w-[37px]   "></div>
+                                <div class="w-[350px]">
+                                    @if (lines.at($index).get('product')?.touched && lines.at($index).get('product')?.errors) {
+                                        <p class="text-xs text-danger font-light">
+                                            {{ "Product" | translate : language.lang }}
+                                            {{ "has errors" | translate : language.lang }}
+                                        </p>
+                                    }</div>
+                                <div class="w-[140px]">
+                                    @if (lines.at($index).get('quantity')?.touched && lines.at($index).get('quantity')?.errors) {
+                                        <p class="text-xs text-danger font-light">
+                                            {{ "Quantity" | translate : language.lang }}
+                                            {{ "has errors" | translate : language.lang }}
+                                        </p>
+                                    }</div>
+                                <div class="w-[350px]"></div>
+                                <div class="w-[50px]"></div>
+
+                            </div>
+                        }
+                    }
+                    <div (click)="addNewField()"
+                         class="p-2 cursor-pointer bg-secondary/5 w-fit rounded mt-2">
+                        <svg aria-hidden="true"
+                             class="w-6 h-6 text-gray-800 dark:text-white"
+                             fill="none" height="24" viewBox="0 0 24 24"
+                             width="24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5 12h14m-7 7V5" stroke="currentColor"
+                                  stroke-linecap="round" stroke-linejoin="round"
+                                  stroke-width="2"/>
+                        </svg>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </app-main-content>
+}

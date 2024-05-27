@@ -9,22 +9,30 @@
           width="300"
           height="76"
           alt="High Apility Company"
+          priority
         />
       </div>
-      <form (ngSubmit)="onSubmit()" #form="ngForm" class="mt-6">
+      <form (ngSubmit)="onSubmit()" [formGroup]="formGroup" class="mt-6">
         <div class="mb-5">
           <label
-            for="email"
+            for="username"
             class="block mb-2 text-sm font-medium text-secondary/90"
-          >{{ "Email" | translate : language.lang }}</label
+          >{{ "Username" | translate : language.lang }}</label
           >
           <input
-            type="email"
-            id="email"
+            type="username"
+            id="username"
             class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
-            placeholder="name@flowbite.com"
+            placeholder="username"
             required
+            formControlName="username"
           />
+            @if (formGroup.get('username')?.touched && formGroup.get('username')?.errors) {
+                <p class="text-xs text-danger font-light">
+                    {{ "Username" | translate : language.lang }}
+                    {{ "has errors" | translate : language.lang }}
+                </p>
+            }
         </div>
         <div class="mb-5">
           <label
@@ -37,7 +45,14 @@
             id="password"
             class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
             required
+            formControlName="password"
           />
+            @if (formGroup.get('password')?.touched && formGroup.get('password')?.errors) {
+                <p class="text-xs text-danger font-light">
+                    {{ "Password" | translate : language.lang }}
+                    {{ "has errors" | translate : language.lang }}
+                </p>
+            }
         </div>
         <div class="w-full">
           <button

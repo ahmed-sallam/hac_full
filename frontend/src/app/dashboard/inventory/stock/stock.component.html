@@ -7,6 +7,12 @@
     >
         <div headerActions>
             <button
+                    [routerLink]="['/dashboard/inventory/replenishment']"
+                    class="w-max p-4 my-1 font-medium text-secondary rounded-lg bg-secondary/30 ms-3 hover:bg-primary/90 hover:text-white"
+            >
+                {{ "Add Replenishment" | translate : language.lang }}
+            </button>
+            <button
                     [routerLink]="'create'"
                     class="w-max p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70"
             >
