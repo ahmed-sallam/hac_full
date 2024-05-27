@@ -41,7 +41,7 @@ public class StoreController {
 
     @GetMapping
     public ResponseEntity<Page<StoreResponse>> list(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                    @RequestParam(value = "size", defaultValue = "15") Integer size,
+                                                    @RequestParam(value = "size", defaultValue = "80") Integer size,
                                                     @RequestParam(value = "isActive", defaultValue = "true") Boolean isActive,
                                                     @RequestParam(value = "name", defaultValue = "") String name
     ) {

@@ -32,7 +32,7 @@ public class MachinePartController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<MachinePartResponse>> list(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "15") Integer size,
+    public ResponseEntity<Page<MachinePartResponse>> list(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "80") Integer size,
                                                           @RequestParam(value = "isActive", defaultValue = "true") Boolean isActive, @RequestParam(value = "name", defaultValue = "") String name
     ) {
         Pageable pageRequest = PageRequest.of(page, size);

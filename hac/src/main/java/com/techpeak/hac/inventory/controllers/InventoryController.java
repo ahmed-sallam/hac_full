@@ -22,7 +22,7 @@ public class InventoryController {
     @GetMapping
     public ResponseEntity<Page<InventoryResponse>> listWithPages(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "size", defaultValue = "15") Integer size,
+            @RequestParam(value = "size", defaultValue = "80") Integer size,
             @RequestParam(value = "productNumber", defaultValue = "") String productNumber) {
         Pageable pageRequest = PageRequest.of(page, size);
         Page<InventoryResponse> data = inventoryService.listWithPages(pageRequest, productNumber);

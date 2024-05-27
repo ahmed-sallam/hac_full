@@ -40,7 +40,7 @@ public class BrandController {
 
     @GetMapping
     public ResponseEntity<Page<MainBrand>> list(
-            @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "15") Integer size,
+            @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "80") Integer size,
             @RequestParam(value = "isActive", defaultValue = "true") Boolean isActive, @RequestParam(value = "name", defaultValue = "") String name
     ) {
         Pageable pageRequest = PageRequest.of(page, size);

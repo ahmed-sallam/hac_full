@@ -1,7 +1,8 @@
 package com.techpeak.hac.inventory.controllers;
 
-import com.techpeak.hac.inventory.dtos.*;
-import com.techpeak.hac.inventory.models.MachineryType;
+import com.techpeak.hac.inventory.dtos.CreateMachineryModel;
+import com.techpeak.hac.inventory.dtos.CreateMachineryType;
+import com.techpeak.hac.inventory.dtos.MachineryTypeResponse;
 import com.techpeak.hac.inventory.services.MachineryModelService;
 import com.techpeak.hac.inventory.services.MachineryTypeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +30,7 @@ public class MachineryController {
 
     @GetMapping
     public ResponseEntity<Page<MachineryTypeResponse>> list(@RequestParam(value = "page", defaultValue = "0") Integer page,
-                                                    @RequestParam(value = "size", defaultValue = "15") Integer size,
+                                                    @RequestParam(value = "size", defaultValue = "80") Integer size,
                                                     @RequestParam(value = "isActive", defaultValue = "true") Boolean isActive,
                                                     @RequestParam(value = "name", defaultValue = "") String name
     ) {

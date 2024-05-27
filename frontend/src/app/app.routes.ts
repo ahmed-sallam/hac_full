@@ -108,6 +108,18 @@ export const routes: Routes = [
         path:'purchases',
         loadComponent: () => import('./dashboard/purchases/purchases.component').then((c)=>c.PurchasesComponent)
       },
+      {
+        path:'purchases/material-requests',
+        loadComponent: () => import('./dashboard/purchases/material-request/material-request.component').then((c)=>c.MaterialRequestComponent)
+      },
+      {
+        path:'purchases/material-requests/:id',
+        loadComponent: () => import('./dashboard/purchases/material-request/one-material-request/one-material-request.component').then((c)=>c.OneMaterialRequestComponent)
+      },
+      {
+        path:'purchases/material-requests/:id/edit',
+        loadComponent: () => import('./dashboard/purchases/material-request/edit-material-request/edit-material-request.component').then((c)=>c.EditMaterialRequestComponent)
+      },
     ],
     canActivate:[AuthGuard]
   },
