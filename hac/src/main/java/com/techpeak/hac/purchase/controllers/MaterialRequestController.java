@@ -12,12 +12,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.net.URI;
 
 
 @RestController
@@ -28,18 +26,18 @@ public class MaterialRequestController {
     private final MaterialRequestService materialRequestService;
 
     @PostMapping
-    public ResponseEntity<Object> create(
+    public ResponseEntity<Long> create(
             @Valid @RequestBody CreateMaterialRequest createMaterialRequest) {
 
         User user = AuthUtils.getCurrentUser();
         MaterialRequest materialRequest = materialRequestService
                 .create(createMaterialRequest, user);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(materialRequest.getId())
-                .toUri();
-        return ResponseEntity.created(uri).build();
+//        URI uri = ServletUriComponentsBuilder
+//                .fromCurrentRequest()
+//                .path("/{id}")
+//                .buildAndExpand(materialRequest.getId())
+//                .toUri();
+        return new ResponseEntity<>(materialRequest.getId(), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{id}")

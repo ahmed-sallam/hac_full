@@ -27,6 +27,7 @@ public class MaterialRequestMapper {
         Date date = tuple.get("date", Date.class);
         response.setDate(date.toLocalDate() );
         response.setStatus(tuple.get("status", String.class));
+        response.setNotes(tuple.get("notes", String.class));
 
         // Map store
         StoreResponseShort store = objectMapper.readValue(tuple.get("store", String.class), StoreResponseShort.class);
@@ -48,11 +49,10 @@ public class MaterialRequestMapper {
 
         // Map history
         objectMapper.registerModule(new JavaTimeModule());
-
         JsonNode historyN = objectMapper.readTree(tuple.get("history", String.class));
         ObjectReader readerH = objectMapper.readerFor(new TypeReference<List<UserHistoryResponse>>() {});
         List<UserHistoryResponse> history = readerH.readValue(historyN);
-        response.setHistory(history);
+        response.setHistory(history.stream().filter(i->i.getId() != null ).toList()) ; // todo find best solution
         return response;
     }
 }

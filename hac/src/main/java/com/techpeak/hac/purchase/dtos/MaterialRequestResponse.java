@@ -19,6 +19,7 @@ public class MaterialRequestResponse implements Serializable {
     private String number;
     private LocalDate date;
     private String status;
+    private String notes;
     private StoreResponseShort store;
     private Long internalRef;
     private String currentPhase;

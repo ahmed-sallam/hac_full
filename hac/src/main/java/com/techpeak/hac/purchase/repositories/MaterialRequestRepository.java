@@ -76,6 +76,7 @@ public interface MaterialRequestRepository extends JpaRepository<MaterialRequest
             "       mri.material_request_number AS number, " +
             "       mri.material_request_date AS date, " +
             "       mri.material_request_status AS status, " +
+            "       mri.material_request_notes AS notes, " +
             "       jsonb_build_object('id', mri.store_id, 'nameAr', mri.store_name_ar, 'nameEn', mri.store_name_en) AS store, " +
             "       mri.internal_ref_id AS internalRef, " +
             "       mri.internal_ref_phase AS currentPhase, " +
@@ -96,7 +97,7 @@ public interface MaterialRequestRepository extends JpaRepository<MaterialRequest
             "           ), " +
             "           'storeInventory', mrl.store_quantity " +
             "       )) AS lines, " +
-            "       json_agg( DISTINCT jsonb_build_object( " +
+            "      json_agg( DISTINCT jsonb_build_object( " +
             "           'id', uhi.user_history_id, " +
             "           'actionDetails', uhi.action_details, " +
             "           'tableName', uhi.table_name, " +
