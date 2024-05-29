@@ -93,6 +93,7 @@ export class ReplenishmentComponent implements OnInit {
     searchStores($event: string) {
         this.getStores(0, 15, $event.trim(), true);
     }
+
     getStores(
         page: number = 0,
         size: number = 1000,
@@ -112,12 +113,13 @@ export class ReplenishmentComponent implements OnInit {
                 return []
             })
         ).subscribe({
-            next: (res: any)=>{
+            next: (res: any) => {
                 this.storeOptions = res;
             }
         })
     }
-    onSubmitForm() {
+
+    onSubmitForm(confirm = false) {
         this.formGroup.markAllAsTouched()
         this.lines.markAllAsTouched()
         console.log("formGroupv", this.formGroup.value)
@@ -128,13 +130,14 @@ export class ReplenishmentComponent implements OnInit {
             console.log("formGroup err", this.formGroup.errors)
         } else {
             console.log("formGroup", this.formGroup.value)
-            this.addReplenishment(this.formGroup.value)
+            this.addReplenishment(this.formGroup.value, confirm)
         }
     }
 
-    addReplenishment(r: ReplenishmentRequest){
+    addReplenishment(r: ReplenishmentRequest, confirm = false) {
+        confirm ? r.status = "PENDING" : "DRAFT"
         this.replenishmentService.addReplenishment(r).subscribe({
-            next:(id)=>{
+            next: (id) => {
                 this.toastService.showSuccessToast()
                 this.goToMaterialRequest(id);
             },
@@ -143,9 +146,10 @@ export class ReplenishmentComponent implements OnInit {
             }
         });
     }
-goToMaterialRequest(id:number){
-this.router.navigate(["/dashboard/purchases/material-requests", id]);
-}
+
+    goToMaterialRequest(id: number) {
+        this.router.navigate(["/dashboard/purchases/material-requests", id]);
+    }
 
     addNewField() {
         this.lines.push(this.createLine())
@@ -179,23 +183,24 @@ this.router.navigate(["/dashboard/purchases/material-requests", id]);
         console.log('item selected', $event)
         if ($event != null) {
             this.lines.at(index).get("product")?.setValue($event.id);
-        }else{
+        } else {
             console.log(this.lines.value)
             this.lines.at(index).get('product')?.setValue('')
             console.log(this.lines.value)
         }
         this.products$ = null
     }
+
     onStoreSelected($event: any) {
 
         if ($event != null) {
             this.formGroup.get("store")?.setValue($event.id);
-        }else{
+        } else {
             this.formGroup.get("store")?.setValue('')
         }
     }
 
-    cancelCreateReplenishment(){
+    cancelCreateReplenishment() {
         // this.formGroup.reset();
         // this.formGroup.clearValidators();
         // this.lines.reset()

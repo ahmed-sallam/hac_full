@@ -11,8 +11,13 @@
             </button>
             <button
                     (click)="onSubmitForm()"
-                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                    class="rounded-lg bg-secondary/70 text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/60  disabled:bg-secondary/60 ">
                 {{ 'Save' | translate: language?.lang }}
+            </button>
+            <button
+                    (click)="onSubmitForm(true)"
+                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                {{ 'Confirm' | translate: language?.lang }}
             </button>
             <!--            Delete all lines active when there are some product lines-->
             <!--            <button-->

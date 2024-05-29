@@ -3,6 +3,7 @@ export interface ReplenishmentRequest {
     date: string
     store: number
     lines: Line[]
+    status?: string
 }
 
 export interface Line {

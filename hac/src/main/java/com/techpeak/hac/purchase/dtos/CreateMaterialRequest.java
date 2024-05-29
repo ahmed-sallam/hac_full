@@ -1,5 +1,6 @@
 package com.techpeak.hac.purchase.dtos;
 
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -31,4 +32,6 @@ public class CreateMaterialRequest {
     @NotEmpty(message = "Lines cannot be empty")
     @Valid
     private Set<CreateMaterialRequestLine> lines;
+
+    private RequestStatus status = RequestStatus.DRAFT;
 }

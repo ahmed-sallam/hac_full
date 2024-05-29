@@ -55,7 +55,7 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
         materialRequest.setLines(lines);
         MaterialRequest savedMaterialRequest = materialRequestRepository.save(materialRequest);
         CreateUserHistory createUserHistory = new CreateUserHistory(
-                "Created a new Material Request (DRAFT) with number:" + savedMaterialRequest.getNumber() + " and internal id: " + savedMaterialRequest.getInternalRef().getId(),
+                "Created a new Material Request ("+ createMaterialRequest.getStatus().name() +") with number:" + savedMaterialRequest.getNumber() + " and internal id: " + savedMaterialRequest.getInternalRef().getId(),
                 "material_requests",
                 savedMaterialRequest.getId(),
                 user
@@ -73,7 +73,7 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
                 .date(createMaterialRequest.getDate())
                 .store(storeService.getOrElseThrow(createMaterialRequest.getStore()))
                 .number(materialRequestNumber)
-                .status(RequestStatus.DRAFT)
+                .status(createMaterialRequest.getStatus())
                 .user(user)
                 .internalRef(internalRef)
                 .build();
