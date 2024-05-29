@@ -1,8 +1,12 @@
 import {Component, inject} from '@angular/core';
 import {TranslatePipe} from "../../../pipes/translate.pipe";
-import {MainContentComponent} from "../../components/main-content/main-content.component";
+import {
+  MainContentComponent
+} from "../../components/main-content/main-content.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {SearchInputComponent} from "../../components/search-input/search-input.component";
+import {
+  SearchInputComponent
+} from "../../components/search-input/search-input.component";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {Store} from "@ngrx/store";
 import {State} from "../../../state/reducers";
@@ -10,7 +14,10 @@ import {Observable} from "rxjs";
 import {LangState} from "../../../state/reducers/lang.reducer";
 import {selectLanguage} from "../../../state/selectors/lang.selectors";
 import {MachineryService} from "./machinery.service";
-import {MachineryResponse, MachineryTypeEntity} from "./interfaces/MachineryResponse";
+import {
+  MachineryResponse,
+  MachineryTypeEntity
+} from "./interfaces/MachineryResponse";
 import {Pageable} from "../brands/BrandsResponse";
 
 @Component({
@@ -54,25 +61,6 @@ export class MachineryComponent {
   ngOnInit(): void {
     this.initPageParams();
   }
-  private initPageParams() {
-    this.activeRouter.queryParams.subscribe((params) => {
-      this.searchName = params['name'] || '';
-      this.currentPage = params['page'] || 0;
-      this.pageSize = params['size'] || 15;
-      this.getData();
-
-    });
-  }
-
-  private getData() {
-    this.machineryService
-        .getMachinery(this.currentPage, this.pageSize, this.searchName)
-        .subscribe((data) => {
-          this.machineryResponse = data;
-          this.pageable = data.pageable;
-          this.machinery = data.content;
-        });
-  }
 
   onSearchChanged($event: string) {
     this.searchName = $event;
@@ -83,6 +71,7 @@ export class MachineryComponent {
     });
     this.getData();
   }
+
   generatePageArray() {
     return new Array(this.machineryResponse?.totalPages);
   }
@@ -101,5 +90,25 @@ export class MachineryComponent {
       queryParamsHandling: 'merge',
     });
     this.getData();
+  }
+
+  private initPageParams() {
+    this.activeRouter.queryParams.subscribe((params) => {
+      this.searchName = params['name'] || '';
+      this.currentPage = params['page'] || 0;
+      this.pageSize = params['size'] || 80;
+      this.getData();
+
+    });
+  }
+
+  private getData() {
+    this.machineryService
+        .getMachinery(this.currentPage, this.pageSize, this.searchName)
+        .subscribe((data) => {
+          this.machineryResponse = data;
+          this.pageable = data.pageable;
+          this.machinery = data.content;
+        });
   }
 }

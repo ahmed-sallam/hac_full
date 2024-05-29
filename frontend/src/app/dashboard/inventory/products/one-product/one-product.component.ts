@@ -4,17 +4,23 @@ import {State} from "../../../../state/reducers";
 import {BehaviorSubject, Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
 import {selectLanguage} from "../../../../state/selectors/lang.selectors";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {ProductsService} from "../products.service";
 import {ProductEntity} from "../interfaces/ListProductsResponse";
-import {EmptyDivComponent} from "../../../components/empty-div/empty-div.component";
+import {
+    EmptyDivComponent
+} from "../../../components/empty-div/empty-div.component";
 import {FilesService} from "../../../../files.service";
 import {LoaderService} from "../../../components/loader/loader.service";
 import {LoaderComponent} from "../../../components/loader/loader.component";
-import {OneProductTableComponent} from "./one-product-table/one-product-table.component";
+import {
+    OneProductTableComponent
+} from "./one-product-table/one-product-table.component";
 import {StockService} from "../../stock/stock.service";
 import {StockResponseShort} from "../interfaces/StockResponseShort";
 
@@ -36,20 +42,6 @@ import {StockResponseShort} from "../interfaces/StockResponseShort";
     styles: ``
 })
 export class OneProductComponent implements OnInit {
-    constructor(
-        private loaderService: LoaderService,
-        private filesService: FilesService,
-        private store: Store<State>,
-        private activeRouter: ActivatedRoute,
-        private productsService: ProductsService,
-        private stockService: StockService,
-        private router: Router,
-    ) {
-        this.loader$ = this.loaderService.isLoading;
-        this.selectLanguage$ = this.store.select(selectLanguage);
-    }
-
-
     selectLanguage$!: Observable<LangState>;
     product!: ProductEntity;
     productId!: number;
@@ -69,28 +61,30 @@ export class OneProductComponent implements OnInit {
         'Unit',
         'Stock'
     ];
-
     selectedTab: number = 0;
-    // alternatives: ProductEntity[] = [];
     // sameItems: ProductEntity[] = [];
     stock : StockResponseShort[]  | any = [];
+    // alternatives: ProductEntity[] = [];
     selectedImage!: string;
     loader$!: Observable<boolean>;
     loadImageComplete: number = 0;
     imageLoading$ = new BehaviorSubject<boolean>(false);
 
-    ngOnInit(): void {
-        this.initPageParams();
-
+    constructor(
+        private loaderService: LoaderService,
+        private filesService: FilesService,
+        private store: Store<State>,
+        private activeRouter: ActivatedRoute,
+        private productsService: ProductsService,
+        private stockService: StockService,
+        private router: Router,
+    ) {
+        this.loader$ = this.loaderService.isLoading;
+        this.selectLanguage$ = this.store.select(selectLanguage);
     }
 
-    private initPageParams() {
-        this.loaderService.show()
-        this.activeRouter.params.subscribe(params => {
-            this.productId = params['id'];
-            this.productId && this.getData()
-            this.productId &&  this.getProductStock()
-        })
+    ngOnInit(): void {
+        this.initPageParams();
     }
 
     getData() {
@@ -133,17 +127,6 @@ export class OneProductComponent implements OnInit {
             });
     }
 
-    // getSameItems() {
-    //     this.productsService.getProducts(0, 50, this.product.productNumber, true)
-    //         .subscribe(
-    //             {
-    //                 next: (response: ListProductsResponse) => {
-    //                     this.sameItems = response.content.filter((item: ProductEntity) => item.id != this.productId);
-    //                 }
-    //             }
-    //         );
-    // }
-
     getProductStock(){
         this.stockService.getProductStockShort(this.productId).subscribe({
             next:(res: StockResponseShort[])=>{
@@ -167,6 +150,17 @@ export class OneProductComponent implements OnInit {
         })
     }
 
+    // getSameItems() {
+    //     this.productsService.getProducts(0, 50, this.product.productNumber, true)
+    //         .subscribe(
+    //             {
+    //                 next: (response: ListProductsResponse) => {
+    //                     this.sameItems = response.content.filter((item: ProductEntity) => item.id != this.productId);
+    //                 }
+    //             }
+    //         );
+    // }
+
     onTabSelect($index: number) {
         this.selectedTab = $index;
     }
@@ -183,5 +177,14 @@ export class OneProductComponent implements OnInit {
         return item.reduce((a:number, i:StockResponseShort)=>{
             return i.quantity + a
         }, 0);
+    }
+
+    private initPageParams() {
+        this.loaderService.show()
+        this.activeRouter.params.subscribe(params => {
+            this.productId = params['id'];
+            this.productId && this.getData()
+            this.productId &&  this.getProductStock()
+        })
     }
 }

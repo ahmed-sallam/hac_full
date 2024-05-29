@@ -4,13 +4,20 @@ import {Store} from '@ngrx/store';
 import {State} from '../../../state/reducers';
 import {selectLanguage} from '../../../state/selectors/lang.selectors';
 import {AsyncPipe, DatePipe, NgClass} from '@angular/common';
-import {MainContentComponent} from '../../components/main-content/main-content.component';
-import {SearchInputComponent} from '../../components/search-input/search-input.component';
+import {
+    MainContentComponent
+} from '../../components/main-content/main-content.component';
+import {
+    SearchInputComponent
+} from '../../components/search-input/search-input.component';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MachinePartsService} from "./machine-parts.service";
 import {Observable} from "rxjs";
 import {LangState} from "../../../state/reducers/lang.reducer";
-import {MachinePartEntity, MachinePartResponse} from "./interfaces/MachinePartResponse";
+import {
+    MachinePartEntity,
+    MachinePartResponse
+} from "./interfaces/MachinePartResponse";
 import {Pageable} from "../stores/interfaces/StoreResponse";
 
 @Component({
@@ -52,23 +59,7 @@ export class MachinePartsComponent implements  OnInit{
         this.initPageParams();
         this.getData();
     }
-    private initPageParams() {
-        this.activeRouter.queryParams.subscribe((params) => {
-            this.searchName = params['name'] || '';
-            this.currentPage = params['page'] || 0;
-            this.pageSize = params['size'] || 15;
-        });
-    }
 
-    private getData() {
-        this.machinePartsService
-            .getMachineParts(this.currentPage, this.pageSize, this.searchName)
-            .subscribe((data) => {
-                this.machinePartResponse = data;
-                this.pageable = data.pageable;
-                this.machineParts = data.content;
-            });
-    }
     onSearchChanged($event: string) {
         this.searchName = $event;
         this.router.navigate([], {
@@ -78,6 +69,7 @@ export class MachinePartsComponent implements  OnInit{
         });
         this.getData();
     }
+
     generatePageArray() {
         return new Array(this.machinePartResponse?.totalPages);
     }
@@ -96,6 +88,24 @@ export class MachinePartsComponent implements  OnInit{
             queryParamsHandling: 'merge',
         });
         this.getData();
+    }
+
+    private initPageParams() {
+        this.activeRouter.queryParams.subscribe((params) => {
+            this.searchName = params['name'] || '';
+            this.currentPage = params['page'] || 0;
+            this.pageSize = params['size'] || 80;
+        });
+    }
+
+    private getData() {
+        this.machinePartsService
+            .getMachineParts(this.currentPage, this.pageSize, this.searchName)
+            .subscribe((data) => {
+                this.machinePartResponse = data;
+                this.pageable = data.pageable;
+                this.machineParts = data.content;
+            });
     }
 
 

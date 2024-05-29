@@ -134,15 +134,18 @@ export class ReplenishmentComponent implements OnInit {
 
     addReplenishment(r: ReplenishmentRequest){
         this.replenishmentService.addReplenishment(r).subscribe({
-            next:()=>{
+            next:(id)=>{
                 this.toastService.showSuccessToast()
-                // this.goBack() // todo
+                this.goToMaterialRequest(id);
             },
             error: (r) => {
                 this.toastService.showErrorToast()
             }
         });
     }
+goToMaterialRequest(id:number){
+this.router.navigate(["/dashboard/purchases/material-requests", id]);
+}
 
     addNewField() {
         this.lines.push(this.createLine())

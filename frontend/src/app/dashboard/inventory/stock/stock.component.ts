@@ -9,10 +9,14 @@ import {Pageable} from "../stores/interfaces/StoreResponse";
 import {StockEntity, StockResponse} from "./interfaces/StockResponse";
 import {StockService} from "./stock.service";
 import {AsyncPipe, KeyValuePipe, NgClass} from "@angular/common";
-import {MainContentComponent} from "../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../pipes/translate.pipe";
-import {SearchInputComponent} from "../../components/search-input/search-input.component";
-import {groupBy, flatMap} from "lodash-es";
+import {
+    SearchInputComponent
+} from "../../components/search-input/search-input.component";
+import {flatMap, groupBy} from "lodash-es";
 
 @Component({
     selector: 'app-stock',
@@ -54,35 +58,12 @@ export class StockComponent implements OnInit {
     pageSize!: number;
     productNumber: string = '';
     stockGrouped!: any | { key: StockEntity[] };//Dictionary<StockEntity[]> | Dictionary<Array<StockEntity[][keyof StockEntity[]]>>;
-
+    protected readonly groupBy = groupBy;
 
     ngOnInit(): void {
         this.initPageParams();
         this.getData();
     }
-
-    private initPageParams() {
-        this.activeRouter.queryParams.subscribe((params) => {
-            this.productNumber = params['productNumber'] || '';
-            this.currentPage = params['page'] || 0;
-            this.pageSize = params['size'] || 15;
-        });
-    }
-
-    private getData() {
-        this.stockService
-            .getStock(this.currentPage, this.pageSize, this.productNumber)
-            .subscribe((data) => {
-                this.stockResponse = data;
-                this.pageable = data.pageable;
-                this.stock = data.content;
-                this.stockGrouped = groupBy(data.content, "product.productNumber")
-                console.log(this.stockGrouped)
-                this.stockGrouped = flatMap(this.stockGrouped, (v, k)=>[[k, [...v]]])
-                console.log(this.stockGrouped)
-            });
-    }
-
 
     onSearchChanged($event: string) {
         this.productNumber = $event;
@@ -114,5 +95,25 @@ export class StockComponent implements OnInit {
         this.getData();
     }
 
-    protected readonly groupBy = groupBy;
+    private initPageParams() {
+        this.activeRouter.queryParams.subscribe((params) => {
+            this.productNumber = params['productNumber'] || '';
+            this.currentPage = params['page'] || 0;
+            this.pageSize = params['size'] || 80;
+        });
+    }
+
+    private getData() {
+        this.stockService
+            .getStock(this.currentPage, this.pageSize, this.productNumber)
+            .subscribe((data) => {
+                this.stockResponse = data;
+                this.pageable = data.pageable;
+                this.stock = data.content;
+                this.stockGrouped = groupBy(data.content, "product.productNumber")
+                console.log(this.stockGrouped)
+                this.stockGrouped = flatMap(this.stockGrouped, (v, k)=>[[k, [...v]]])
+                console.log(this.stockGrouped)
+            });
+    }
 }

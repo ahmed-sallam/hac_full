@@ -8,9 +8,13 @@ import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {BrandsService} from "./brands.service";
 import {BrandEntity, BrandsResponse} from "./BrandsResponse";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {MainContentComponent} from "../../components/main-content/main-content.component";
+import {
+  MainContentComponent
+} from "../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../pipes/translate.pipe";
-import {SearchInputComponent} from "../../components/search-input/search-input.component";
+import {
+  SearchInputComponent
+} from "../../components/search-input/search-input.component";
 import {Pageable} from "../stores/interfaces/StoreResponse";
 
 @Component({
@@ -51,25 +55,7 @@ export class BrandsComponent implements OnInit{
   ngOnInit(): void {
     this.initPageParams();
   }
-  private initPageParams() {
-    this.activeRouter.queryParams.subscribe((params) => {
-      this.searchName = params['name'] || '';
-      this.currentPage = params['page'] || 0;
-      this.pageSize = params['size'] || 15;
-      this.getData();
 
-    });
-  }
-
-  private getData() {
-    this.brandService
-        .getBrands(this.currentPage, this.pageSize, this.searchName)
-        .subscribe((data) => {
-          this.brandsResponse = data;
-          this.pageable = data.pageable;
-          this.brands = data.content;
-        });
-  }
   onSearchChanged($event: string) {
     this.searchName = $event;
     this.router.navigate([], {
@@ -79,6 +65,7 @@ export class BrandsComponent implements OnInit{
     });
     this.getData();
   }
+
   generatePageArray() {
     return new Array(this.brandsResponse?.totalPages);
   }
@@ -97,5 +84,25 @@ export class BrandsComponent implements OnInit{
       queryParamsHandling: 'merge',
     });
     this.getData();
+  }
+
+  private initPageParams() {
+    this.activeRouter.queryParams.subscribe((params) => {
+      this.searchName = params['name'] || '';
+      this.currentPage = params['page'] || 0;
+      this.pageSize = params['size'] || 80;
+      this.getData();
+
+    });
+  }
+
+  private getData() {
+    this.brandService
+        .getBrands(this.currentPage, this.pageSize, this.searchName)
+        .subscribe((data) => {
+          this.brandsResponse = data;
+          this.pageable = data.pageable;
+          this.brands = data.content;
+        });
   }
 }

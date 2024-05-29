@@ -1,7 +1,11 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {MainContentComponent} from "../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../components/main-content/main-content.component";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
-import {SearchInputComponent} from "../../components/search-input/search-input.component";
+import {
+    SearchInputComponent
+} from "../../components/search-input/search-input.component";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {TranslatePipe} from "../../../pipes/translate.pipe";
 import {Store} from "@ngrx/store";
@@ -10,7 +14,10 @@ import {ProductsService} from "./products.service";
 import {selectLanguage} from "../../../state/selectors/lang.selectors";
 import {Observable} from "rxjs";
 import {LangState} from "../../../state/reducers/lang.reducer";
-import {ListProductsResponse, ProductEntity} from "./interfaces/ListProductsResponse";
+import {
+    ListProductsResponse,
+    ProductEntity
+} from "./interfaces/ListProductsResponse";
 import {Pageable} from "../stores/interfaces/StoreResponse";
 
 @Component({
@@ -58,14 +65,6 @@ export class ProductsComponent implements OnInit {
         this.getData();
     }
 
-    private initPageParams() {
-        this.activeRouter.queryParams.subscribe((params) => {
-            this.searchName = params['name'] || '';
-            this.currentPage = params['page'] || 0;
-            this.pageSize = params['size'] || 15;
-        });
-    }
-
     getData() {
         this.productsService.getProducts(this.currentPage, this.pageSize, this.searchName)
             .subscribe((res) => {
@@ -103,5 +102,13 @@ export class ProductsComponent implements OnInit {
             queryParamsHandling: 'merge',
         });
         this.getData();
+    }
+
+    private initPageParams() {
+        this.activeRouter.queryParams.subscribe((params) => {
+            this.searchName = params['name'] || '';
+            this.currentPage = params['page'] || 0;
+            this.pageSize = params['size'] || 80;
+        });
     }
 }

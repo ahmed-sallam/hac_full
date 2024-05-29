@@ -10,8 +10,8 @@ import {ReplenishmentRequest} from "./interfaces/ReplenishmentRequest";
 export class ReplenishmintService {
 
   constructor(private http: HttpClient, private appService: AppService) {}
-  public addReplenishment(r: ReplenishmentRequest): Observable<void> {
+  public addReplenishment(r: ReplenishmentRequest): Observable<number> {
     const link = `${this.appService.baseApi}/material_requests`;
-    return this.http.post<void>(link, r);
+    return this.http.post<number>(link, r);
   }
 }

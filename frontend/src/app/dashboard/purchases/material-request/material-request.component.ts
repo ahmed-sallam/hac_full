@@ -19,6 +19,7 @@ import {TranslatePipe} from "../../../pipes/translate.pipe";
 import {
     SearchInputComponent
 } from "../../components/search-input/search-input.component";
+import {selectUser} from "../../../state/selectors/auth.selectors";
 
 @Component({
     selector: 'app-material-request',
@@ -40,6 +41,7 @@ export class MaterialRequestComponent implements OnInit {
     activeRouter: ActivatedRoute = inject(ActivatedRoute);
     router: Router = inject(Router);
     selectLanguage$: Observable<LangState> = this.store.select(selectLanguage);
+    selectUser$: Observable<any> = this.store.select(selectUser);
     pageable!: Pageable;
     tableColumns: string[] = [
         'Internal Ref',
@@ -53,12 +55,14 @@ export class MaterialRequestComponent implements OnInit {
     currentPage!: number;
     pageSize!: number;
     searchName: string = '';
-     sort!: string;
-     ref!: number;
-     phase!: string;
-     user!: number;
-     status!: string;
-     storeId!: number;
+     sort!: string|undefined;
+     ref!: number|undefined;
+     phase!: string|undefined;
+     user!: number|undefined;
+     status!: string|undefined;
+     storeId!: number|undefined;
+
+     all: boolean = true;
 
     materialRequestService: MaterialRequestService = inject(MaterialRequestService);
      materialRequestResponse!: MaterialRequestResponse;
@@ -83,11 +87,12 @@ export class MaterialRequestComponent implements OnInit {
             });
     }
 
-    onSearchChanged($event: string) {
-        this.searchName = $event;
+    onSearchChanged($event: any) {
+        this.searchName = $event["search"];
+        const params = {...$event}
         this.router.navigate([], {
             relativeTo: this.activeRouter,
-            queryParams: {name: $event},
+            queryParams: params,
             queryParamsHandling: 'merge',
         });
         this.getData();
@@ -111,6 +116,29 @@ export class MaterialRequestComponent implements OnInit {
         this.getData();
     }
 
+    resetParamsAndSearch(){
+        this.searchName =  '';
+        this.currentPage =  0;
+        this.pageSize =  80;
+        this.sort = undefined
+        this.ref = undefined
+        this.phase = undefined
+        this.user = undefined
+        this.status = undefined
+        this.storeId = undefined
+    }
+
+    getMyRequests(id: number){
+        this.user = id;
+        this.all= false;
+        this.onSearchChanged({search:'', user: id})
+    }
+    getAll(){
+        this.resetParamsAndSearch()
+        this.all= true;
+        this.onSearchChanged({search:''})
+    }
+
     private initPageParams() {
         this.activeRouter.queryParams.subscribe((params) => {
             this.searchName = params['name'] || '';
@@ -123,8 +151,5 @@ export class MaterialRequestComponent implements OnInit {
             this.status = params["sort"];
             this.storeId = params["sort"];
         });
-
-
-
     }
 }

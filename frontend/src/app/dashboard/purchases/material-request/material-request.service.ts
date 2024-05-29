@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {AppService} from "../../../app.service";
 import {Observable} from "rxjs";
 import {MaterialRequestResponse} from "./interfaces/MaterialRequestResponse";
+import {OneMaterialRequest} from "./interfaces/OneMaterialRequest";
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,7 @@ export class MaterialRequestService {
     }
 
     getMaterialRequests(
-        page: number, sort?:string, size?: number,
+        page: number, sort?: string, size?: number,
         search?: string, ref?: number, store?: number,
         user?: number, phase?: string, status?: string): Observable<MaterialRequestResponse> {
         let link: string = `${this.appService.baseApi}/material_requests?page=${page}`;
@@ -45,5 +46,10 @@ export class MaterialRequestService {
         return this.http.get<MaterialRequestResponse>(link);
     }
 
+
+    getOneMaterialRequest(id: number): Observable<OneMaterialRequest> {
+        let link: string = `${this.appService.baseApi}/material_requests/${id}`;
+        return this.http.get<OneMaterialRequest>(link);
+    }
 
 }
