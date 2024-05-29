@@ -42,6 +42,7 @@ public class MaterialRequest extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @OneToMany(mappedBy = "materialRequest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<MaterialRequestLine> lines = new HashSet<>();
 
     public void addLine(MaterialRequestLine line){

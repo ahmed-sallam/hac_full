@@ -1,5 +1,6 @@
 package com.techpeak.hac.core.models;
 
+import com.techpeak.hac.core.enums.InternalPhase;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,4 +17,7 @@ public class InternalRef implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name="current_phase", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private InternalPhase currentPhase;
 }
