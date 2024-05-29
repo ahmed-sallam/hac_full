@@ -141,15 +141,15 @@ export class MaterialRequestComponent implements OnInit {
 
     private initPageParams() {
         this.activeRouter.queryParams.subscribe((params) => {
-            this.searchName = params['name'] || '';
+            this.searchName = params['search'] || '';
             this.currentPage = params['page'] || 0;
             this.pageSize = params['size'] || 80;
             this.sort = params["sort"];
-            this.ref = params["sort"];
-            this.phase = params["sort"];
-            this.user = params["sort"];
-            this.status = params["sort"];
-            this.storeId = params["sort"];
+            this.ref = params["ref"];
+            this.phase = params["phase"];
+            this.user = params["user"];
+            this.status = params["status"];
+            this.storeId = params["storeId"];
         });
     }
 }

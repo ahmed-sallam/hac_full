@@ -75,8 +75,8 @@
                                     <td class="px-6 py-4">
                                         {{ language.lang == "ar" ? item.store.nameAr :item.store.nameEn }}
                                     </td>
-                                    <td class="px-6 py-4">
-                                        {{ item.status }}
+                                    <td class="px-4 py-2 ">
+                                        <div [class]="'px-3 py-1.5 rounded text-center w-fit ' + (item.status == 'COMPLETED'? ' bg-success/20 ' : item.status == 'PROCESSING'? ' bg-blue-200 ' : item.status == 'PENDING'? ' bg-primary/30 ' :  ' bg-secondary/10 ')">{{ item.status }}</div>
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ item.currentPhase }}
