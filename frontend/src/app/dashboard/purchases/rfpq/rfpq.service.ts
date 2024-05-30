@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {AppService} from "../../../app.service";
 import {Observable} from "rxjs";
 import {RFPQResponse} from "./interfaces/RFPQResponse";
+import {OneRFPQ} from "./interfaces/OneRFPQ";
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,11 @@ export class RfpqService {
       link += `&search=${search}`;
     }
     return this.http.get<RFPQResponse>(link);
+  }
+
+  getOneRFPQ(id: number): Observable<OneRFPQ> {
+    let link: string = `${this.appService.baseApi}/rfpqs/${id}`;
+    return this.http.get<OneRFPQ>(link);
   }
 
 

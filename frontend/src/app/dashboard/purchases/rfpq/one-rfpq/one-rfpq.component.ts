@@ -1,21 +1,21 @@
 import {Component, OnInit} from '@angular/core';
+import {Observable} from "rxjs";
+import {LangState} from "../../../../state/reducers/lang.reducer";
 import {LoaderService} from "../../../components/loader/loader.service";
 import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
 import {ActivatedRoute, RouterLink} from "@angular/router";
 import {selectLanguage} from "../../../../state/selectors/lang.selectors";
-import {Observable} from "rxjs";
-import {LangState} from "../../../../state/reducers/lang.reducer";
-import {OneMaterialRequest} from "../interfaces/OneMaterialRequest";
-import {MaterialRequestService} from "../material-request.service";
+import {OneRFPQ} from "../interfaces/OneRFPQ";
+import {RfpqService} from "../rfpq.service";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {
-    MainContentComponent
+  MainContentComponent
 } from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 
 @Component({
-  selector: 'app-one-material-request',
+  selector: 'app-one-rfpq',
   standalone: true,
   imports: [
     AsyncPipe,
@@ -24,20 +24,18 @@ import {TranslatePipe} from "../../../../pipes/translate.pipe";
     RouterLink,
     DatePipe
   ],
-  templateUrl: './one-material-request.component.html',
+  templateUrl: './one-rfpq.component.html',
   styles: ``
 })
-export class OneMaterialRequestComponent implements OnInit{
+export class OneRfpqComponent implements OnInit{
   selectLanguage$!: Observable<LangState>;
   loader$!: Observable<boolean>;
-  materialRequest!: OneMaterialRequest;
+  rfpq!: OneRFPQ;
   requestId!: number;
   tableColumns: string[] = [
     '#',
     'Product',
     'Quantity',
-    'Stock in store',
-    'Total stock',
     'Notes',
   ];
 
@@ -45,7 +43,7 @@ export class OneMaterialRequestComponent implements OnInit{
       private loaderService: LoaderService,
       private store: Store<State>,
       private activeRouter: ActivatedRoute,
-      private materialRequestService: MaterialRequestService,
+      private rfpqService: RfpqService,
   ) {
     this.loader$ = this.loaderService.isLoading;
     this.selectLanguage$ = this.store.select(selectLanguage);
@@ -58,11 +56,10 @@ export class OneMaterialRequestComponent implements OnInit{
   getData() {
     this.loaderService.show()
 
-    this.materialRequestService.getOneMaterialRequest(this.requestId)
+    this.rfpqService.getOneRFPQ(this.requestId)
         .subscribe({
-          next: (response: OneMaterialRequest) => {
-            console.log(response)
-            this.materialRequest = response;
+          next: (response: OneRFPQ) => {
+            this.rfpq = response;
             this.loaderService.hide()
           }
         });

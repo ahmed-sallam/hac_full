@@ -1,0 +1,137 @@
+@if (selectLanguage$ | async; as language) {
+    @if (rfpq) {
+        <app-main-content
+                [language]="language"
+                [headerText]="rfpq.number"
+                [noDataMessage]="'There is no data to show' | translate : language?.lang"
+                [noData]="false"
+                [loader]="loader$ | async"
+        >
+            <div headerActions>
+
+                <!--            todo-->
+                <button
+
+                        class="w-40 p-4 my-1 font-medium text-danger rounded-lg bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
+                >
+                    {{ "Cancel " | translate : language.lang }}
+                </button>
+                <!--            todo-->
+                <button
+                        class="w-40 p-4 my-1 font-medium text-mustard rounded-lg bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                >
+                    {{ "Confirm " | translate : language.lang }}
+                </button>
+                <button
+                        [routerLink]="['edit',rfpq.id]"
+                        class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"
+                >
+                    {{ "Edit " | translate : language.lang }}
+                </button>
+
+            </div>
+
+
+            <div contentWithData class="relative w-full h-full p-8 min-h-max">
+                <div class="w-full flex items-center justify-end gap-1">
+                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'DRAFT' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "DRAFT " | translate : language.lang }}</div>
+                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'PENDING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PENDING " | translate : language.lang }}</div>
+                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'PROCESSING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PROCESSING " | translate : language.lang }}</div>
+                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'COMPLETED' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "COMPLETED " | translate : language.lang }}</div>
+                </div>
+
+                <div class=" w-full mt-6 flex gap-4 items-start justify-start">
+                    <div class="w-full max-w-md gap-1">
+                        <div class="flex items-center justify-start  gap-2">
+                            <div class="w-40 font-semibold ">{{ "Date" | translate : language.lang }}</div>
+                            <div class="w-full ">{{ rfpq.date }}</div>
+                        </div>
+                        <div class="flex items-center justify-start  gap-2">
+                            <div class="w-40 font-semibold ">{{ "Requested by" | translate : language.lang }}</div>
+                            <div class="w-full ">{{ rfpq.userDto.username }}</div>
+                        </div>
+                        <div class="flex items-center justify-start  gap-2">
+                            <div class="w-40 font-semibold ">{{ "Store" | translate : language.lang }}</div>
+                            <div class="w-full ">{{ language.lang == 'ar' ? rfpq.store.nameAr : rfpq.store.nameEn }}</div>
+                        </div>
+                    </div>
+                    <div class="w-full max-w-md gap-1">
+                        <div class="flex items-center justify-start  gap-2">
+                            <div class="w-40 font-semibold ">{{ "Internal Ref" | translate : language.lang }}</div>
+                            <div class="w-full ">{{ rfpq.internalRef }}</div>
+                        </div>
+                        <div class="flex items-center justify-start  gap-2">
+                            <div class="w-40 font-semibold ">{{ "Phase" | translate : language.lang }}</div>
+                            <div class="w-full ">{{ rfpq.currentPhase }}</div>
+                        </div>
+                        <div class="flex items-center justify-start  gap-2">
+                            <div class="w-40 font-semibold ">{{ "Notes" | translate : language.lang }}</div>
+                            <div class="w-full ">{{ rfpq.notes }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full  mt-12 overflow-x-auto overflow-y-auto rounded shadow-accent shadow pt-2">
+                    <table class="w-full text-sm text-left rtl:text-right">
+                        <thead class="text-xs uppercase text-secondary/50">
+                        <tr>
+                            @for (col of tableColumns; track $index) {
+                                <th scope="col" class="px-6 py-3 min-w-40">
+                                    {{ col | translate : language }}
+                                </th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody >
+                            @for (item of rfpq.lines; track item.product.id + $index) {
+
+                                <tr
+                                        class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80"
+                                >
+                                    <td class="px-6 py-4">
+                                        {{ $index + 1 }}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        {{
+                                            item.product.productNumber + ' - '
+                                            + (language.lang == 'ar' ? (item.product.mainBrandAr + ' - ' + item.product.subBrandAr) : (item.product.mainBrandEn + ' - ' + item.product.subBrandEn))
+                                        }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ item.quantity }}
+                                    </td>
+
+                                    <td class="px-6 py-4">
+                                        {{ item.notes }}
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="w-full  mt-6 overflow-x-auto overflow-y-auto rounded shadow-accent shadow pt-4 pb-0 px-4 bg-accent/10">
+                    <div class="text-lg font-semibold underline">{{"History " | translate : language.lang}}</div>
+                    @for(item of rfpq.history; track item.id){
+                        <div class="w-full py-2 border-b border-secondary/30 flex flex-col gap-1">
+                            <div class="flex gap-1 font-semibold ">
+                                <div class=" w-40 ">{{"AT" | translate : language.lang}}</div>
+                                <div class="underline">{{item.dateTime | date: "dd/MM/yyyy h:mm a "}}</div>
+                            </div>
+                            <div class="flex gap-1">
+                                <div class="font-semibold w-40">{{"DETAILS" | translate : language.lang}}</div>
+                                <div>{{item.actionDetails}}</div>
+                            </div>
+                            <div class="flex gap-1 font-semibold ">
+                                <div class=" w-40 ">{{"BY" | translate : language.lang}}</div>
+                                <div class="underline">{{item.user.username}}</div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+
+        </app-main-content>
+    }
+}

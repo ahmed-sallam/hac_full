@@ -124,6 +124,10 @@ export const routes: Routes = [
         path:'purchases/rfpqs',
         loadComponent: () => import('./dashboard/purchases/rfpq/rfpq.component').then((c)=>c.RfpqComponent)
       },
+      {
+        path:'purchases/rfpqs/:id',
+        loadComponent: () => import('./dashboard/purchases/rfpq/one-rfpq/one-rfpq.component').then((c)=>c.OneRfpqComponent)
+      },
     ],
     canActivate:[AuthGuard]
   },
