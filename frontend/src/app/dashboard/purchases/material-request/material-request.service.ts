@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AppService} from "../../../app.service";
 import {Observable} from "rxjs";
 import {MaterialRequestResponse} from "./interfaces/MaterialRequestResponse";
@@ -50,6 +50,19 @@ export class MaterialRequestService {
     getOneMaterialRequest(id: number): Observable<OneMaterialRequest> {
         let link: string = `${this.appService.baseApi}/material_requests/${id}`;
         return this.http.get<OneMaterialRequest>(link);
+    }
+
+    updateMaterialRequestStatus(id: number, status : string): Observable<any> {
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+        });
+
+        let  link: string = `${this.appService.baseApi}/material_requests/${id}`;
+        console.log("ssss ", status)
+        return this.http.patch<any>(link, JSON.stringify(status), {
+            headers,
+            withCredentials: true
+        });
     }
 
 }

@@ -1,11 +1,9 @@
 package com.techpeak.hac.core.config;
 
-import java.util.Arrays;
-import java.util.List;
-
 import com.techpeak.hac.core.repositories.UserRepository;
 import com.techpeak.hac.core.security.JwtAuthenticationFilter;
 import com.techpeak.hac.core.services.impl.CustomUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +24,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -39,6 +38,7 @@ private final UserRepository userRepository;
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+//                .cors(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(r -> {
                     r.requestMatchers("/api/v1/auth/**").permitAll();
@@ -49,24 +49,34 @@ private final UserRepository userRepository;
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of(
-                "*"
-        // "http://15.185.253.101:4200",
-        // "http://localhost:4200",
-        // "http://hacfrontend:4200"
-        ));
-        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "DELETE", "OPTIONS", "PUT", "POST"));
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200")); // replace with your frontend URL
+        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "DELETE", "OPTIONS", "PUT","PATCH", "POST"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
-        // corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization",
-        // "Content-Type", "Content-Type:multipart/form-data;","Content-Disposition"));
+        corsConfiguration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedOrigins(List.of(
+//                "*"
+//        // "http://15.185.253.101:4200",
+//        // "http://localhost:4200",
+//        ));
+//        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "DELETE", "OPTIONS", "PUT", "POST"));
+//        corsConfiguration.setAllowedHeaders(List.of("*"));
+//        // corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization",
+//        // "Content-Type", "Content-Type:multipart/form-data;","Content-Disposition"));
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/**", corsConfiguration);
+//        return source;
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

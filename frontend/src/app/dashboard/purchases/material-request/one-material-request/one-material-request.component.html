@@ -8,35 +8,72 @@
                 [loader]="loader$ | async"
         >
             <div headerActions>
-                <!--            todo-->
-                <button
 
-                        class="w-40 p-4 my-1 font-medium text-danger rounded-lg bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
-                >
-                    {{ "Cancel " | translate : language.lang }}
-                </button>
-                <!--            todo-->
-                <button
-                        class="w-40 p-4 my-1 font-medium text-mustard rounded-lg bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
-                >
-                    {{ "Confirm " | translate : language.lang }}
-                </button>
-                <button
-                        [routerLink]="['edit',materialRequest.id]"
-                        class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"
-                >
-                    {{ "Edit " | translate : language.lang }}
-                </button>
+
+                @if (materialRequest.status == "CANCELED") {
+                    <button
+                            class="w-40 p-4 my-1 font-medium text-mustard rounded-lg bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                            (click)="updateMaterialRequestStatus('DRAFT')"
+                    >
+                        {{ "DRAFT" | translate : language.lang }}
+                    </button>
+                } @else   if (materialRequest.status == "DRAFT") {
+                    <!--            todo-->
+                    <button
+
+                            class="w-40 p-4 my-1 font-medium text-danger rounded-lg bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
+                    >
+                        {{ "Cancel " | translate : language.lang }}
+                    </button>
+
+                    <button
+                            class="w-40 p-4 my-1 font-medium text-mustard rounded-lg bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                            (click)="updateMaterialRequestStatus('PENDING')"
+                    >
+                        {{ "Confirm" | translate : language.lang }}
+                    </button>
+                    <button
+                            [routerLink]="['edit',materialRequest.id]"
+                            class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"
+                    >
+                        {{ "Edit " | translate : language.lang }}
+                    </button>
+                } @else   if (materialRequest.status == "PENDING") {
+                    <!--            todo-->
+                    <button
+
+                            class="w-40 p-4 my-1 font-medium text-danger rounded-lg bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
+                    >
+                        {{ "Cancel " | translate : language.lang }}
+                    </button>
+                    <button
+                            class="w-40 p-4 my-1 font-medium text-mustard rounded-lg bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                            (click)="updateMaterialRequestStatus('PROCESSING')"
+                    >
+                        {{ "Process" | translate : language.lang }}
+                    </button>
+                    <button
+                            [routerLink]="['edit',materialRequest.id]"
+                            class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"
+                    >
+                        {{ "Edit " | translate : language.lang }}
+                    </button>
+                }
+
 
             </div>
 
 
             <div contentWithData class="relative w-full h-full p-8 min-h-max">
                 <div class="w-full flex items-center justify-end gap-1">
-                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'DRAFT' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "DRAFT " | translate : language.lang }}</div>
-                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'PENDING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PENDING " | translate : language.lang }}</div>
-                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'PROCESSING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PROCESSING " | translate : language.lang }}</div>
-                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'COMPLETED' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "COMPLETED " | translate : language.lang }}</div>
+                    @if (materialRequest.status == "CANCELED") {
+                        <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'CANCELED' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "CANCELED " | translate : language.lang }}</div>
+                    } @else {
+                        <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'DRAFT' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "DRAFT " | translate : language.lang }}</div>
+                        <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'PENDING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PENDING " | translate : language.lang }}</div>
+                        <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'PROCESSING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PROCESSING " | translate : language.lang }}</div>
+                        <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( materialRequest.status == 'COMPLETED' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "COMPLETED " | translate : language.lang }}</div>
+                    }
                 </div>
 
                 <div class=" w-full mt-6 flex gap-4 items-start justify-start">
@@ -80,7 +117,7 @@
                             }
                         </tr>
                         </thead>
-                        <tbody >
+                        <tbody>
                             @for (item of materialRequest.lines; track item.product.id + $index) {
 
                                 <tr
@@ -114,20 +151,20 @@
                     </table>
                 </div>
                 <div class="w-full  mt-6 overflow-x-auto overflow-y-auto rounded shadow-accent shadow pt-4 pb-0 px-4 bg-accent/10">
-                    <div class="text-lg font-semibold underline">{{"History " | translate : language.lang}}</div>
-                    @for(item of materialRequest.history; track item.id){
+                    <div class="text-lg font-semibold underline">{{ "History " | translate : language.lang }}</div>
+                    @for (item of materialRequest.history; track item.id) {
                         <div class="w-full py-2 border-b border-secondary/30 flex flex-col gap-1">
                             <div class="flex gap-1 font-semibold ">
-                                <div class=" w-40 ">{{"AT" | translate : language.lang}}</div>
-                                <div class="underline">{{item.dateTime | date: "dd/MM/yyyy h:mm a "}}</div>
+                                <div class=" w-40 ">{{ "AT" | translate : language.lang }}</div>
+                                <div class="underline">{{ item.dateTime | date: "dd/MM/yyyy h:mm a " }}</div>
                             </div>
                             <div class="flex gap-1">
-                                <div class="font-semibold w-40">{{"DETAILS" | translate : language.lang}}</div>
-                                <div>{{item.actionDetails}}</div>
+                                <div class="font-semibold w-40">{{ "DETAILS" | translate : language.lang }}</div>
+                                <div>{{ item.actionDetails }}</div>
                             </div>
                             <div class="flex gap-1 font-semibold ">
-                                <div class=" w-40 ">{{"BY" | translate : language.lang}}</div>
-                                <div class="underline">{{item.user.username}}</div>
+                                <div class=" w-40 ">{{ "BY" | translate : language.lang }}</div>
+                                <div class="underline">{{ item.user.username }}</div>
                             </div>
                         </div>
                     }

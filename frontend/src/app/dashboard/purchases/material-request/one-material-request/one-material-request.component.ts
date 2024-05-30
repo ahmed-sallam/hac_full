@@ -10,7 +10,7 @@ import {OneMaterialRequest} from "../interfaces/OneMaterialRequest";
 import {MaterialRequestService} from "../material-request.service";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {
-    MainContentComponent
+  MainContentComponent
 } from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 
@@ -66,6 +66,14 @@ export class OneMaterialRequestComponent implements OnInit{
             this.loaderService.hide()
           }
         });
+  }
+
+  updateMaterialRequestStatus(status: string){
+    this.materialRequestService.updateMaterialRequestStatus(this.requestId, status).subscribe({
+      next:()=>{this.getData()},
+      error:(e)=>{
+        console.log(e)}
+    })
   }
 
   private initPageParams() {
