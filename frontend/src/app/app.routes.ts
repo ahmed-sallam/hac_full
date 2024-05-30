@@ -120,6 +120,10 @@ export const routes: Routes = [
         path:'purchases/material-requests/:id/edit',
         loadComponent: () => import('./dashboard/purchases/material-request/edit-material-request/edit-material-request.component').then((c)=>c.EditMaterialRequestComponent)
       },
+      {
+        path:'purchases/rfpqs',
+        loadComponent: () => import('./dashboard/purchases/rfpq/rfpq.component').then((c)=>c.RfpqComponent)
+      },
     ],
     canActivate:[AuthGuard]
   },

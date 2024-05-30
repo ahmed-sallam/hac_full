@@ -1,1 +1,204 @@
-<p>rfpq works!</p>
+@if (selectLanguage$ | async; as language){
+    <app-main-content
+            [language]="language"
+            [headerText]="'Request For Purchase Quotation' | translate : language.lang"
+            [noDataMessage]="'There is no data to show' | translate : language?.lang"
+            [noData]="rfpqs.length === 0"
+    >
+        <div headerActions >
+            @if(selectUser$ | async; as userData){
+                @if(all){
+                    <button
+                            (click)="getMyRequests(userData.id)"
+                            class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
+                    >
+                        {{ "My Requests" | translate : language.lang }}
+                    </button>
+
+                } @else {
+                    <button
+                            (click)="getAll()"
+                            class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
+                    >
+                        {{ "All" | translate : language.lang }}
+                    </button>
+                }
+
+
+            }
+<!--            <button-->
+<!--                    [routerLink]="['/dashboard/inventory/replenishment']"-->
+<!--                    class="w-auto p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70 hover:border-secondary/70 border border-secondary"-->
+<!--            >-->
+<!--                {{ "Add Replenishment" | translate : language.lang }}-->
+<!--            </button>-->
+        </div>
+        <div headerSlot>
+            <app-search-input
+                    [placeholder]="'Search' | translate : language?.lang"
+                    (searchChanged)="onSearchChanged({search: $event})"
+                    [value]="searchName"
+            />
+        </div>
+
+        @if (rfpqs.length >0) {
+
+            <div contentWithData class="relative w-full h-full p-8 min-h-max">
+
+                <div class="relative my-4 overflow-x-auto overflow-y-auto">
+                    <table class="w-full text-sm text-left rtl:text-right">
+                        <thead class="text-xs uppercase text-secondary/50">
+                        <tr>
+                            @for (col of tableColumns; track $index) {
+                                <th scope="col" class="px-6 py-3 min-w-40">
+                                    {{ col | translate : language.lang }}
+                                </th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody >
+                            @for ( item of rfpqs; track item.id){
+
+                                <tr
+                                        [routerLink]="'' + item.id"
+                                        class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80 cursor-pointer"
+                                >
+                                    <td class="px-6 py-4">
+                                        {{ item.internalRef }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ item.number }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ item.date | date : "dd/MM/yyyy" }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ language.lang == "ar" ? item.store.nameAr :item.store.nameEn }}
+                                    </td>
+                                    <td class="px-4 py-2 ">
+                                        <div [class]="'px-3 py-1.5 rounded text-center w-fit ' + (item.status == 'COMPLETED'? ' bg-success/20 ' : item.status == 'PROCESSING'? ' bg-blue-200 ' : item.status == 'PENDING'? ' bg-primary/30 ' :  ' bg-secondary/10 ')">{{ item.status }}</div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ item.currentPhase }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ item.user.username }}
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--            If there are more than one page -->
+                @if (true) {
+                    <div class="flex items-center my-8 me-4 ms-auto w-fit">
+                        @if (language.dir == 'ltr') {
+
+                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+                                 [ngClass]="rfpqResponse.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+                                 (click)="onPageChanged(rfpqResponse.first ? -1: currentPage-1)"
+                            >
+                                <svg
+                                        class="w-6 h-6 text-secondary/50"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="m15 19-7-7 7-7"
+                                    />
+                                </svg>
+                            </div>
+                        } @else {
+                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+                                 [ngClass]="rfpqResponse.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+                                 (click)="onPageChanged(rfpqResponse.first ? -1: currentPage-1)"
+                            >
+                                <svg
+                                        class="w-6 h-6 text-secondary/50"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="m9 5 7 7-7 7"
+                                    />
+                                </svg>
+                            </div>
+                        }
+                        @for (i of generatePageArray(); track $index) {
+
+                            <div
+                                    class="px-3 py-1 border rounded border-secondary/15 me-1 "
+                                    [ngClass]="+pageable.pageNumber == $index ? 'bg-primary/80 ':' hover:bg-primary/80 cursor-pointer'"
+                                    (click)="onPageChanged($index)"
+
+                            >{{ $index + 1 }}
+                            </div>
+
+                        }
+
+                        @if (language.dir == 'ltr') {
+
+                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+                                 [ngClass]="rfpqResponse.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+                                 (click)="onPageChanged(rfpqResponse.last ? -1: +currentPage+1)"
+                            >
+                                <svg
+                                        class="w-6 h-6 text-secondary/50"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="m9 5 7 7-7 7"
+                                    />
+                                </svg>
+                            </div>
+
+                        } @else {
+
+
+                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+                                 [ngClass]="rfpqResponse.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+                                 (click)="onPageChanged(rfpqResponse.last ? -1: +currentPage+1)"
+                            >
+                                <svg
+                                        class="w-6 h-6 text-secondary/50"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                >
+                                    <path
+                                            stroke="currentColor"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="m15 19-7-7 7-7"
+                                    />
+                                </svg>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </app-main-content>
+}
