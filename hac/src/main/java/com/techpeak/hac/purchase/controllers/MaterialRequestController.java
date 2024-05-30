@@ -44,7 +44,6 @@ public class MaterialRequestController {
     public ResponseEntity<Resource> updateStatus(@RequestBody RequestStatus status,
                                                  @PathVariable("id") Long id) {
 
-        System.out.println("ppppppp " + status);
         User user = AuthUtils.getCurrentUser();
         materialRequestService.updateStatus(id, status, user);
         return ResponseEntity.ok().build();

@@ -1,9 +1,13 @@
 package com.techpeak.hac.purchase.controllers;
 
+import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.core.utils.AuthUtils;
 import com.techpeak.hac.purchase.dtos.RFPQResponse;
 import com.techpeak.hac.purchase.dtos.RFPQResponseShort;
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.services.RFPQService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -36,5 +40,14 @@ public class RFPQController {
     @GetMapping("/{id}")
     public ResponseEntity<RFPQResponse> getOne(@PathVariable("id") Long id){
         return ResponseEntity.ok(rfpqService.getOne(id));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Resource> updateStatus(@RequestBody RequestStatus status,
+                                                 @PathVariable("id") Long id) {
+
+        User user = AuthUtils.getCurrentUser();
+        rfpqService.updateStatus(id, status, user);
+        return ResponseEntity.ok().build();
     }
 }

@@ -116,7 +116,7 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
             rfpqService.createInternal(mr, user);
         }
         mr.setStatus(status);
-        MaterialRequest saved = materialRequestRepository .save(mr);
+        MaterialRequest saved = materialRequestRepository.save(mr);
         String actionDetails = "Update Material Request with number: " + saved.getNumber() + " and internal id: " + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
         createUserHistory(user, saved, actionDetails);
     }

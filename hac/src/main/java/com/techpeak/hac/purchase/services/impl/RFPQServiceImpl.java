@@ -3,6 +3,7 @@ package com.techpeak.hac.purchase.services.impl;
 import com.techpeak.hac.core.dtos.CreateUserHistory;
 import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.core.enums.InternalPhase;
+import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.repositories.InternalRefRepository;
@@ -100,12 +101,26 @@ public class RFPQServiceImpl implements RFPQService {
     @Override
     public RFPQResponse getOne(Long id) {
         Tuple a = rfpqRepository.findByIdWithHistory(id);
-        System.out.println("iiiiiii "+ a);
+        System.out.println("iiiiiii " + a);
         try {
             return RFPQMapper.mapToRFPQResponse(a);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    @Transactional
+    public void updateStatus(Long id, RequestStatus status, User user) {
+        RFPQ rfpq = getOrElseThrow(id);
+        rfpq.setStatus(status);
+        RFPQ saved = rfpqRepository.save(rfpq);
+        String actionDetails = "Update Request for purchase quotation with number: " + saved.getNumber() + " and internal id: " + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
+        createUserHistory(user, saved, actionDetails);
+    }
+
+    private RFPQ getOrElseThrow(Long id) {
+        return rfpqRepository.findById(id).orElseThrow(() -> new NotFoundException("RFPQ with id: " + id + " not found"));
     }
 
     private RFPQResponseShort RFPQToResponse(RFPQ rfpq) {
