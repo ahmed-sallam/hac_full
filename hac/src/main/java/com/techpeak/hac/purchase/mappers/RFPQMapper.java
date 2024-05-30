@@ -8,24 +8,28 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.core.dtos.UserHistoryResponse;
 import com.techpeak.hac.inventory.dtos.StoreResponseShort;
-import com.techpeak.hac.purchase.dtos.MaterialRequestLineWithStockDto;
-import com.techpeak.hac.purchase.dtos.MaterialRequestResponse;
+import com.techpeak.hac.purchase.dtos.RFPQLineResponse;
+import com.techpeak.hac.purchase.dtos.RFPQResponse;
 import jakarta.persistence.Tuple;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
-public class MaterialRequestMapper {
+public class RFPQMapper {
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    private MaterialRequestMapper(){}
 
-    public static MaterialRequestResponse mapToMaterialRequestResponse(Tuple tuple) throws IOException {
-        MaterialRequestResponse response = new MaterialRequestResponse();
+    private RFPQMapper() {
+    }
+
+    public static RFPQResponse mapToRFPQResponse(Tuple tuple) throws IOException {
+        RFPQResponse response = new RFPQResponse();
         response.setId(tuple.get("id", Long.class));
         response.setNumber(tuple.get("number", String.class));
         Date date = tuple.get("date", Date.class);
-        response.setDate(date.toLocalDate() );
+        if (date != null) {
+            response.setDate(date.toLocalDate());
+        }
         response.setStatus(tuple.get("status", String.class));
         response.setNotes(tuple.get("notes", String.class));
 
@@ -43,17 +47,18 @@ public class MaterialRequestMapper {
 
         // Map lines
         JsonNode linesN = objectMapper.readTree(tuple.get("lines", String.class));
-        ObjectReader reader = objectMapper.readerFor(new TypeReference<List<MaterialRequestLineWithStockDto>>() {});
-        List<MaterialRequestLineWithStockDto> lines = reader.readValue(linesN);
+        ObjectReader reader = objectMapper.readerFor(new TypeReference<List<RFPQLineResponse>>() {
+        });
+        List<RFPQLineResponse> lines = reader.readValue(linesN);
         response.setLines(lines);
 
         // Map history
         objectMapper.registerModule(new JavaTimeModule());
         JsonNode historyN = objectMapper.readTree(tuple.get("history", String.class));
-        ObjectReader readerH = objectMapper.readerFor(new TypeReference<List<UserHistoryResponse>>() {});
+        ObjectReader readerH = objectMapper.readerFor(new TypeReference<List<UserHistoryResponse>>() {
+        });
         List<UserHistoryResponse> history = readerH.readValue(historyN);
         response.setHistory(history);
         return response;
     }
 }
-

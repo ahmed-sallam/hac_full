@@ -32,6 +32,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -156,16 +157,12 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
     @Override
     public MaterialRequestResponse getOne(Long id) {
         Tuple byIdWithStock = materialRequestRepository.findByIdWithStock(id, 2l);
-
-        System.out.println("ttttt " + byIdWithStock.get("lines"));
-
-//        Optional<MaterialRequestResponse> byIdWithStock = materialRequestRepository.findByIdWithStock(id);
         try {
             return MaterialRequestMapper.mapToMaterialRequestResponse(byIdWithStock);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        return null;
+
     }
 
     private MaterialRequestResponseShort MaterialRequestToResponse(MaterialRequest materialRequest) {

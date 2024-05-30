@@ -1,15 +1,13 @@
 package com.techpeak.hac.purchase.controllers;
 
+import com.techpeak.hac.purchase.dtos.RFPQResponse;
 import com.techpeak.hac.purchase.dtos.RFPQResponseShort;
 import com.techpeak.hac.purchase.services.RFPQService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/v1/rfpqs")
@@ -33,5 +31,10 @@ public class RFPQController {
     ) {
         Page<RFPQResponseShort> response = rfpqService.search( page,  size, sort, search, ref, store, user, phase, status);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RFPQResponse> getOne(@PathVariable("id") Long id){
+        return ResponseEntity.ok(rfpqService.getOne(id));
     }
 }

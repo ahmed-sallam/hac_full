@@ -11,14 +11,17 @@ import com.techpeak.hac.inventory.dtos.StoreResponseShort;
 import com.techpeak.hac.inventory.models.Store;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.dtos.CreateRFPQ;
+import com.techpeak.hac.purchase.dtos.RFPQResponse;
 import com.techpeak.hac.purchase.dtos.RFPQResponseShort;
 import com.techpeak.hac.purchase.enums.RequestStatus;
+import com.techpeak.hac.purchase.mappers.RFPQMapper;
 import com.techpeak.hac.purchase.models.MaterialRequest;
 import com.techpeak.hac.purchase.models.MaterialRequestLine;
 import com.techpeak.hac.purchase.models.RFPQ;
 import com.techpeak.hac.purchase.models.RFPQLine;
 import com.techpeak.hac.purchase.repositories.RFPQRepository;
 import com.techpeak.hac.purchase.services.RFPQService;
+import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +31,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -92,6 +96,18 @@ public class RFPQServiceImpl implements RFPQService {
 
         return all.map(this::RFPQToResponse);
     }
+
+    @Override
+    public RFPQResponse getOne(Long id) {
+        Tuple a = rfpqRepository.findByIdWithHistory(id);
+        System.out.println("iiiiiii "+ a);
+        try {
+            return RFPQMapper.mapToRFPQResponse(a);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private RFPQResponseShort RFPQToResponse(RFPQ rfpq) {
         return RFPQResponseShort.builder()
                 .id(rfpq.getId())
