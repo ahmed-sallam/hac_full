@@ -13,8 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CreateMaterialRequest {
-
+public class CreateRFPQ  {
 
     @Size(max = 255, message = "Notes cannot exceed 200 characters")
     private String notes;
@@ -31,6 +30,6 @@ public class CreateMaterialRequest {
     @NotNull(message = "Lines cannot be null")
     @NotEmpty(message = "Lines cannot be empty")
     @Valid
-    private Set<CreateMaterialRequestLine> lines;
+    private Set<CreateRFPQLine> lines;
     private RequestStatus status = RequestStatus.DRAFT;
 }

@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "RFPQ")
 @Table(name = "rfpqs", 
@@ -38,7 +40,19 @@ public class RFPQ extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @ManyToOne
-    @JoinColumn(name = "supplier_id")
-    private Supplier supplier;
+//    @ManyToOne
+//    @JoinColumn(name = "supplier_id")
+//    private Supplier supplier;
+
+    @OneToMany(mappedBy = "rfpq", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<RFPQLine> lines = new HashSet<>();
+
+    public void setLines(Set<RFPQLine> lines) {
+        this.lines = lines;
+        for (RFPQLine line : lines) {
+            line.setRfpq(this);
+        }
+    }
+
 }

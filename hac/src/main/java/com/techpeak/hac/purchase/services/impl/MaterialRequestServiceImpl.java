@@ -3,6 +3,7 @@ package com.techpeak.hac.purchase.services.impl;
 import com.techpeak.hac.core.dtos.CreateUserHistory;
 import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.core.enums.InternalPhase;
+import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.services.UserHistoryService;
@@ -19,6 +20,7 @@ import com.techpeak.hac.purchase.models.MaterialRequest;
 import com.techpeak.hac.purchase.models.MaterialRequestLine;
 import com.techpeak.hac.purchase.repositories.MaterialRequestRepository;
 import com.techpeak.hac.purchase.services.MaterialRequestService;
+import com.techpeak.hac.purchase.services.RFPQService;
 import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +44,7 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
     private final StoreService storeService;
     private final ProductService productService;
     private final UserHistoryService userHistoryService;
+    private final RFPQService rfpqService;
 
     @Override
     @Transactional
@@ -54,14 +57,20 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
         Set<MaterialRequestLine> lines = mapToMaterialRequestLines(createMaterialRequest);
         materialRequest.setLines(lines);
         MaterialRequest savedMaterialRequest = materialRequestRepository.save(materialRequest);
+        // for user history
+        String actionDetails = "Created a new Material Request (" + savedMaterialRequest.getStatus().name() + ") with number:" + savedMaterialRequest.getNumber() + " and internal id: " + savedMaterialRequest.getInternalRef().getId();
+        createUserHistory(user, savedMaterialRequest, actionDetails);
+        return savedMaterialRequest;
+    }
+
+    private void createUserHistory(User user, MaterialRequest savedMaterialRequest, String actionDetails) {
         CreateUserHistory createUserHistory = new CreateUserHistory(
-                "Created a new Material Request ("+ createMaterialRequest.getStatus().name() +") with number:" + savedMaterialRequest.getNumber() + " and internal id: " + savedMaterialRequest.getInternalRef().getId(),
+                actionDetails,
                 "material_requests",
                 savedMaterialRequest.getId(),
                 user
         );
         userHistoryService.create(createUserHistory);
-        return savedMaterialRequest;
     }
 
     private MaterialRequest buildMaterialRequest(
@@ -98,8 +107,21 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
     }
 
     @Override
-    public void updateStatus(Long id, RequestStatus status) {
+    @Transactional
+    public void updateStatus(Long id, RequestStatus status, User user) {
+        MaterialRequest mr = getOrElseThrow(id);
 
+        if (status.name().equals(RequestStatus.PROCESSING.name())) {
+            rfpqService.createInternal(mr, user);
+        }
+        mr.setStatus(status);
+        MaterialRequest saved = materialRequestRepository .save(mr);
+        String actionDetails = "Update Material Request with number: " + saved.getNumber() + " and internal id: " + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
+        createUserHistory(user, saved, actionDetails);
+    }
+
+    private MaterialRequest getOrElseThrow(Long id) {
+        return materialRequestRepository.findById(id).orElseThrow(() -> new NotFoundException("Material Request with id: " + id + " not found"));
     }
 
     @Override
@@ -135,8 +157,7 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
     public MaterialRequestResponse getOne(Long id) {
         Tuple byIdWithStock = materialRequestRepository.findByIdWithStock(id, 2l);
 
-//        System.out.println("ttttt " + byIdWithStock.get(4).getClass());
-//        System.out.println("ttttt " + byIdWithStock.get("store"));
+        System.out.println("ttttt " + byIdWithStock.get("lines"));
 
 //        Optional<MaterialRequestResponse> byIdWithStock = materialRequestRepository.findByIdWithStock(id);
         try {

@@ -21,4 +21,7 @@ public class RFPQLine extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+    @ManyToOne
+    @JoinColumn(name = "rfpq_id", nullable = false)
+    private RFPQ rfpq;
 }

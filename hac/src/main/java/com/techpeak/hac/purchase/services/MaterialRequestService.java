@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 public interface MaterialRequestService {
     MaterialRequest create(CreateMaterialRequest createMaterialRequest, User user);
 
-    void updateStatus(Long id, RequestStatus status);
+    void updateStatus(Long id, RequestStatus status, User user);
 
     Page<MaterialRequestResponseShort> search(int page, int size, String sort, String search, Long ref, Long store, Long user, String phase, String status);
 
