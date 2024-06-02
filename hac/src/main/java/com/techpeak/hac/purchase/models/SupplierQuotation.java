@@ -3,6 +3,7 @@ package com.techpeak.hac.purchase.models;
 import com.techpeak.hac.core.models.BaseEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.purchase.enums.PaymentTerms;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,10 @@ public class SupplierQuotation extends BaseEntity {
     private Double total;
     @Column(name = "is_local")
     private Boolean isLocal = true;
+
+    @Column(name="payment_terms")
+    @Enumerated(EnumType.STRING)
+    private PaymentTerms paymentTerms = PaymentTerms.IMMEDIATELY;
 
     @Column(name = "supplier_ref")
     private String supplierRef;
