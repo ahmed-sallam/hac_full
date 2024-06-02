@@ -20,7 +20,7 @@
                 } @else   if (materialRequest.status == "DRAFT") {
                     <!--            todo-->
                     <button
-
+                        (click)="updateMaterialRequestStatus('CANCELED')"
                             class="w-40 p-4 my-1 font-medium text-danger rounded-lg bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
                     >
                         {{ "Cancel " | translate : language.lang }}

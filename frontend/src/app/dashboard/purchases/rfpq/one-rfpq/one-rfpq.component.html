@@ -8,6 +8,9 @@
                 [loader]="loader$ | async"
         >
             <div headerActions>
+                @if (rfpq.status == "DRAFT") {
+<!--                    todo -->
+                }
 
                 <!--            todo-->
                 <button
@@ -35,7 +38,6 @@
             <div contentWithData class="relative w-full h-full p-8 min-h-max">
                 <div class="w-full flex items-center justify-end gap-1">
                     <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'DRAFT' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "DRAFT " | translate : language.lang }}</div>
-                    <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'PENDING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PENDING " | translate : language.lang }}</div>
                     <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'PROCESSING' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "PROCESSING " | translate : language.lang }}</div>
                     <div [class]="'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center'+ ( rfpq.status == 'COMPLETED' ?' border-primary/50 text-white bg-primary/70 ' :' border-secondary/30 text-secondary/30 ')">{{ "COMPLETED " | translate : language.lang }}</div>
                 </div>

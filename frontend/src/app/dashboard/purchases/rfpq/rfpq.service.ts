@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {AppService} from "../../../app.service";
 import {Observable} from "rxjs";
 import {RFPQResponse} from "./interfaces/RFPQResponse";
@@ -53,5 +53,15 @@ export class RfpqService {
     return this.http.get<OneRFPQ>(link);
   }
 
+  updateRFPQStatus(id: number, status : string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    let  link: string = `${this.appService.baseApi}/rfpqs/${id}`;
+    return this.http.patch<any>(link, JSON.stringify(status), {
+      headers,
+      withCredentials: true
+    });
+  }
 
 }

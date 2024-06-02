@@ -56,9 +56,7 @@ export class MaterialRequestService {
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
         });
-
         let  link: string = `${this.appService.baseApi}/material_requests/${id}`;
-        console.log("ssss ", status)
         return this.http.patch<any>(link, JSON.stringify(status), {
             headers,
             withCredentials: true

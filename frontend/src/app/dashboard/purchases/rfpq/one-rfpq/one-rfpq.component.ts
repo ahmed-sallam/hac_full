@@ -10,7 +10,7 @@ import {OneRFPQ} from "../interfaces/OneRFPQ";
 import {RfpqService} from "../rfpq.service";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {
-  MainContentComponent
+    MainContentComponent
 } from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 
@@ -65,6 +65,14 @@ export class OneRfpqComponent implements OnInit{
         });
   }
 
+  updateRFPQStatus(status: string){
+    this.rfpqService.updateRFPQStatus(this.requestId, status).subscribe({
+      next:()=>{this.getData()},
+      error:(e)=>{
+        console.log(e)}
+    })
+  }
+
   private initPageParams() {
     this.loaderService.show()
     this.activeRouter.params.subscribe(params => {
@@ -72,4 +80,7 @@ export class OneRfpqComponent implements OnInit{
       this.requestId && this.getData()
     })
   }
+
+
+
 }

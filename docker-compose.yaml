@@ -16,7 +16,10 @@ services:
     restart: unless-stopped
   hac-api:
     container_name: hac-api
-    image: hac/hac:0.0.1
+    image: hac/hac-api:0.0.2
+    environment:
+      ACTIVE_PROFILE: dev
+      JAR_VERSION: 0.0.2
     ports:
       - 8080:8080
     networks:

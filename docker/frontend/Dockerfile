@@ -1,12 +1,12 @@
 FROM node:20 AS build-stage
 WORKDIR /app
-COPY package*.json .
+COPY ../frontend/package*.json .
 RUN npm install
-COPY . .
+COPY ../frontend .
 RUN npm run build
 
 FROM nginx:alpine
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY ../frontend/nginx.conf /etc/nginx/nginx.conf
 COPY --from=build-stage /app/dist/hac_fronted/browser /usr/share/nginx/html
 
 EXPOSE 80
