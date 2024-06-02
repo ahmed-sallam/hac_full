@@ -48,6 +48,9 @@ public class SupplierQuotation extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     @ManyToOne
+    @JoinColumn(name = "rfpq_id", nullable = false)
+    private RFPQ rfpq;
+    @ManyToOne
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
     @OneToMany(mappedBy = "supplierQuotation")

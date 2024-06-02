@@ -15,7 +15,7 @@ import lombok.*;
 public class SupplierQuotationExpenses extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "pet_id")
-    private PurchaseExpensesTitle title;
+    private PurchaseExpensesTitle expensesTitle;
     private Double amount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_quotation_id")

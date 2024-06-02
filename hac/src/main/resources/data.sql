@@ -273,6 +273,6 @@ VALUES
     ('Dsg', 'Dsg', 'Dsg', 1, NOW(), NOW(), TRUE),
     ('Dsm', 'Dsm', 'Dsm', 3, NOW(), NOW(), TRUE);
 
+INSERT INTO roles (id, name) VALUES (1,'ADMIN'),(2,'USER');
 
-DELETE FROM brands
-WHERE id > 0;
+

@@ -78,7 +78,7 @@ export class ReplenishmentComponent implements OnInit {
 
     createLine(): FormGroup {
         return this.fb.group({
-            quantity: new FormControl('', [Validators.required, Validators.min(1)]),
+            quantity: new FormControl(1, [Validators.required, Validators.min(1)]),
             product: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)]),
             notes: new FormControl(''),
         })
