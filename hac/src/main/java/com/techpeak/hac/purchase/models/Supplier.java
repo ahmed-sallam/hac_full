@@ -29,5 +29,5 @@ public class Supplier extends BaseEntity {
     private String nameEn;
     private String email;
     private String phone;
-    private String Address;
+    private String address;
 }
