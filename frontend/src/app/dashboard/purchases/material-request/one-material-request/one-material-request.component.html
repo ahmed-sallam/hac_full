@@ -106,7 +106,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="w-full  mt-12 overflow-x-auto overflow-y-auto rounded shadow-accent shadow pt-2">
+                <div class="w-full  mt-12 overflow-x-auto overflow-y-auto  pt-2">
                     <table class="w-full text-sm text-left rtl:text-right">
                         <thead class="text-xs uppercase text-secondary/50">
                         <tr>
@@ -150,29 +150,11 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="w-full  mt-6 overflow-x-auto overflow-y-auto rounded shadow-accent shadow pt-4 pb-0 px-4 bg-accent/10">
-                    <div class="text-lg font-semibold underline">{{ "History " | translate : language.lang }}</div>
-                    @for (item of materialRequest.history; track item.id) {
-                        <div class="w-full py-2 border-b border-secondary/30 flex flex-col gap-1">
-                            <div class="flex gap-1 font-semibold ">
-                                <div class=" w-40 ">{{ "AT" | translate : language.lang }}</div>
-                                <div class="underline">{{ item.dateTime | date: "dd/MM/yyyy h:mm a " }}</div>
-                            </div>
-                            <div class="flex gap-1">
-                                <div class="font-semibold w-40">{{ "DETAILS" | translate : language.lang }}</div>
-                                <div>{{ item.actionDetails }}</div>
-                            </div>
-                            <div class="flex gap-1 font-semibold ">
-                                <div class=" w-40 ">{{ "BY" | translate : language.lang }}</div>
-                                <div class="underline">{{ item.user.username }}</div>
-                            </div>
-                        </div>
-                    }
-                </div>
-
             </div>
 
 
         </app-main-content>
+        <app-history-section [language]="language.lang" [history]="materialRequest.history" />
+
     }
 }

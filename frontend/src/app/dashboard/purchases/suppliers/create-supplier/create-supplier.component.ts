@@ -77,6 +77,6 @@ export class CreateSupplierComponent {
   }
 
   private gotoSuppliers() {
-    this.router.navigate(['dashboard/purchase/suppliers']);
+    this.router.navigate(['/dashboard/purchases/suppliers']);
   }
 }

@@ -13,17 +13,21 @@ import {
   MainContentComponent
 } from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
+import {
+  HistorySectionComponent
+} from "../../../components/history-section/history-section.component";
 
 @Component({
   selector: 'app-one-material-request',
   standalone: true,
-  imports: [
-    AsyncPipe,
-    MainContentComponent,
-    TranslatePipe,
-    RouterLink,
-    DatePipe
-  ],
+    imports: [
+        AsyncPipe,
+        MainContentComponent,
+        TranslatePipe,
+        RouterLink,
+        DatePipe,
+        HistorySectionComponent
+    ],
   templateUrl: './one-material-request.component.html',
   styles: ``
 })
