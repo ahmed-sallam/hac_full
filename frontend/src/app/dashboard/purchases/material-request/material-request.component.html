@@ -1,28 +1,28 @@
-@if (selectLanguage$ | async; as language){
+@if (selectLanguage$ | async; as language) {
     <app-main-content
             [language]="language"
             [headerText]="'Material Requests' | translate : language.lang"
             [noDataMessage]="'There is no data to show' | translate : language?.lang"
             [noData]="materialRequests.length === 0"
     >
-        <div headerActions >
-            @if(selectUser$ | async; as userData){
-            @if(all){
-            <button
-                    (click)="getMyRequests(userData.id)"
-                    class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
-            >
-                {{ "My Requests" | translate : language.lang }}
-            </button>
+        <div headerActions>
+            @if (selectUser$ | async; as userData) {
+                @if (all) {
+                    <button
+                            (click)="getMyRequests(userData.id)"
+                            class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
+                    >
+                        {{ "My Requests" | translate : language.lang }}
+                    </button>
 
-            } @else {
-                <button
-                        (click)="getAll()"
-                        class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
-                >
-                    {{ "All" | translate : language.lang }}
-                </button>
-            }
+                } @else {
+                    <button
+                            (click)="getAll()"
+                            class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
+                    >
+                        {{ "All" | translate : language.lang }}
+                    </button>
+                }
 
 
             }
@@ -41,7 +41,7 @@
             />
         </div>
 
-        @if (materialRequests.length >0) {
+        @if (materialRequests.length > 0) {
 
             <div contentWithData class="relative w-full h-full p-8 min-h-max">
 
@@ -56,8 +56,8 @@
                             }
                         </tr>
                         </thead>
-                        <tbody >
-                            @for ( item of materialRequests; track item.id){
+                        <tbody>
+                            @for (item of materialRequests; track item.id) {
 
                                 <tr
                                         [routerLink]="'' + item.id"
@@ -73,7 +73,7 @@
                                         {{ item.date | date : "dd/MM/yyyy" }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ language.lang == "ar" ? item.store.nameAr :item.store.nameEn }}
+                                        {{ language.lang == "ar" ? item.store.nameAr : item.store.nameEn }}
                                     </td>
                                     <td class="px-4 py-2 ">
                                         <div [class]="'px-3 py-1.5 rounded text-center w-fit ' + (item.status == 'COMPLETED'? ' bg-success/20 ' : item.status == 'PROCESSING'? ' bg-blue-200 ' : item.status == 'PENDING'? ' bg-primary/30 ' :  ' bg-secondary/10 ')">{{ item.status }}</div>
@@ -91,112 +91,16 @@
                 </div>
 
                 <!--            If there are more than one page -->
-                @if (true) {
-                    <div class="flex items-center my-8 me-4 ms-auto w-fit">
-                        @if (language.dir == 'ltr') {
 
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="materialRequestResponse.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(materialRequestResponse.first ? -1: currentPage-1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m15 19-7-7 7-7"
-                                    />
-                                </svg>
-                            </div>
-                        } @else {
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="materialRequestResponse.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(materialRequestResponse.first ? -1: currentPage-1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m9 5 7 7-7 7"
-                                    />
-                                </svg>
-                            </div>
-                        }
-                        @for (i of generatePageArray(); track $index) {
-
-                            <div
-                                    class="px-3 py-1 border rounded border-secondary/15 me-1 "
-                                    [ngClass]="+pageable.pageNumber == $index ? 'bg-primary/80 ':' hover:bg-primary/80 cursor-pointer'"
-                                    (click)="onPageChanged($index)"
-
-                            >{{ $index + 1 }}
-                            </div>
-
-                        }
-
-                        @if (language.dir == 'ltr') {
-
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="materialRequestResponse.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(materialRequestResponse.last ? -1: +currentPage+1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m9 5 7 7-7 7"
-                                    />
-                                </svg>
-                            </div>
-
-                        } @else {
-
-
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="materialRequestResponse.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(materialRequestResponse.last ? -1: +currentPage+1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m15 19-7-7 7-7"
-                                    />
-                                </svg>
-                            </div>
-                        }
-                    </div>
+                @if (materialRequestResponse) {
+                    <app-pagenation
+                            [language]="language"
+                            [response]="materialRequestResponse"
+                            [currentPage]="currentPage"
+                            [pageArray]="generatePageArray()"
+                            [pageable]="pageable"
+                            (onPageChanged)="onPageChanged($event)"
+                    />
                 }
             </div>
         }

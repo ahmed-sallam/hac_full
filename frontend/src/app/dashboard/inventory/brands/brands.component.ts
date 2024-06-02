@@ -16,6 +16,9 @@ import {
   SearchInputComponent
 } from "../../components/search-input/search-input.component";
 import {Pageable} from "../stores/interfaces/StoreResponse";
+import {
+  PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
   selector: 'app-brands',
@@ -27,7 +30,8 @@ import {Pageable} from "../stores/interfaces/StoreResponse";
     RouterLink,
     SearchInputComponent,
     DatePipe,
-    NgClass
+    NgClass,
+    PagenationComponent
   ],
   templateUrl: './brands.component.html',
   styles: ``

@@ -91,112 +91,16 @@
                 </div>
 
                 <!--            If there are more than one page -->
-                @if (true) {
-                    <div class="flex items-center my-8 me-4 ms-auto w-fit">
-                        @if (language.dir == 'ltr') {
 
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="rfpqResponse.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(rfpqResponse.first ? -1: currentPage-1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m15 19-7-7 7-7"
-                                    />
-                                </svg>
-                            </div>
-                        } @else {
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="rfpqResponse.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(rfpqResponse.first ? -1: currentPage-1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m9 5 7 7-7 7"
-                                    />
-                                </svg>
-                            </div>
-                        }
-                        @for (i of generatePageArray(); track $index) {
-
-                            <div
-                                    class="px-3 py-1 border rounded border-secondary/15 me-1 "
-                                    [ngClass]="+pageable.pageNumber == $index ? 'bg-primary/80 ':' hover:bg-primary/80 cursor-pointer'"
-                                    (click)="onPageChanged($index)"
-
-                            >{{ $index + 1 }}
-                            </div>
-
-                        }
-
-                        @if (language.dir == 'ltr') {
-
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="rfpqResponse.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(rfpqResponse.last ? -1: +currentPage+1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m9 5 7 7-7 7"
-                                    />
-                                </svg>
-                            </div>
-
-                        } @else {
-
-
-                            <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
-                                 [ngClass]="rfpqResponse.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
-                                 (click)="onPageChanged(rfpqResponse.last ? -1: +currentPage+1)"
-                            >
-                                <svg
-                                        class="w-6 h-6 text-secondary/50"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                >
-                                    <path
-                                            stroke="currentColor"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="m15 19-7-7 7-7"
-                                    />
-                                </svg>
-                            </div>
-                        }
-                    </div>
+                @if (rfpqResponse ) {
+                    <app-pagenation
+                            [language]="language"
+                            [response]="rfpqResponse"
+                            [currentPage]="currentPage"
+                            [pageArray]="generatePageArray()"
+                            [pageable]="pageable"
+                            (onPageChanged)="onPageChanged($event)"
+                    />
                 }
             </div>
         }

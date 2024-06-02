@@ -1,0 +1,105 @@
+<div class="flex items-center my-8 me-4 ms-auto w-fit">
+    @if (language.dir == 'ltr') {
+
+        <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+             [ngClass]="response.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+             (click)="onPageChangedF(response.first ? -1: currentPage-1)"
+        >
+            <svg
+                    class="w-6 h-6 text-secondary/50"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+            >
+                <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m15 19-7-7 7-7"
+                />
+            </svg>
+        </div>
+    } @else {
+        <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+             [ngClass]="response.first ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+             (click)="onPageChangedF(response.first ? -1: currentPage-1)"
+        >
+            <svg
+                    class="w-6 h-6 text-secondary/50"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+            >
+                <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m9 5 7 7-7 7"
+                />
+            </svg>
+        </div>
+    }
+    @for (i of pageArray; track $index) {
+
+        <div
+                class="px-3 py-1 border rounded border-secondary/15 me-1 "
+                [ngClass]="+pageable.pageNumber == $index ? 'bg-primary/80 ':' hover:bg-primary/80 cursor-pointer'"
+                (click)="onPageChangedF($index)"
+
+        >{{ $index + 1 }}
+        </div>
+
+    }
+
+    @if (language.dir == 'ltr') {
+
+        <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+             [ngClass]="response.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+             (click)="onPageChangedF(response.last ? -1: +currentPage+1)"
+        >
+            <svg
+                    class="w-6 h-6 text-secondary/50"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+            >
+                <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m9 5 7 7-7 7"
+                />
+            </svg>
+        </div>
+
+    } @else {
+
+
+        <div class="px-2 py-1 border rounded border-secondary/15 me-1  "
+             [ngClass]="response.last ? 'bg-primary/20 ':'hover:bg-primary/80 cursor-pointer'"
+             (click)="onPageChangedF(response.last ? -1: +currentPage+1)"
+        >
+            <svg
+                    class="w-6 h-6 text-secondary/50"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+            >
+                <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m15 19-7-7 7-7"
+                />
+            </svg>
+        </div>
+    }
+</div>

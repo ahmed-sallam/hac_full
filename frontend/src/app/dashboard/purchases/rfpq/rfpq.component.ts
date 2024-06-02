@@ -17,19 +17,23 @@ import {TranslatePipe} from "../../../pipes/translate.pipe";
 import {
   SearchInputComponent
 } from "../../components/search-input/search-input.component";
+import {
+  PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
   selector: 'app-rfpq',
   standalone: true,
-  imports: [
-    AsyncPipe,
-    MainContentComponent,
-    TranslatePipe,
-    RouterLink,
-    SearchInputComponent,
-    DatePipe,
-    NgClass
-  ],
+    imports: [
+        AsyncPipe,
+        MainContentComponent,
+        TranslatePipe,
+        RouterLink,
+        SearchInputComponent,
+        DatePipe,
+        NgClass,
+        PagenationComponent
+    ],
   templateUrl: './rfpq.component.html',
   styles: ``
 })

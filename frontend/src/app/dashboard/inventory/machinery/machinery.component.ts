@@ -19,19 +19,23 @@ import {
   MachineryTypeEntity
 } from "./interfaces/MachineryResponse";
 import {Pageable} from "../brands/BrandsResponse";
+import {
+  PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
   selector: 'app-machinery',
   standalone: true,
-  imports: [
-    TranslatePipe,
-    MainContentComponent,
-    RouterLink,
-    SearchInputComponent,
-    DatePipe,
-    NgClass,
-    AsyncPipe
-  ],
+    imports: [
+        TranslatePipe,
+        MainContentComponent,
+        RouterLink,
+        SearchInputComponent,
+        DatePipe,
+        NgClass,
+        AsyncPipe,
+        PagenationComponent
+    ],
   templateUrl: './machinery.component.html',
   styles: ``
 })

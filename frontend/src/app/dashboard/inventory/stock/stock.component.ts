@@ -17,6 +17,9 @@ import {
     SearchInputComponent
 } from "../../components/search-input/search-input.component";
 import {flatMap, groupBy} from "lodash-es";
+import {
+    PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
     selector: 'app-stock',
@@ -28,7 +31,8 @@ import {flatMap, groupBy} from "lodash-es";
         RouterLink,
         SearchInputComponent,
         NgClass,
-        KeyValuePipe
+        KeyValuePipe,
+        PagenationComponent
     ],
     templateUrl: './stock.component.html',
     styles: ``

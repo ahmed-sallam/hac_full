@@ -17,21 +17,25 @@ import {
   StoreEntity as StoreEntity,
   StoreResponse,
 } from './interfaces/StoreResponse';
+import {
+  PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
   selector: 'app-stores',
   standalone: true,
   templateUrl: './stores.component.html',
   styles: ``,
-  imports: [
-    TranslatePipe,
-    DatePipe,
-    AsyncPipe,
-    MainContentComponent,
-    SearchInputComponent,
-    RouterLink,
-    NgClass,
-  ],
+    imports: [
+        TranslatePipe,
+        DatePipe,
+        AsyncPipe,
+        MainContentComponent,
+        SearchInputComponent,
+        RouterLink,
+        NgClass,
+        PagenationComponent,
+    ],
 })
 export class StoresComponent implements OnInit {
   store = inject(Store<State>);

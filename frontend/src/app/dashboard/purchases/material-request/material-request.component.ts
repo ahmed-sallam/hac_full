@@ -20,6 +20,9 @@ import {
     SearchInputComponent
 } from "../../components/search-input/search-input.component";
 import {selectUser} from "../../../state/selectors/auth.selectors";
+import {
+    PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
     selector: 'app-material-request',
@@ -31,7 +34,8 @@ import {selectUser} from "../../../state/selectors/auth.selectors";
         RouterLink,
         SearchInputComponent,
         NgClass,
-        DatePipe
+        DatePipe,
+        PagenationComponent
     ],
     templateUrl: './material-request.component.html',
     styles: ``

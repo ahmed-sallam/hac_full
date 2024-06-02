@@ -19,6 +19,9 @@ import {
     ProductEntity
 } from "./interfaces/ListProductsResponse";
 import {Pageable} from "../stores/interfaces/StoreResponse";
+import {
+    PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
     selector: 'app-products',
@@ -30,7 +33,8 @@ import {Pageable} from "../stores/interfaces/StoreResponse";
         DatePipe,
         TranslatePipe,
         AsyncPipe,
-        NgClass
+        NgClass,
+        PagenationComponent
     ],
     templateUrl: './products.component.html',
     styles: ``

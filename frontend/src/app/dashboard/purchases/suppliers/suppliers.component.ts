@@ -19,6 +19,9 @@ import {TranslatePipe} from "../../../pipes/translate.pipe";
 import {
   SearchInputComponent
 } from "../../components/search-input/search-input.component";
+import {
+  PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
   selector: 'app-suppliers',
@@ -29,7 +32,8 @@ import {
     TranslatePipe,
     RouterLink,
     SearchInputComponent,
-    NgClass
+    NgClass,
+    PagenationComponent
   ],
   templateUrl: './suppliers.component.html',
   styles: ``

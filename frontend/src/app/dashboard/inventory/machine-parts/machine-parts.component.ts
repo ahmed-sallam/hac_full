@@ -19,6 +19,9 @@ import {
     MachinePartResponse
 } from "./interfaces/MachinePartResponse";
 import {Pageable} from "../stores/interfaces/StoreResponse";
+import {
+    PagenationComponent
+} from "../../components/pagenation/pagenation.component";
 
 @Component({
     selector: 'app-machine-parts',
@@ -31,6 +34,7 @@ import {Pageable} from "../stores/interfaces/StoreResponse";
         RouterLink,
         DatePipe,
         NgClass,
+        PagenationComponent,
     ],
     templateUrl: './machine-parts.component.html',
     styles: ``,
