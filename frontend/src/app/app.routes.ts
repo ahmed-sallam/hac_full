@@ -144,6 +144,14 @@ export const routes: Routes = [
                 path: 'purchases/bid-summaries/create',
                 loadComponent: () => import('./dashboard/purchases/bid-summary/create-bid-summary/create-bid-summary.component').then((c) => c.CreateBidSummaryComponent)
             },
+            {
+                path: 'purchases/suppliers',
+                loadComponent: () => import('./dashboard/purchases/suppliers/suppliers.component').then((c) => c.SuppliersComponent)
+            },
+            {
+                path: 'purchases/suppliers/create',
+                loadComponent: () => import('./dashboard/purchases/suppliers/create-supplier/create-supplier.component').then((c) => c.CreateSupplierComponent)
+            },
         ],
         canActivate: [AuthGuard]
     },
