@@ -1,9 +1,11 @@
 package com.techpeak.hac.purchase.models;
 
 import com.techpeak.hac.core.models.BaseEntity;
+import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
+import com.techpeak.hac.purchase.enums.ReceiveTypes;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,6 +24,14 @@ public class SupplierQuotation extends BaseEntity {
     @Column(name = "notes")
     private String notes;
     private LocalDate date;
+    @Column(name = "valid_to")
+    private LocalDate validTo;
+    @Column(name = "receive_in")
+    @Enumerated(EnumType.STRING)
+    private ReceiveTypes receiveIn;
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
+    private CurrencyEntity currency;
     @Column(name = "sub_total")
     private Double subTotal;
     @Column(name = "discount")

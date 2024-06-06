@@ -1,7 +1,14 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AsyncPipe, JsonPipe, NgClass} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
@@ -9,8 +16,13 @@ import {selectLanguage} from "../../../../state/selectors/lang.selectors";
 import {catchError, map, Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
 import {MachinePartsService} from "../../machine-parts/machine-parts.service";
-import {MachinePartEntity, MachinePartResponse} from "../../machine-parts/interfaces/MachinePartResponse";
-import {SelectWithSearchComponent} from "./select-with-search/select-with-search.component";
+import {
+    MachinePartEntity,
+    MachinePartResponse
+} from "../../machine-parts/interfaces/MachinePartResponse";
+import {
+    SelectWithSearchComponent
+} from "./select-with-search/select-with-search.component";
 import {BrandsService} from "../../brands/brands.service";
 import {BrandEntity, BrandsResponse} from "../../brands/BrandsResponse";
 import {CountriesService} from "../../../core/countries/countries.service";
@@ -20,8 +32,12 @@ import {HttpEventType, HttpResponse} from "@angular/common/http";
 import {ProductsService} from "../products.service";
 import {CreateProduct} from "../interfaces/CreateProduct";
 import {Router} from "@angular/router";
-import {SelectSetItemsModalComponent} from "./select-set-items-modal/select-set-items-modal.component";
-import {SelectAlternativeModalComponent} from "./select-alternatice-modal/select-alternative-modal.component";
+import {
+    SelectSetItemsModalComponent
+} from "./select-set-items-modal/select-set-items-modal.component";
+import {
+    SelectAlternativeModalComponent
+} from "./select-alternatice-modal/select-alternative-modal.component";
 import {MachineryService} from "../../machinery/machinery.service";
 import {
     MachineryModelEntity,
@@ -51,18 +67,8 @@ export class CreateProductComponent implements OnInit {
     partImageUploadProgress: number = 0;
     productImageUrl!: string | any;
     partImageUrl!: string | any;
-    private newProductId: number | any;
     tempProductImage: any;
     tempPartImage: any;
-
-    ngOnInit(): void {
-        this.getMachineParts()
-        this.getBrands()
-        this.getCountryOptions()
-        this.getMachinery()
-    }
-
-
     store: Store<State> = inject(Store<State>)
     // storesService: StoresService = inject(StoresService)
     machinePartsService: MachinePartsService = inject(MachinePartsService);
@@ -71,9 +77,7 @@ export class CreateProductComponent implements OnInit {
     filesService: FilesService = inject(FilesService);
     productsService: ProductsService = inject(ProductsService)
     machineryService: MachineryService = inject(MachineryService)
-
     router: Router = inject(Router)
-
     selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
     machinePartOptions$!: Observable<MachinePartEntity[]>;
     brandOptions$!: Observable<BrandEntity[]>;
@@ -112,7 +116,6 @@ export class CreateProductComponent implements OnInit {
 
 
     });
-
     UnitTypes = [
         'PIECE',
         'SET'
@@ -123,7 +126,14 @@ export class CreateProductComponent implements OnInit {
     showSelectAlternatives: boolean = false;
     showSelectRelated: boolean = false;
     showSuccessModal: boolean = false;
+    private newProductId: number | any;
 
+    ngOnInit(): void {
+        this.getMachineParts()
+        this.getBrands()
+        this.getCountryOptions()
+        this.getMachinery()
+    }
 
     imageValidator(file: any): boolean {
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
@@ -405,15 +415,15 @@ export class CreateProductComponent implements OnInit {
     }
 
     searchMachineParts($event: string) {
-        this.getMachineParts(0, 15, $event.trim(), true);
+        this.getMachineParts(0, 80, $event.trim(), true);
     }
 
     searchBrands($event: string) {
-        this.getBrands(0, 15, $event.trim(), true);
+        this.getBrands(0, 80, $event.trim(), true);
     }
 
     searchMachinery($event: string) {
-        this.getMachinery(0, 15, $event.trim(), true);
+        this.getMachinery(0, 80, $event.trim(), true);
     }
 
     searchCountries($event: string) {

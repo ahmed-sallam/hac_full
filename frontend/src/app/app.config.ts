@@ -3,11 +3,7 @@ import {metaReducers, reducers} from './state/reducers';
 
 import {LangEffects} from './state/effects/lang.effect';
 import {provideEffects} from '@ngrx/effects';
-import {
-  HTTP_INTERCEPTORS,
-  provideHttpClient,
-  withInterceptorsFromDi
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {provideRouter} from '@angular/router';
 import {provideStore} from '@ngrx/store';
 import {provideStoreDevtools} from '@ngrx/store-devtools';

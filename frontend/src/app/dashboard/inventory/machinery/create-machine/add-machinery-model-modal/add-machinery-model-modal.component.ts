@@ -1,6 +1,19 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {CreateBrand} from "../../../brands/interfaces/CreateBrand";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {TranslatePipe} from "../../../../../pipes/translate.pipe";
 import {AsyncPipe} from "@angular/common";
 import {
@@ -24,18 +37,11 @@ import {BrandsService} from "../../../brands/brands.service";
   styles: ``
 })
 export class AddMachineryModelModalComponent implements OnInit{
-  ngOnInit(): void {
-      this.getBrands()
-  }
-
   brandOptions$!: Observable<BrandEntity[]>;
   brandsService: BrandsService = inject(BrandsService);
-
-
   @Input() language!: string;
   @Output() hideAddMachineryModelModal: EventEmitter<void> = new EventEmitter<void>();
   @Output() submitForm: EventEmitter<CreateBrand> = new EventEmitter<CreateBrand>();
-
   formGroup: FormGroup = new FormGroup({
     nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
     ]),
@@ -45,6 +51,9 @@ export class AddMachineryModelModalComponent implements OnInit{
     ]),
   });
 
+  ngOnInit(): void {
+      this.getBrands()
+  }
 
   OnHideAddMachineryModelModal() {
     this.hideAddMachineryModelModal.emit()
@@ -61,7 +70,7 @@ export class AddMachineryModelModalComponent implements OnInit{
   }
 
   searchBrands($event: string) {
-    this.getBrands(0, 15,   $event.trim(), true);
+    this.getBrands(0, 80,   $event.trim(), true);
   }
 
   getBrands(

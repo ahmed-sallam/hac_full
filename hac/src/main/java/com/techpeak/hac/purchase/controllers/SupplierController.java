@@ -40,7 +40,7 @@ public class SupplierController {
             @RequestParam(value = "isActive", required = false, defaultValue = "true") Boolean isActive
     ) {
         Pageable pageRequest = PageRequest.of(page, size, Sort.by(sort));
-        Page<SupplierResponse> response = supplierService.search( pageRequest, search, isActive);
+        Page<SupplierResponse> response = supplierService.search(pageRequest, search, isActive);
         return ResponseEntity.ok(response);
     }
 

@@ -17,6 +17,7 @@ export class SelectWithSearchComponent {
   @Input() searchOptions: null|any[]=[];
   @Input() language: string = 'en';
   @Input() product: boolean=false;
+  @Input() request: boolean=false;
 
   @Input() inputValue: string|any=''
   showOptionsd(s:boolean) {
@@ -27,8 +28,8 @@ export class SelectWithSearchComponent {
     this.searchInput.emit(($event.target as HTMLInputElement).value)
   }
   onItemSeclected(item: any) {
-    this.inputValue =this.product ? item.productNumber : this.language  == 'ar' ? item.nameAr : item.nameEn
-    this.selectedItem.emit(item)
+    this.inputValue =this.product ? item.productNumber : this.request ? item.number : this.language  == 'ar' ? item.nameAr : item.nameEn;
+    this.selectedItem.emit(item);
   }
 
   reset() {

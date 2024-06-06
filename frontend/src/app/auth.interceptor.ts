@@ -1,9 +1,4 @@
-import {
-    HttpEvent,
-    HttpHandler,
-    HttpInterceptor,
-    HttpRequest
-} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import {inject, Injectable} from "@angular/core";
 import {Observable, switchMap} from "rxjs";
 import {AuthState} from "./state/reducers/auth.reducer";

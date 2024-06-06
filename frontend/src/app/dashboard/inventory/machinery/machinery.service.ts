@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {AppService} from "../../../app.service";
 import {CreateBrand} from "../brands/interfaces/CreateBrand";
 import {Observable} from "rxjs";

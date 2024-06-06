@@ -173,12 +173,12 @@ export class CreateStockComponent implements OnInit {
     }
 
     searchStores($event: string) {
-        this.getStores(0, 15, $event.trim(), true);
+        this.getStores(0, 80, $event.trim(), true);
     }
 
     searchProducts($event: string) {
         console.log("Search Event", $event)
-        this.getProducts(0, 15, $event.trim(), true);
+        this.getProducts(0, 80, $event.trim(), true);
     }
 
     onItemSelected($event: any, key: string) {

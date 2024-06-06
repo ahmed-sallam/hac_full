@@ -17,6 +17,7 @@ public class SupplierQuotationExpenses extends BaseEntity {
     @JoinColumn(name = "pet_id")
     private PurchaseExpensesTitle expensesTitle;
     private Double amount;
+    private String notes;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "supplier_quotation_id")
     private SupplierQuotation supplierQuotation;

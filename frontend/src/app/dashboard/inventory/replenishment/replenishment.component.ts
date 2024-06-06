@@ -91,7 +91,7 @@ export class ReplenishmentComponent implements OnInit {
     }
 
     searchStores($event: string) {
-        this.getStores(0, 15, $event.trim(), true);
+        this.getStores(0, 80, $event.trim(), true);
     }
 
     getStores(
