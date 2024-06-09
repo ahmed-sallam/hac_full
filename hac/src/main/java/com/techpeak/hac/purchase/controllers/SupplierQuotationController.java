@@ -18,8 +18,18 @@ public class SupplierQuotationController {
     private final SupplierQuotationService supplierQuotationService;
 
     @GetMapping
-    public ResponseEntity<Page<SupplierQuotationResponseShort>> getAllSupplierQuotations() {
-        return ResponseEntity.ok(supplierQuotationService.getAllSupplierQuotations());
+    public ResponseEntity<Page<SupplierQuotationResponseShort>> search(
+            @RequestParam(value = "page", defaultValue = "0", required = false) int page,
+            @RequestParam(value = "size", defaultValue = "80", required = false) int size,
+            @RequestParam(value = "sort", defaultValue = "id", required = false) String sort,
+            @RequestParam(value = "ref", required = false) Long ref,
+            @RequestParam(value = "supplier", required = false) Long supplier,
+            @RequestParam(value = "user", required = false) Long user,
+            @RequestParam(value = "supplierRef", required = false) String supplierRef,
+            @RequestParam(value = "isLocal", required = false) Boolean isLocal,
+            @RequestParam(value = "date", required = false) String date
+    ) {
+        return ResponseEntity.ok(supplierQuotationService.search(page, size, sort, ref, supplier, user, supplierRef, isLocal, date));
     }
     // I want to get all supplier quotations (paginated) by is active or without it ,  with the following fields:
     // id,  date, supplier name , currency,  total, isLocal, paymentTerms, supplierRef, internalRef, user, rfpq

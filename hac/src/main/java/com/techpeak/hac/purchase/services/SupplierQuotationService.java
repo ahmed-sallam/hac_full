@@ -7,7 +7,7 @@ import com.techpeak.hac.purchase.models.SupplierQuotation;
 import org.springframework.data.domain.Page;
 
 public interface SupplierQuotationService {
-    Page<SupplierQuotationResponseShort> getAllSupplierQuotations();
+    Page<SupplierQuotationResponseShort> search(int page, int size, String sort, Long ref, Long supplier, Long user, String supplierRef, Boolean isLocal, String date);
     Page<SupplierQuotationResponseShort> getAllActiveSupplierQuotations();
     SupplierQuotation createSupplierQuotation(SupplierQuotationRequest request, User user);
 }

@@ -24,6 +24,10 @@ import com.techpeak.hac.purchase.services.SupplierService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -41,9 +45,30 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
     private final UserHistoryService userHistoryService;
 
     @Override
-    public Page<SupplierQuotationResponseShort> getAllSupplierQuotations() {
-//        return supplierQuotationRepository.findAll();
-        return null;
+    public Page<SupplierQuotationResponseShort> search(int page, int size, String sort, Long ref, Long supplier, Long user, String supplierRef, Boolean isLocal, String date) {
+        Specification<SupplierQuotation> spec = Specification.where(null);
+        if (ref != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("internalRef").get("id"), ref));
+        }
+        if (supplier != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("supplier").get("id"), supplier));
+        }
+        if (user != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("user").get("id"), user));
+        }
+        if (supplierRef != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("supplierRef"), supplierRef));
+        }
+        if (isLocal != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("isLocal"), isLocal));
+        }
+        if (date != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("date"), date));
+        }
+
+        Pageable pageRequest = PageRequest.of(page, size, Sort.by(sort));
+        Page<SupplierQuotation> all = supplierQuotationRepository.findAll( spec, pageRequest);
+        return all.map(SupplierQuotationMapper::mapToResponseShort);
     }
 
     @Override

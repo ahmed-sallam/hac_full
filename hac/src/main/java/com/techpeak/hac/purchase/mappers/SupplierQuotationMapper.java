@@ -1,9 +1,11 @@
 package com.techpeak.hac.purchase.mappers;
 
+import com.techpeak.hac.core.mappers.UserMapper;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
 import com.techpeak.hac.purchase.models.RFPQ;
 import com.techpeak.hac.purchase.models.Supplier;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
@@ -41,6 +43,21 @@ public class SupplierQuotationMapper {
     }
 
 
-
+    public static SupplierQuotationResponseShort mapToResponseShort(SupplierQuotation supplierQuotation) {
+        return SupplierQuotationResponseShort.builder()
+                .id(supplierQuotation.getId())
+                .isActive(supplierQuotation.getIsActive())
+                .date(supplierQuotation.getDate())
+                .currency(CurrencyMapper.mapToCurrencyCodeDto(supplierQuotation.getCurrency()))
+                .total(supplierQuotation.getTotal())
+                .isLocal(supplierQuotation.getIsLocal())
+                .paymentTerms(supplierQuotation.getPaymentTerms())
+                .supplierRef(supplierQuotation.getSupplierRef())
+                .internalRef(InternalRefMapper.mapToInternalRefDto(supplierQuotation.getInternalRef()))
+                .user(UserMapper.toDtoShort(supplierQuotation.getUser()))
+                .rfpq(RFPQMapper.mapToRFPQResponseNumber(supplierQuotation.getRfpq()))
+                .supplier(SupplierMapper.mapToSupplierResponseName(supplierQuotation.getSupplier()))
+                .build();
+    }
 
 }

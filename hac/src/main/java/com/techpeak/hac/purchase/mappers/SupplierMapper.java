@@ -2,6 +2,7 @@ package com.techpeak.hac.purchase.mappers;
 
 import com.techpeak.hac.purchase.dtos.CreateSupplier;
 import com.techpeak.hac.purchase.dtos.SupplierResponse;
+import com.techpeak.hac.purchase.dtos.SupplierResponseName;
 import com.techpeak.hac.purchase.models.Supplier;
 
 public class SupplierMapper {
@@ -33,5 +34,13 @@ public class SupplierMapper {
                 .updatedAt(supplier.getUpdatedAt())
                 .build();
 
+    }
+
+    public static SupplierResponseName mapToSupplierResponseName(Supplier supplier){
+        return SupplierResponseName.builder()
+                .id(supplier.getId())
+                .nameAr(supplier.getNameAr())
+                .nameEn(supplier.getNameEn())
+                .build();
     }
 }

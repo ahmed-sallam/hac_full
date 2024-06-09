@@ -10,6 +10,8 @@ import com.techpeak.hac.core.dtos.UserHistoryResponse;
 import com.techpeak.hac.inventory.dtos.StoreResponseShort;
 import com.techpeak.hac.purchase.dtos.RFPQLineResponse;
 import com.techpeak.hac.purchase.dtos.RFPQResponse;
+import com.techpeak.hac.purchase.dtos.RFPQResponseNumber;
+import com.techpeak.hac.purchase.models.RFPQ;
 import jakarta.persistence.Tuple;
 
 import java.io.IOException;
@@ -61,4 +63,9 @@ public class RFPQMapper {
         response.setHistory(history);
         return response;
     }
+
+    public static RFPQResponseNumber mapToRFPQResponseNumber(RFPQ frpq) {
+       return new RFPQResponseNumber(frpq.getId(), frpq.getNumber());
+    }
+
 }
