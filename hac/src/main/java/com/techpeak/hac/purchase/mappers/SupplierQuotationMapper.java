@@ -1,0 +1,46 @@
+package com.techpeak.hac.purchase.mappers;
+
+import com.techpeak.hac.core.models.CurrencyEntity;
+import com.techpeak.hac.core.models.InternalRef;
+import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
+import com.techpeak.hac.purchase.models.RFPQ;
+import com.techpeak.hac.purchase.models.Supplier;
+import com.techpeak.hac.purchase.models.SupplierQuotation;
+
+public class SupplierQuotationMapper {
+    private SupplierQuotationMapper() {
+    }
+
+    public static SupplierQuotation mapToSupplierQuotation(
+            SupplierQuotationRequest request,
+            User user, CurrencyEntity currency,
+            InternalRef internalRef, RFPQ rfpq, Supplier supplier) {
+        // todo calc lines
+        return SupplierQuotation.builder()
+                .notes(request.getNotes())
+                .date(request.getDate())
+                .validTo(request.getValidTo())
+                .receiveIn(request.getReceiveIn())
+                .currency(currency)
+                .subTotal(request.getSubTotal())
+                .discount(request.getDiscount())
+                .vat(request.getVat())
+                .totalExpenses(request.getTotalExpenses())
+                .total(request.getTotal())
+                .isLocal(request.getIsLocal())
+                .paymentTerms(request.getPaymentTerms())
+                .supplierRef(request.getSupplierRef())
+                .internalRef(internalRef)
+                .user(user)
+                .rfpq(rfpq)
+                .supplier(supplier)
+//                .expenses(request.getExpenses().stream().map(SupplierQuotationExpensesMapper::mapToSupplierQuotationExpenses).collect(Collectors.toSet()))
+//                .lines(request.getLines().stream().map((l)->SupplierQuotationLineMapper.mapToSupplierQuotationLine(l)).collect(Collectors.toSet()))
+                .build();
+    }
+
+
+
+
+}

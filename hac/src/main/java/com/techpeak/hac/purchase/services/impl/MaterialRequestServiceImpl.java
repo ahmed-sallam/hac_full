@@ -1,6 +1,5 @@
 package com.techpeak.hac.purchase.services.impl;
 
-import com.techpeak.hac.core.dtos.CreateUserHistory;
 import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.core.enums.InternalPhase;
 import com.techpeak.hac.core.exception.NotFoundException;
@@ -60,18 +59,8 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
         MaterialRequest savedMaterialRequest = materialRequestRepository.save(materialRequest);
         // for user history
         String actionDetails = "Created a new Material Request (" + savedMaterialRequest.getStatus().name() + ") with number:" + savedMaterialRequest.getNumber() + " and internal id: " + savedMaterialRequest.getInternalRef().getId();
-        createUserHistory(user, savedMaterialRequest, actionDetails);
+        userHistoryService.createUserHistory(user, savedMaterialRequest.getId(), actionDetails, "material_requests");
         return savedMaterialRequest;
-    }
-
-    private void createUserHistory(User user, MaterialRequest savedMaterialRequest, String actionDetails) {
-        CreateUserHistory createUserHistory = new CreateUserHistory(
-                actionDetails,
-                "material_requests",
-                savedMaterialRequest.getId(),
-                user
-        );
-        userHistoryService.create(createUserHistory);
     }
 
     private MaterialRequest buildMaterialRequest(
@@ -118,7 +107,7 @@ public class MaterialRequestServiceImpl implements MaterialRequestService {
         mr.setStatus(status);
         MaterialRequest saved = materialRequestRepository.save(mr);
         String actionDetails = "Update Material Request with number: " + saved.getNumber() + " and internal id: " + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
-        createUserHistory(user, saved, actionDetails);
+        userHistoryService.createUserHistory(user, saved.getId(), actionDetails, "material_requests");
     }
 
     private MaterialRequest getOrElseThrow(Long id) {

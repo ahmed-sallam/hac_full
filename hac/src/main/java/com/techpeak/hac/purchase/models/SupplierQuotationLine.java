@@ -20,10 +20,10 @@ public class SupplierQuotationLine extends BaseEntity {
     private Double price;
     @Column(name = "discount")
     private Double discount = 0d;
-    @Column(name = "vat")
-    private Double vat = 0d;
-    @Column(name = "sub_total")
-    private Double subTotal = 0d;
+//    @Column(name = "vat")
+//    private Double vat = 0d;
+//    @Column(name = "sub_total")
+//    private Double subTotal = 0d;
     @Column(name = "total")
     private Double total = 0d;
     @Column(name = "notes")

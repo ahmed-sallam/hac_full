@@ -1,5 +1,6 @@
 package com.techpeak.hac.purchase.services.impl;
 
+import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.purchase.dtos.PurchaseExpensesTitleResponse;
 import com.techpeak.hac.purchase.models.PurchaseExpensesTitle;
 import com.techpeak.hac.purchase.repositories.PurchaseExpensesTitleRepository;
@@ -19,6 +20,12 @@ public class PurchaseExpensesTitleServiceImpl implements PurchaseExpensesTitleSe
         List<PurchaseExpensesTitle> all = purchaseExpensesTitleRepository.findAll();
         return all.stream().map(this::toResponse).toList();
     }
+
+    @Override
+    public PurchaseExpensesTitle get(Long id) {
+        return purchaseExpensesTitleRepository.findById(id).orElseThrow(()-> new NotFoundException("PurchaseExpensesTitle not found with id: "+id));
+    }
+
     private PurchaseExpensesTitleResponse toResponse(PurchaseExpensesTitle purchaseExpensesTitle){
         return PurchaseExpensesTitleResponse.builder()
                 .id(purchaseExpensesTitle.getId())

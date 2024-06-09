@@ -21,6 +21,7 @@ import java.util.Set;
 @ToString
 @Builder
 public class SupplierQuotation extends BaseEntity {
+    // use is active from BaseEntity
     @Column(name = "notes")
     private String notes;
     private LocalDate date;

@@ -26,8 +26,8 @@
         <div class="absolute top-12 right-0 left-0 bg-white pb-4 rounded shadow-md drop-shadow-md max-h-44 overflow-y-auto z-10">
             <ul class="relative">
                 @for (item of searchOptions; track item['id']) {
-                    <li (click)="showOptionsd(false); onItemSeclected(item)"
-                        class="px-4 py-2.5 border-b hover:bg-secondary/5">{{ product ?  item['productNumber'] : request ? item['number']: language == 'ar' ? item['nameAr'] : item['nameEn'] }}
+                    <li (click)="onSelect(false, item)"
+                        class="px-4 py-2.5 border-b hover:bg-secondary/5 cursor-pointer w-full ">{{ product ?  item['productNumber'] : request ? item['number']: language == 'ar' ? item['nameAr'] : item['nameEn'] }}
                     </li>
                 }
             </ul>

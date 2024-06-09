@@ -10,4 +10,5 @@ public interface SupplierService {
     Supplier create(CreateSupplier createSupplier);
 
     Page<SupplierResponse> search(Pageable pageRequest, String search, Boolean isActive);
+    Supplier get(Long id);
 }

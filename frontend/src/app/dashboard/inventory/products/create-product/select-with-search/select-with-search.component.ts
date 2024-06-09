@@ -32,6 +32,10 @@ export class SelectWithSearchComponent {
     this.selectedItem.emit(item);
   }
 
+  onSelect(show:boolean, item:any){
+    this.onItemSeclected(item);
+    this.showOptionsd(show)
+  }
   reset() {
     this.inputValue='';
     this.selectedItem.emit(null)

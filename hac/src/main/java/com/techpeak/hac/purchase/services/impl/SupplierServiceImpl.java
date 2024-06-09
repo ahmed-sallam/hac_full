@@ -1,5 +1,6 @@
 package com.techpeak.hac.purchase.services.impl;
 
+import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.purchase.dtos.CreateSupplier;
 import com.techpeak.hac.purchase.dtos.SupplierResponse;
 import com.techpeak.hac.purchase.mappers.SupplierMapper;
@@ -27,6 +28,11 @@ public class SupplierServiceImpl implements SupplierService {
     public Page<SupplierResponse> search(Pageable pageRequest, String search, Boolean isActive) {
         Page<Supplier> all = supplierRepository.findByIsActiveAndNameArContainingIgnoreCaseOrNameEnContainingIgnoreCase(isActive, search, search, pageRequest);
         return all.map(SupplierMapper::entityToSupplierResponse);
+    }
+
+    @Override
+    public Supplier get(Long id) {
+        return supplierRepository.findById(id).orElseThrow(()-> new NotFoundException("Supplier not found with id: "+id));
     }
 
 }

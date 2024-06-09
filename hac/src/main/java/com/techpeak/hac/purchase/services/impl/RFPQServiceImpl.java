@@ -119,7 +119,7 @@ public class RFPQServiceImpl implements RFPQService {
         createUserHistory(user, saved, actionDetails);
     }
 
-    private RFPQ getOrElseThrow(Long id) {
+    public RFPQ getOrElseThrow(Long id) {
         return rfpqRepository.findById(id).orElseThrow(() -> new NotFoundException("RFPQ with id: " + id + " not found"));
     }
 

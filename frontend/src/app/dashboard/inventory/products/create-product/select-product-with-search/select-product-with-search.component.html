@@ -5,7 +5,7 @@
             <ul class="relative">
                 @for (item of searchOptions; track item['id']) {
                     <li (click)="hideAndSelect(item)"
-                        class="px-4 py-2.5 border-b hover:bg-secondary/5">
+                        class="px-4 py-2.5 border-b hover:bg-secondary/5 cursor-pointer w-full">
                         {{ item['productNumber'] }}
                         {{ ' - ' }}
                         {{ language == 'ar' ? item['mainBrand']['nameAr'] : item['mainBrand']['nameEn'] }}
@@ -22,7 +22,7 @@
            class="bg-secondary/5 border-0  text-secondary/90 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " type="text">
     <div class="absolute end-2 top-2">
 
-        @if (inputValue.length > 0) {
+        @if (inputValue && inputValue.length > 0) {
             <svg
                     (click)=" reset()"
                     class="w-5 h-5 text-secondary/70" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"

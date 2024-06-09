@@ -3,6 +3,7 @@ package com.techpeak.hac.core.services.impl;
 import com.techpeak.hac.core.dtos.CreateUserHistory;
 import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.core.dtos.UserHistoryResponse;
+import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.core.repositories.UserHistoryRepository;
 import com.techpeak.hac.core.services.UserHistoryService;
@@ -43,6 +44,16 @@ public class UserHistoryServiceImpl implements UserHistoryService {
                 userHistory.getRecordId(),
                 userHistory.getDateTime(),
                 new UserDtoShort(userHistory.getUser().getId(), userHistory.getUser().getUsername()));
+    }
+    @Override
+    public void createUserHistory(User user, Long recordId, String actionDetails, String tableName) {
+        CreateUserHistory createUserHistory = new CreateUserHistory(
+                actionDetails,
+                tableName,
+                recordId,
+                user
+        );
+        create(createUserHistory);
     }
 
 }
