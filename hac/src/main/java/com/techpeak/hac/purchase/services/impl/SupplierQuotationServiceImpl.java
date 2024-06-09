@@ -45,7 +45,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
     private final UserHistoryService userHistoryService;
 
     @Override
-    public Page<SupplierQuotationResponseShort> search(int page, int size, String sort, Long ref, Long supplier, Long user, String supplierRef, Boolean isLocal, String date) {
+    public Page<SupplierQuotationResponseShort> search(int page, int size, String sort, Long ref, Long supplier, Long user, String supplierRef, Boolean isLocal, String date, String rfpq) {
         Specification<SupplierQuotation> spec = Specification.where(null);
         if (ref != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("internalRef").get("id"), ref));
@@ -64,6 +64,9 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         }
         if (date != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("date"), date));
+        }
+        if(rfpq != null) {
+            spec = spec.and((root, query, cb) -> cb.like(root.get("rfpq").get("number"), "%" + rfpq + "%" ));
         }
 
         Pageable pageRequest = PageRequest.of(page, size, Sort.by(sort));

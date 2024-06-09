@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {State} from "../../../state/reducers";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
@@ -37,7 +37,7 @@ import {
   templateUrl: './rfpq.component.html',
   styles: ``
 })
-export class RfpqComponent {
+export class RfpqComponent implements OnInit {
 
   store: Store<State> = inject(Store<State>);
   activeRouter: ActivatedRoute = inject(ActivatedRoute);

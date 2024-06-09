@@ -27,9 +27,11 @@ public class SupplierQuotationController {
             @RequestParam(value = "user", required = false) Long user,
             @RequestParam(value = "supplierRef", required = false) String supplierRef,
             @RequestParam(value = "isLocal", required = false) Boolean isLocal,
-            @RequestParam(value = "date", required = false) String date
+            @RequestParam(value = "date", required = false) String date,
+            @RequestParam(value = "rfpq", required = false) String rfpq
+
     ) {
-        return ResponseEntity.ok(supplierQuotationService.search(page, size, sort, ref, supplier, user, supplierRef, isLocal, date));
+        return ResponseEntity.ok(supplierQuotationService.search(page, size, sort, ref, supplier, user, supplierRef, isLocal, date, rfpq));
     }
     // I want to get all supplier quotations (paginated) by is active or without it ,  with the following fields:
     // id,  date, supplier name , currency,  total, isLocal, paymentTerms, supplierRef, internalRef, user, rfpq
