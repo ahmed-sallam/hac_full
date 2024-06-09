@@ -3,6 +3,7 @@ package com.techpeak.hac.purchase.controllers;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.utils.AuthUtils;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationResponse;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
 import com.techpeak.hac.purchase.services.SupplierQuotationService;
@@ -36,6 +37,10 @@ public class SupplierQuotationController {
     // I want to get all supplier quotations (paginated) by is active or without it ,  with the following fields:
     // id,  date, supplier name , currency,  total, isLocal, paymentTerms, supplierRef, internalRef, user, rfpq
 
+    @GetMapping("/{id}")
+    public ResponseEntity<SupplierQuotationResponse> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(supplierQuotationService.getOne(id));
+    }
     @GetMapping("/active")
     public ResponseEntity<Page<SupplierQuotationResponseShort>> getAllActiveSupplierQuotations() {
         return ResponseEntity.ok(supplierQuotationService.getAllActiveSupplierQuotations());

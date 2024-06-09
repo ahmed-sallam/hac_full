@@ -2,6 +2,7 @@ package com.techpeak.hac.inventory.mappers;
 
 import com.techpeak.hac.inventory.dtos.ProductRequest;
 import com.techpeak.hac.inventory.dtos.ProductResponse;
+import com.techpeak.hac.inventory.dtos.ProductResponseShort;
 import com.techpeak.hac.inventory.models.Product;
 import org.springframework.stereotype.Component;
 
@@ -91,5 +92,17 @@ public class ProductMapper {
         return response;
     }
 
+    public static ProductResponseShort mapToProductResponseShort(Product product){
+        return ProductResponseShort.builder()
+                .id(product.getId())
+                .productNumber(product.getProductNumber())
+                .descriptionAr(product.getDescriptionAr())
+                .descriptionEn(product.getDescriptionEn())
+                .mainBrandAr(product.getMainBrand().getNameAr())
+                .mainBrandEn(product.getMainBrand().getNameEn())
+                .subBrandAr(product.getSubBrand().getNameAr())
+                .subBrandEn(product.getSubBrand().getNameEn())
+                .build();
+    }
 
 }

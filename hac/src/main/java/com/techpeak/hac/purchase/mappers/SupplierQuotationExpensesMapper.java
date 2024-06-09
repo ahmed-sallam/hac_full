@@ -14,8 +14,7 @@ public class SupplierQuotationExpensesMapper {
             .expensesTitle(expensesTitle)
             .notes(request.getNotes())
             .build();
-
-
-
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.techpeak.hac.purchase.services.impl;
 
+import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
@@ -7,10 +8,7 @@ import com.techpeak.hac.core.services.CurrencyService;
 import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.services.ProductService;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationExpensesRequest;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationLineRequest;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
+import com.techpeak.hac.purchase.dtos.*;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationExpensesMapper;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationLineMapper;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationMapper;
@@ -112,6 +110,16 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         userHistoryService.createUserHistory(user, saved.getId(), actionDetails, "supplier_quotations");
         return saved;
 
+    }
+
+    @Override
+    public SupplierQuotationResponse getOne(Long id) {
+        SupplierQuotation supplierQuotation = getSupplierQuotation(id);
+        return SupplierQuotationMapper.mapToResponse(supplierQuotation);
+    }
+
+    private SupplierQuotation getSupplierQuotation(Long id) {
+        return supplierQuotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id));
     }
 
 
