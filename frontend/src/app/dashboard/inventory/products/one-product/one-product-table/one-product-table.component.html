@@ -77,7 +77,7 @@
                         {{ item.unit }}
                     </td>
                     <td
-                            [class]="  ( item.minQuantity == item.totalInventory? 'bg-primary/20': item.minQuantity > item.totalInventory ? ' bg-danger/20 ':  item.minQuantity < item.totalInventory ? ' bg-green-200 ':'bg-primary/20') + ' px-6   rounded p-1 py-4 '"
+                            [class]="  ( item.minQuantity == item.totalInventory? 'bg-primary/20': item.minQuantity > item.totalInventory ? ' bg-danger/20 ':  item.minQuantity < item.totalInventory ? ' bg-green-200 ':'bg-primary/20') + ' px-6   p-1 py-4 '"
 
                     >
                         <span class="font-semibold">{{ item.totalInventory || 0 }}</span>  {{ item.unit }}

@@ -1,6 +1,6 @@
 <div class="relative"  >
     @if (showOptions) {
-        <div class="bg-white absolute top-12 right-0 left-0  pb-4 rounded shadow-md drop-shadow-md max-h-44 overflow-y-auto z-50 "
+        <div class="bg-white absolute top-12 right-0 left-0  pb-4 shadow-md drop-shadow-md max-h-44 overflow-y-auto z-50 "
         >
             <ul class="relative">
                 @for (item of searchOptions; track item['id']) {
@@ -19,7 +19,7 @@
     <input (click)="showOptionsd(true)" (focusout)="fOut()" (keyup)="search($event)"
            [placeholder]="'Enter Product Number' | translate : language"
            [value]="inputValue"
-           class="bg-secondary/5 border-0  text-secondary/90 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " type="text">
+           class="bg-secondary/5 border-0  text-secondary/90 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " type="text">
     <div class="absolute end-2 top-2">
 
         @if (inputValue && inputValue.length > 0) {

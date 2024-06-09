@@ -10,7 +10,7 @@
                 @if(all){
                     <button
                             (click)="getMyRequests(userData.id)"
-                            class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
+                            class="w-40 p-4 my-1 font-medium text-primary  bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
                     >
                         {{ "My Requests" | translate : language.lang }}
                     </button>
@@ -18,7 +18,7 @@
                 } @else {
                     <button
                             (click)="getAll()"
-                            class="w-40 p-4 my-1 font-medium text-primary rounded-lg bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
+                            class="w-40 p-4 my-1 font-medium text-primary  bg-white ms-3 hover:bg-primary/80 hover:text-white border-primary border "
                     >
                         {{ "All" | translate : language.lang }}
                     </button>
@@ -28,7 +28,7 @@
             }
 <!--            <button-->
 <!--                    [routerLink]="['/dashboard/inventory/replenishment']"-->
-<!--                    class="w-auto p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70 hover:border-secondary/70 border border-secondary"-->
+<!--                    class="w-auto p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 hover:border-secondary/70 border border-secondary"-->
 <!--            >-->
 <!--                {{ "Add Replenishment" | translate : language.lang }}-->
 <!--            </button>-->
@@ -76,7 +76,7 @@
                                         {{ language.lang == "ar" ? item.store.nameAr :item.store.nameEn }}
                                     </td>
                                     <td class="px-4 py-2 ">
-                                        <div [class]="'px-3 py-1.5 rounded text-center w-fit ' + (item.status == 'COMPLETED'? ' bg-success/20 ' : item.status == 'PROCESSING'? ' bg-blue-200 ' : item.status == 'PENDING'? ' bg-primary/30 ' :  ' bg-secondary/10 ')">{{ item.status }}</div>
+                                        <div [class]="'px-3 py-1.5 text-center w-fit ' + (item.status == 'COMPLETED'? ' bg-success/20 ' : item.status == 'PROCESSING'? ' bg-blue-200 ' : item.status == 'PENDING'? ' bg-primary/30 ' :  ' bg-secondary/10 ')">{{ item.status }}</div>
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ item.currentPhase }}

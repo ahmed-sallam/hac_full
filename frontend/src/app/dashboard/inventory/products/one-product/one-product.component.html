@@ -9,7 +9,7 @@
         <div headerActions>
             <button
                     [routerLink]="['edit',product.id]"
-                    class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70"
+                    class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70"
             >
                 {{ "Edit " | translate : language.lang }}
             </button>
@@ -35,13 +35,13 @@
                                      (click)="onImageSelected(product.image)">
                                     <img [src]="product.image" class="h-20 w-auto   "
                                          alt="Product Image"/>
-                                    <div class="text-sm p-2 rounded hover:bg-secondary/10 underline">{{ "Product Image" | translate: language.lang }}</div>
+                                    <div class="text-sm p-2 hover:bg-secondary/10 underline">{{ "Product Image" | translate: language.lang }}</div>
                                 </div>
                                 <div class="w-1/2 flex flex-col items-center justify-center cursor-pointer"
                                      (click)="onImageSelected(product.partImage)">
                                     <img [src]="product.partImage" class="h-20  w-auto "
                                          alt="Part Image"/>
-                                    <div class="text-sm p-2 rounded hover:bg-secondary/10 underline">{{ "Machine Part Image" | translate: language.lang }}</div>
+                                    <div class="text-sm p-2 hover:bg-secondary/10 underline">{{ "Machine Part Image" | translate: language.lang }}</div>
                                 </div>
                             </div>
                         }
@@ -58,7 +58,7 @@
                         </div>
                         <div class="flex items-center gap-2 ">
                             <p class="font-semibold min-w-32">{{ 'Stock (total)' | translate : language.lang }}:</p>
-                            <p [class]=" ( product.minQuantity == product.totalInventory ? 'bg-primary/20 ':  product.minQuantity > product.totalInventory ? ' bg-danger/20 ':product.minQuantity < product.totalInventory ? ' bg-green-200 ':' bg-secondary/20 ') + ' rounded p-1'"><span class="font-semibold">
+                            <p [class]=" ( product.minQuantity == product.totalInventory ? 'bg-primary/20 ':  product.minQuantity > product.totalInventory ? ' bg-danger/20 ':product.minQuantity < product.totalInventory ? ' bg-green-200 ':' bg-secondary/20 ') + ' p-1'"><span class="font-semibold">
                                 {{ product.totalInventory }}</span>  {{ product.unit  }}
 <!-- todo handle new product without stock balance -->
                             </p>
@@ -305,7 +305,7 @@
                                                 <div class="flex gap-1 ms-3">
                                                     <div class="flex gap-1 p-1.5 ">
                                                         <div>{{ language.lang == "ar" ? i['locationNameAr'] : i['locationNameEn'] }}</div>
-                                                        <div class="font-semibold rounded px-2 bg-secondary/5">{{ i['quantity'] }}</div>
+                                                        <div class="font-semibold px-2 bg-secondary/5">{{ i['quantity'] }}</div>
                                                     </div>
                                                 </div>
                                             }

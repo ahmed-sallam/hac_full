@@ -8,7 +8,7 @@
         <div headerActions >
             <button
                     [routerLink]="'create'"
-                    class="w-40 p-4 my-1 font-medium text-white rounded-lg bg-secondary ms-3 hover:bg-secondary/70"
+                    class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70"
             >
                 {{ "Add Product" | translate : language.lang }}
             </button>
@@ -94,7 +94,7 @@
                                     {{ item.unit }}
                                 </td>
                                 <td
-                                    [class]="  ( item.minQuantity == item.totalInventory? 'bg-primary/20': item.minQuantity > item.totalInventory ? ' bg-danger/20 ':  item.minQuantity < item.totalInventory ? ' bg-green-200 ':'bg-secondary/20') + ' px-6   rounded  py-4 '"
+                                    [class]="  ( item.minQuantity == item.totalInventory? 'bg-primary/20': item.minQuantity > item.totalInventory ? ' bg-danger/20 ':  item.minQuantity < item.totalInventory ? ' bg-green-200 ':'bg-secondary/20') + ' px-6    py-4 '"
                                 >
                                     {{ item.totalInventory || 0 }}
                                 </td>

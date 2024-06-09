@@ -1,5 +1,5 @@
 <div class="mb-5 max-w-md">
-    <div class=" p-1.5  space-y-2 border rounded shadow drop-shadow">
+    <div class=" p-1.5  space-y-2 border shadow drop-shadow">
         <div class="p-4 border-b ">{{ 'Select Set Products' | translate : language }}</div>
         <div class="w-full  flex items-center gap-1.5 justify-start   text-secondary/50">
             <div class="px-3 py-2   ">{{ '#' }}</div>
@@ -8,7 +8,7 @@
         </div>
         @for (product of products; track $index) {
             <div class="w-full  flex items-center gap-1.5 justify-start   ">
-                <div class="px-3 py-2 rounded bg-secondary/5 ">{{ $index + 1 }}</div>
+                <div class="px-3 py-2 bg-secondary/5 ">{{ $index + 1 }}</div>
                 <!--                            -->
                 <div class="flex-1 w-full">
                     <app-select-product-with-search
@@ -27,7 +27,7 @@
                             id="productNumber"
                             [(ngModel)]="product.quantity"
                             class="bg-accent/5 border-0
-                                     text-secondary/70 text-sm rounded-lg focus:border-0
+                                     text-secondary/70 text-sm  focus:border-0
                                      ring-transparent block w-full p-2.5  ring-0"
                             [placeholder]="'Quantity' | translate : language"
                     />
@@ -55,9 +55,9 @@
         <div class="mb-5 max-w-96">
             <label class="inline-flex items-center cursor-pointer">
                 <input
-                        id="isRestricted"
                         [(ngModel)]="isRestricted"
-                        type="checkbox" class="sr-only peer">
+                        class="sr-only peer"
+                        id="isRestricted" type="checkbox">
                 <div
                         class="relative w-11 h-6 bg-secondary/5 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/30 dark:peer-focus:ring-primary/80 rounded-full peer dark:bg-secondary/70 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-secondary/30 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-secondary/60 peer-checked:bg-primary/60"></div>
                 <span class="ms-3 text-sm font-medium  ">{{ "Is Restricted" | translate : language }}</span>
@@ -65,15 +65,15 @@
         </div>
 
         <div class="flex items-center justify-end w-full p-4">
-            <!--            <button class="px-6 py-2 bg-primary/5 text-primary/70 rounded-lg" (click)="closeModal()">-->
+            <!--            <button class="px-6 py-2 bg-primary/5 text-primary/70 " (click)="closeModal()">-->
             <!--                {{ 'Cancel' | translate : language}}-->
             <!--            </button>-->
-            <button class="px-6 py-2 bg-primary text-white rounded-lg ml-4 hover:bg-primary/70"
-                    (click)="saveProducts()">
+            <button (click)="saveProducts()"
+                    class="px-6 py-2 bg-primary text-white  ml-4 hover:bg-primary/70">
                 {{ 'Save Set'| translate : language }}
             </button>
-            <button class="px-6 py-2 bg-white text-danger rounded-lg border border-danger ml-4 hover:bg-danger/20"
-                    (click)="onHideModal()">
+            <button (click)="onHideModal()"
+                    class="px-6 py-2 bg-white text-danger  border border-danger ml-4 hover:bg-danger/20">
                 {{ 'Cancel'| translate : language }}
             </button>
         </div>

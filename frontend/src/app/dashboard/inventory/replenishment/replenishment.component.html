@@ -6,23 +6,23 @@
         <div headerActions>
             <button
                     (click)="cancelCreateReplenishment()"
-                    class="rounded-lg border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
+                    class=" border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
                 {{ 'Cancel' | translate: language?.lang }}
             </button>
             <button
                     (click)="onSubmitForm()"
-                    class="rounded-lg bg-secondary/70 text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/60  disabled:bg-secondary/60 ">
+                    class=" bg-secondary/70 text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/60  disabled:bg-secondary/60 ">
                 {{ 'Save' | translate: language?.lang }}
             </button>
             <button
                     (click)="onSubmitForm(true)"
-                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                    class=" bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
                 {{ 'Confirm' | translate: language?.lang }}
             </button>
             <!--            Delete all lines active when there are some product lines-->
             <!--            <button-->
             <!--                    (click)="onSubmitForm()"-->
-            <!--                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">-->
+            <!--                    class=" bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">-->
             <!--                {{ 'Save' | translate: language?.lang }}-->
             <!--            </button>-->
         </div>
@@ -31,7 +31,7 @@
 
             <form [formGroup]="formGroup">
                 <button
-                        class="rounded-lg bg-mustard text-white font-medium w-60 p-4  my-1 hover:bg-mustard/70">
+                        class=" bg-mustard text-white font-medium w-60 p-4  my-1 hover:bg-mustard/70">
                     {{ 'Select Auto Fill' | translate: language?.lang }}
                 </button>
                 <div class="flex w-full items-start justify-start gap-1">
@@ -48,7 +48,7 @@
                                     formControlName="date"
                                     type="date"
                                     id="date"
-                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm  focus:border-0 ring-transparent block w-full p-2.5 "
                             />
                             @if (formGroup.get('date')?.touched && formGroup.get('date')?.errors) {
                                 <p class="text-xs text-danger font-light">
@@ -75,7 +75,7 @@
                             <!--                                    formControlName="store"-->
                             <!--                                    type="text"-->
                             <!--                                    id="store"-->
-                            <!--                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "-->
+                            <!--                                    class="bg-accent/5 border-0  text-secondary/70 text-sm  focus:border-0 ring-transparent block w-full p-2.5 "-->
                             <!--                            />-->
                             @if (formGroup.get('store')?.touched && formGroup.get('store')?.errors) {
                                 <p class="text-xs text-danger font-light">
@@ -96,7 +96,7 @@
                                     rows="6"
                                     formControlName="notes"
                                     id="notes"
-                                    class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                                    class="bg-accent/5 border-0  text-secondary/70 text-sm  focus:border-0 ring-transparent block w-full p-2.5 "
                             ></textarea>
                             @if (formGroup.get('notes')?.touched && formGroup.get('notes')?.errors) {
                                 <p class="text-xs text-danger font-light">
@@ -125,7 +125,7 @@
                             <!--todo change row on error-->
                             <div class="w-full  flex items-center gap-1.5 justify-start  mt-1 "
                                  [formGroupName]="$index">
-                                <div class="px-3 py-2 rounded bg-secondary/5 ">{{ $index + 1 }}</div>
+                                <div class="px-3 py-2 bg-secondary/5 ">{{ $index + 1 }}</div>
                                 <div class="w-[350px]">
                                     <app-select-product-with-search
                                             [language]="language.lang"
@@ -142,7 +142,7 @@
                                             min="1"
                                             id="quantity"
                                             class="bg-accent/5 border-0
-                                     text-secondary/70 text-sm rounded-lg focus:border-0
+                                     text-secondary/70 text-sm  focus:border-0
                                      ring-transparent block w-full p-2.5  ring-0"
                                             [placeholder]="'Quantity' | translate : language"
                                     />
@@ -155,7 +155,7 @@
                                             type="text"
                                             min="1"
                                             class="bg-accent/5 border-0
-                                     text-secondary/70 text-sm rounded-lg focus:border-0
+                                     text-secondary/70 text-sm  focus:border-0
                                      ring-transparent block w-full p-2.5  ring-0"
                                             [placeholder]="'Notes' | translate : language"
                                     />
@@ -202,7 +202,7 @@
                         }
                     }
                     <div (click)="addNewField()"
-                         class="p-2 cursor-pointer bg-secondary/5 w-fit rounded mt-2">
+                         class="p-2 cursor-pointer bg-secondary/5 w-fit mt-2">
                         <svg aria-hidden="true"
                              class="w-6 h-6 text-gray-800 dark:text-white"
                              fill="none" height="24" viewBox="0 0 24 24"

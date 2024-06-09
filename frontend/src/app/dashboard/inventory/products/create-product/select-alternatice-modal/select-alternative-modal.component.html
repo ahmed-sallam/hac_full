@@ -1,5 +1,5 @@
 <div class="mb-5 max-w-md">
-    <div class=" p-1.5  space-y-2 border rounded shadow drop-shadow">
+    <div class=" p-1.5  space-y-2 border shadow drop-shadow">
         <div class="p-4 border-b ">{{ 'Select Product / s' | translate : language }}</div>
         <div class="w-full  flex items-center gap-1.5 justify-start   text-secondary/50">
             <div class="px-3 py-2   ">{{ '#'  }}</div>
@@ -7,7 +7,7 @@
         </div>
         @for (product of products; track $index) {
             <div class="w-full  flex items-center gap-1.5 justify-start   ">
-                <div class="px-3 py-2 rounded bg-secondary/5 ">{{ $index + 1 }}</div>
+                <div class="px-3 py-2 bg-secondary/5 ">{{ $index + 1 }}</div>
                 <!--                            -->
                 <div class="flex-1 w-full">
                     <app-select-product-with-search
@@ -56,10 +56,10 @@
 
 
         <div class="flex items-center justify-end w-full p-4">
-            <button class="px-6 py-2 bg-primary text-white rounded-lg ml-4 border border-primary hover:bg-primary/70" (click)="saveProducts()">
+            <button (click)="saveProducts()" class="px-6 py-2 bg-primary text-white  ml-4 border border-primary hover:bg-primary/70">
                 {{ 'Save Alternatives'| translate : language}}
             </button>
-            <button class="px-6 py-2 bg-white text-danger rounded-lg border border-danger ml-4 hover:bg-danger/20" (click)="onHideModal()">
+            <button (click)="onHideModal()" class="px-6 py-2 bg-white text-danger  border border-danger ml-4 hover:bg-danger/20">
                 {{ 'Cancel'| translate : language}}
             </button>
         </div>

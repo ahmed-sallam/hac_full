@@ -4,13 +4,13 @@
         <div headerActions>
             <button
                     (click)="cancelCreateStock()"
-                    class="rounded-lg border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
+                    class=" border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
                 {{ 'Cancel' | translate: language?.lang }}
             </button>
             <button
                     (click)="onSubmitForm()"
 
-                    class="rounded-lg bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                    class=" bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
                 {{ 'Save' | translate: language?.lang }}
             </button>
         </div>
@@ -97,7 +97,7 @@
                                         type="number"
                                         min="0"
                                         id="quantity"
-                                        class="bg-accent/5 border-0  text-secondary/70 text-sm rounded-lg focus:border-0 ring-transparent block w-full p-2.5 "
+                                        class="bg-accent/5 border-0  text-secondary/70 text-sm  focus:border-0 ring-transparent block w-full p-2.5 "
                                 />
                                 @if (formGroup.get('quantity')?.touched && formGroup.get('quantity')?.errors) {
                                     <p class="text-xs text-danger ">
