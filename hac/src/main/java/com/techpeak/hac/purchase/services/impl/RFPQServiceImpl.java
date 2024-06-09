@@ -113,9 +113,15 @@ public class RFPQServiceImpl implements RFPQService {
     @Transactional
     public void updateStatus(Long id, RequestStatus status, User user) {
         RFPQ rfpq = getOrElseThrow(id);
+        if (status.name().equals(RequestStatus.PROCESSING.name())) {
+            if (rfpq.getInternalRef().getCurrentPhase().equals(InternalPhase.REQUEST_FOR_P_QUOTATION))
+                rfpq.getInternalRef().setCurrentPhase(InternalPhase.SUPPLIER_QUOTATION);
+        }
+
         rfpq.setStatus(status);
         RFPQ saved = rfpqRepository.save(rfpq);
         String actionDetails = "Update Request for purchase quotation with number: " + saved.getNumber() + " and internal id: " + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
+
         createUserHistory(user, saved, actionDetails);
     }
 

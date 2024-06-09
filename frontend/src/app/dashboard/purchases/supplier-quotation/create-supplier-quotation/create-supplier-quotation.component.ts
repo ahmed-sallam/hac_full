@@ -196,7 +196,7 @@ export class CreateSupplierQuotationComponent implements OnInit {
     searchRFPQ(s: string) {
         this.rfpq$ = this.rfpqService.getRFPQs(0, undefined, 80,
             s.trim(), undefined, undefined
-            , undefined, "REQUEST_FOR_P_QUOTATION", "PROCESSING")
+            , undefined, "SUPPLIER_QUOTATION", "PROCESSING")
             .pipe(map((res: RFPQResponse) => {
                     return res.content
                 }),

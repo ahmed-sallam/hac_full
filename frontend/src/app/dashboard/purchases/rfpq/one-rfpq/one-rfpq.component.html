@@ -10,17 +10,14 @@
             <div headerActions>
                 @if (rfpq.status == "DRAFT") {
 <!--                    todo -->
-                }
+<!--                <button-->
 
-                <!--            todo-->
+<!--                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"-->
+<!--                >-->
+<!--                    {{ "Cancel " | translate : language.lang }}-->
+<!--                </button>-->
                 <button
-
-                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
-                >
-                    {{ "Cancel " | translate : language.lang }}
-                </button>
-                <!--            todo-->
-                <button
+                        (click)="updateRFPQStatus('PROCESSING')"
                         class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
                 >
                     {{ "Confirm " | translate : language.lang }}
@@ -31,6 +28,8 @@
                 >
                     {{ "Edit " | translate : language.lang }}
                 </button>
+                }
+
 
             </div>
 
