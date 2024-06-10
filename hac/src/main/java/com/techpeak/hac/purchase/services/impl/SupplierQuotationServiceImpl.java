@@ -114,8 +114,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
 
     @Override
     public SupplierQuotationResponse getOne(Long id) {
-        SupplierQuotation supplierQuotation = getSupplierQuotation(id);
-        return SupplierQuotationMapper.mapToResponse(supplierQuotation);
+        return SupplierQuotationMapper.mapToResponse(supplierQuotationRepository.findByIdLines(id).orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id)));
     }
 
     private SupplierQuotation getSupplierQuotation(Long id) {

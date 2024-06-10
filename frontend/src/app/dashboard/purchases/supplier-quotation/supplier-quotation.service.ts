@@ -6,6 +6,7 @@ import {CreateSupplierQuotation} from "./interfaces/CreateSupplierQuotation";
 import {
   SupplierQuotationResponse
 } from "./interfaces/SupplierQuotationResponse";
+import {SupplierQuotation} from "./interfaces/SupplierQuotation";
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,11 @@ export class SupplierQuotationService {
       link += `&isLocal=${isLocal}`;
     }
     return this.http.get<SupplierQuotationResponse>(link);
+  }
+
+
+  getOne(id: number): Observable<SupplierQuotation> {
+    let link: string = `${this.appService.baseApi}/supplier-quotations/${id}`;
+    return this.http.get<SupplierQuotation>(link);
   }
 }

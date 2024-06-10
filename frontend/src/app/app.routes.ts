@@ -136,6 +136,10 @@ export const routes: Routes = [
                 path: 'purchases/supplier-quotations/create',
                 loadComponent: () => import('./dashboard/purchases/supplier-quotation/create-supplier-quotation/create-supplier-quotation.component').then((c) => c.CreateSupplierQuotationComponent)
             },
+            {
+                path: 'purchases/supplier-quotations/:id',
+                loadComponent: () => import('./dashboard/purchases/supplier-quotation/one-supplier-quotation/one-supplier-quotation.component').then((c) => c.OneSupplierQuotationComponent)
+            },
           {
                 path: 'purchases/bid-summaries',
                 loadComponent: () => import('./dashboard/purchases/bid-summary/bid-summary.component').then((c) => c.BidSummaryComponent)
