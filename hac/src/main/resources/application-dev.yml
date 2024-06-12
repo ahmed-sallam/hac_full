@@ -10,7 +10,7 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-    show-sql: true
+#    show-sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 logging:
@@ -22,3 +22,6 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+        orm:
+          jdbc:
+            bind: TRACE
