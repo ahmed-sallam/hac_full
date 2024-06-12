@@ -36,9 +36,7 @@ public class MachinePartServiceImpl implements MachinePartService {
 
     @Override
     public Page<MachinePartResponse> list(Pageable pageable, Boolean isActive, String name) {
-        System.out.println("isActive = " + isActive);
         Page<MachinePart> all = machinePartRepository.findByIsActiveAndNameArContainingIgnoreCaseOrNameEnContainingIgnoreCase(isActive, name, name, pageable);
-//        Page<MachinePart> all = machinePartRepository.findByIsActive( isActive, pageable  );
         return all.map(MachinePartMapper::toDto);
     }
 

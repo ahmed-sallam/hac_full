@@ -62,11 +62,8 @@ export class AddMachineryModelModalComponent implements OnInit{
   onSubmitForm() {
     this.formGroup.markAllAsTouched()
     if (this.formGroup.invalid) {
-      console.log("formGroup err", this.formGroup.errors)
-    }else{
-      console.log("formGroup", this.formGroup.value)
-      this.submitForm.emit(this.formGroup.value)
-    }
+      }else{
+      }
   }
 
   searchBrands($event: string) {
@@ -86,13 +83,11 @@ export class AddMachineryModelModalComponent implements OnInit{
         isActive
     ).pipe(
         map((res: BrandsResponse) => {
-          console.log("res1", res)
           return res.content
-        }),
+          }),
         catchError((err) => {
-          console.log("err", err)
           return []
-        })
+          })
     )
   }
 

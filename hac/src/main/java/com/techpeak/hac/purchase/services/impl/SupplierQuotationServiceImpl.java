@@ -4,6 +4,7 @@ import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.core.services.CurrencyService;
 import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
@@ -28,7 +29,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -95,7 +99,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
                                 .mapToSupplierQuotationLine(l,
                                         productService
                                                 .getProductOrThrow(l.getProductId())))
-                .collect(java.util.stream.Collectors.toSet()));
+                .collect(Collectors.toSet()));
         Set<SupplierQuotationExpensesRequest> expenses = request.getExpenses();
         if(!expenses.isEmpty())  supplierQuotation.setExpenses(expenses
                 .stream()
@@ -103,7 +107,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
                         SupplierQuotationExpensesMapper
                                 .mapToSupplierQuotationExpenses(e,
                                         purchaseExpensesTitleService.get(e.getExpensesTitleId())))
-                .collect(java.util.stream.Collectors.toSet()));
+                .collect(Collectors.toSet()));
         // add to user history
         SupplierQuotation saved = supplierQuotationRepository.save(supplierQuotation);
         String actionDetails = "Created a new Supplier Quotation  related to internal id: " + saved.getInternalRef().getId();
@@ -114,7 +118,17 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
 
     @Override
     public SupplierQuotationResponse getOne(Long id) {
-        return SupplierQuotationMapper.mapToResponse(supplierQuotationRepository.findByIdLines(id).orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id)));
+        List<Object[]> result = supplierQuotationRepository.findByIdWithLines(id);
+        if (result.isEmpty()) {
+            throw new NotFoundException("Supplier quotation not found with id " + id);
+        }
+        SupplierQuotation supplierQuotation = (SupplierQuotation) result.get(0)[0];
+        Set<UserHistory> userHistories = new HashSet<>();
+        for (Object[] r : result) {
+            userHistories.add((UserHistory) r[1]);
+        }
+        supplierQuotation.setUserHistories(userHistories);
+        return SupplierQuotationMapper.mapToResponse(supplierQuotation);
     }
 
     private SupplierQuotation getSupplierQuotation(Long id) {

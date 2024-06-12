@@ -60,7 +60,6 @@ public class InventoryServiceImpl implements InventoryService {
 //        return inventoryRepository.findAllByProductShort(id);
         List<InventoryShortResponse> allByProductShort = inventoryRepository.findAllByProductShort(id);
 //        List<InventoryShortResponse>  all =  allByProductShort.stream().map((i)->{
-//            System.out.println("aaaa" + i.toString());
 //            return new InventoryShortResponse(
 //                    (Long) i.get("id"),
 //                    (Integer) i.get("quantity"),
@@ -70,7 +69,6 @@ public class InventoryServiceImpl implements InventoryService {
 //                    (String) i.get("name_en"));
 //        }).toList();
 //
-//        System.out.println("aaa "+ allByProductShort);
         return allByProductShort;
     }
 

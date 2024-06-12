@@ -59,7 +59,6 @@ export class SelectSetItemsModalComponent implements OnInit {
     }
 
     onItemSelected($event: any, index: number) {
-        console.log('item selected', $event)
         this.products[index].productId = $event.id
         this.products[index].product = $event.productNumber + ' ' + (this.language == 'ar' ? ($event.subBrand.nameAr) : ($event.subBrand.nameEn))
         // this.products[index].quantity = $event.quantity

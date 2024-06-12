@@ -177,8 +177,8 @@ export class CreateStockComponent implements OnInit {
     }
 
     searchProducts($event: string) {
-        console.log("Search Event", $event)
         this.getProducts(0, 80, $event.trim(), true);
+
     }
 
     onItemSelected($event: any, key: string) {
@@ -217,11 +217,11 @@ export class CreateStockComponent implements OnInit {
         }
 
         else if (key == 'productId') {
-            console.log("eee", $event)
             this.selectedProduct = $event
             this.productNumber$.next($event.productNumber)
             // filter stores
             this.getProductStockInfo(this.selectedProduct.id)
+
         }
     }
 

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface SupplierQuotationRepository extends JpaRepository<SupplierQuotation, Long>, JpaSpecificationExecutor<SupplierQuotation> {
-    @Query("select sq from SupplierQuotation sq join fetch sq.lines where sq.id = :id")
-    Optional<SupplierQuotation> findByIdLines(@Param("id") Long id);
+    @Query("select sq , uh from SupplierQuotation sq left join fetch sq.lines left join UserHistory  uh on (uh.recordId = sq.id and uh.tableName = 'supplier_quotations')  where sq.id = :id")
+    List<Object[]> findByIdWithLines(@Param("id") Long id);
 
 }

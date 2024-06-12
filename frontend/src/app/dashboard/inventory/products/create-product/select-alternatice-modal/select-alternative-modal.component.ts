@@ -1,10 +1,19 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import {ProductsService} from "../../products.service";
 import {map, Observable} from "rxjs";
 import {ProductEntity} from "../../interfaces/ListProductsResponse";
 import {AsyncPipe} from "@angular/common";
 import {FormsModule} from "@angular/forms";
-import {SelectProductWithSearchComponent} from "../select-product-with-search/select-product-with-search.component";
+import {
+  SelectProductWithSearchComponent
+} from "../select-product-with-search/select-product-with-search.component";
 import {TranslatePipe} from "../../../../../pipes/translate.pipe";
 
 @Component({
@@ -20,19 +29,19 @@ import {TranslatePipe} from "../../../../../pipes/translate.pipe";
   styles: ``
 })
 export class SelectAlternativeModalComponent implements OnInit {
-  ngOnInit(): void {
-    this.addNewField();
-  }
-
   productsService: ProductsService = inject(ProductsService)
-
   @Output() hideModal: EventEmitter<any> = new EventEmitter<any>()
   @Output() submitProductSet: EventEmitter<any> = new EventEmitter<any>()
   @Input() language!: string;
-
-
   products: any[] = []
   products$!: Observable<ProductEntity[]> | any;
+  // }
+  @Input() showIsRestricted: boolean = false;
+  isRestricted: boolean = false;
+
+  ngOnInit(): void {
+    this.addNewField();
+  }
 
   addNewField() {
     this.products.push({
@@ -46,12 +55,14 @@ export class SelectAlternativeModalComponent implements OnInit {
   }
 
   onItemSelected($event: any, index: number) {
-    console.log('item selected', $event)
     this.products[index].productNumber = $event.productNumber
     this.products[index].product = $event.productNumber + ' ' + (this.language == 'ar' ? ($event.mainBrand.nameAr) : ($event.mainBrand.nameEn))
     // this.products[index].quantity = $event.quantity
     this.products$ = null
   }
+
+  // closeModal() {
+  //
 
   searchProduct($event: string) {
     this.products$ = this.productsService.getProducts(0, 20, $event)
@@ -61,16 +72,10 @@ export class SelectAlternativeModalComponent implements OnInit {
 
   }
 
-
   removeItem(index: number) {
     this.products.splice(index, 1)
   }
 
-  // closeModal() {
-  //
-  // }
-  @Input() showIsRestricted: boolean = false;
-  isRestricted: boolean = false;
   saveProducts() {
     if (this.products.length < 1) {
       alert('Please add at least 1 products') // todo: change to toast

@@ -1,16 +1,14 @@
 package com.techpeak.hac.core.services.impl;
 
+import com.techpeak.hac.core.services.FileService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.techpeak.hac.core.services.FileService;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +55,6 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public byte[] getFile(String path) throws Exception {
-        System.out.println("pathhhhh = " + path);
         Path filePath = Paths.get(root.toString(), path);
         return Files.readAllBytes(filePath);
     }

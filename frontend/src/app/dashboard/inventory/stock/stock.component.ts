@@ -115,9 +115,7 @@ export class StockComponent implements OnInit {
                 this.pageable = data.pageable;
                 this.stock = data.content;
                 this.stockGrouped = groupBy(data.content, "product.productNumber")
-                console.log(this.stockGrouped)
                 this.stockGrouped = flatMap(this.stockGrouped, (v, k)=>[[k, [...v]]])
-                console.log(this.stockGrouped)
             });
     }
 }

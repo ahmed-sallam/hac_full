@@ -60,7 +60,6 @@ export class OneSupplierQuotationComponent implements OnInit {
         this.supplierQuotationService.getOne(this.sqId)
             .subscribe({
                 next: (response: SupplierQuotation) => {
-                    console.log(response)
                     this.supplierQuotation = response;
                     this.loaderService.hide()
                 }

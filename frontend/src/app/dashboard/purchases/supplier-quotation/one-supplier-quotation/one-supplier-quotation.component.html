@@ -137,10 +137,13 @@
                                         {{ item.quantity }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ item.storeInventory }}
+                                        {{ item.price }} {{supplierQuotation.currency.code}}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ item.product.totalInventory }}
+                                        {{ item.discount }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ item.total }}  {{supplierQuotation.currency.code}}
                                     </td>
                                     <td class="px-6 py-4">
                                         {{ item.notes }}

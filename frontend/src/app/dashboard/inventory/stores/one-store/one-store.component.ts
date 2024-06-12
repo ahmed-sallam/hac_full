@@ -7,12 +7,22 @@ import {selectLanguage} from "../../../../state/selectors/lang.selectors";
 import {Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
 import {StoresService} from "../stores.service";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
 import {AsyncPipe, DatePipe} from "@angular/common";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {StoreEntity} from "../interfaces/StoreResponse";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {AddStoreLocationModalComponent} from "./add-store-location-modal/add-store-location-modal.component";
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
+import {
+    AddStoreLocationModalComponent
+} from "./add-store-location-modal/add-store-location-modal.component";
 import {CreateLocation} from "../interfaces/CreateLocation";
 
 @Component({
@@ -32,6 +42,40 @@ import {CreateLocation} from "../interfaces/CreateLocation";
     styles: ``
 })
 export class OneStoreComponent {
+    selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
+    store$!: Observable<StoreEntity>;
+    loader$!: Observable<boolean>;
+    storeId!: number;
+    showAddLocationModal: boolean = false;
+    selectedLocationId!: number;
+    tableColumns: string[] = [
+        '#',
+        'Name',
+        'Status',
+        'Last updated',
+        'Actions',
+    ];
+    showEditStoreModal: boolean = false;
+    showEditLocationModal: boolean = false;
+    editStoreForm: FormGroup = new FormGroup({
+        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        cityAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        cityEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        isActive: new FormControl(true,),
+    });
+    editLocationForm: FormGroup = new FormGroup({
+        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        isActive: new FormControl(true,),
+    });
+
     constructor(
         private loaderService: LoaderService,
         private store: Store<State>,
@@ -43,34 +87,8 @@ export class OneStoreComponent {
         this.selectLanguage$ = this.store.select(selectLanguage);
     }
 
-    selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
-    store$!: Observable<StoreEntity>;
-    loader$!: Observable<boolean>;
-    storeId!: number;
-    showAddLocationModal: boolean = false;
-    selectedLocationId!: number;
-
-    tableColumns: string[] = [
-        '#',
-        'Name',
-        'Status',
-        'Last updated',
-        'Actions',
-    ];
-    showEditStoreModal: boolean = false;
-    showEditLocationModal: boolean = false;
-
-
     ngOnInit(): void {
         this.initPageParams();
-    }
-
-    private initPageParams() {
-        // this.loaderService.show()
-        this.activeRouter.params.subscribe(params => {
-            this.storeId = params['id'];
-            this.storeId && this.getData()
-        })
     }
 
     getData() {
@@ -91,35 +109,13 @@ export class OneStoreComponent {
         $event.isActive = true
         this.storesService.addLocationToStore(this.storeId, $event).subscribe({
             next: (res) => {
-                console.log("res", res)
                 this.getData()
                 this.hideAddLocationModal()
             },
             error: (err) => {
-                console.log("err", err)
-            }
+                }
         })
     }
-
-    editStoreForm: FormGroup = new FormGroup({
-        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        cityAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        cityEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        isActive: new FormControl(true,),
-    });
-
-    editLocationForm: FormGroup = new FormGroup({
-        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        isActive: new FormControl(true,),
-    });
 
     changeEditStoreModalVisibility(b: boolean) {
         this.showEditStoreModal = b;
@@ -131,7 +127,6 @@ export class OneStoreComponent {
     }
 
     onEditStoreFormSubmit() {
-        console.log("formGroup", this.editStoreForm.value)
         if (this.editStoreForm.invalid) {
             return;
         }
@@ -156,8 +151,7 @@ export class OneStoreComponent {
                 this.changeEditStoreModalVisibility(false)
             },
             error: (r) => {
-                console.log("error", r)
-            }
+                }
         })
     }
 
@@ -173,7 +167,6 @@ export class OneStoreComponent {
     }
 
     onEditLocationFormSubmit() {
-        console.log("formGroup", this.editLocationForm.value)
         if (this.editLocationForm.invalid) {
             return;
         }
@@ -195,8 +188,7 @@ export class OneStoreComponent {
                 this.chaneEditLocationModalVisibility(false)
             },
             error: (r) => {
-                console.log("error", r)
-            }
+                }
         })
     }
 
@@ -206,5 +198,13 @@ export class OneStoreComponent {
         this.editLocationForm.controls['nameAr'].setValue(location.nameAr)
         this.editLocationForm.controls['isActive'].setValue(location.isActive)
         this.chaneEditLocationModalVisibility(true)
+    }
+
+    private initPageParams() {
+        // this.loaderService.show()
+        this.activeRouter.params.subscribe(params => {
+            this.storeId = params['id'];
+            this.storeId && this.getData()
+        })
     }
 }

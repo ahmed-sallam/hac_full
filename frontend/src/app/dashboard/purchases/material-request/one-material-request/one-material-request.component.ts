@@ -65,10 +65,9 @@ export class OneMaterialRequestComponent implements OnInit{
     this.materialRequestService.getOneMaterialRequest(this.requestId)
         .subscribe({
           next: (response: OneMaterialRequest) => {
-            console.log(response)
             this.materialRequest = response;
             this.loaderService.hide()
-          }
+            }
         });
   }
 
@@ -76,7 +75,7 @@ export class OneMaterialRequestComponent implements OnInit{
     this.materialRequestService.updateMaterialRequestStatus(this.requestId, status).subscribe({
       next:()=>{this.getData()},
       error:(e)=>{
-        console.log(e)}
+        }
     })
   }
 

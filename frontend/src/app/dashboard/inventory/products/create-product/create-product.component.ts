@@ -137,10 +137,8 @@ export class CreateProductComponent implements OnInit {
 
     imageValidator(file: any): boolean {
         const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        console.log("file.type", file)
         return !allowedMimeTypes.includes(file.type);
-        // Valid image type
-    }
+        }
 
     onSubmitForm() {
 
@@ -185,8 +183,7 @@ export class CreateProductComponent implements OnInit {
                 this.newProductId = res
             },
             error: (err) => {
-                console.log("err", err)
-            }
+                }
         })
 
     }
@@ -208,13 +205,11 @@ export class CreateProductComponent implements OnInit {
             isActive
         ).pipe(
             map((res: MachinePartResponse) => {
-                console.log("res1", res)
                 return res.content
-            }),
+                }),
             catchError((err) => {
-                console.log("err", err)
                 return []
-            })
+                })
         )
     }
 
@@ -231,11 +226,9 @@ export class CreateProductComponent implements OnInit {
             isActive
         ).pipe(
             map((res: BrandsResponse) => {
-                console.log("res1", res)
                 return res.content
-            }),
+                }),
             catchError((err) => {
-                console.log("err", err)
                 return []
             })
         )
@@ -254,11 +247,9 @@ export class CreateProductComponent implements OnInit {
             isActive
         ).pipe(
             map((res: MachineryResponse) => {
-                console.log("res1", res)
                 return res.content
-            }),
+                }),
             catchError((err) => {
-                console.log("err", err)
                 return []
             })
         )
@@ -267,21 +258,18 @@ export class CreateProductComponent implements OnInit {
     getCountryOptions() {
         this.countryOptions$ = this.countriesService.getCountries().pipe(
             map((res: Country[]) => {
-                console.log("res1", res)
                 return res
-            }),
+                }),
             catchError((err) => {
-                console.log("err", err)
                 return []
-            })
+                })
         )
         this.countryOptionsBefore$ = this.countryOptions$
     }
 
     onProductImageChange($event: Event | any) {
         this.imageValidator($event.target.files[0]) ? this.formGroup.get('image')?.setErrors({'invalidFileType': true}) : this.formGroup.get('image')?.setErrors(null)
-        console.log("onProductImageChange", $event.target.files[0]['type'])
-      this.loadProductImageToPreview($event.target.files[0])
+        this.loadProductImageToPreview($event.target.files[0])
         this.uploadImage($event.target.files[0], 'product')
     }
 
@@ -306,17 +294,15 @@ export class CreateProductComponent implements OnInit {
                     next: (event) => {
                         if (event.type === HttpEventType.UploadProgress) {
                             let percentNumber: number = Math.round(100 * event.loaded / event.total);
-                            console.log('Upload progress: ' + percentNumber + '%');
                             if (into == 'product') {
                                 this.productImageUploadProgress = percentNumber;
+
                             } else if (into == 'part') {
                                 this.partImageUploadProgress = percentNumber;
                             }
                         } else if (event instanceof HttpResponse) {
-                            console.log('File is completely uploaded!', event.body);
                             if (into == 'product') {
                                 this.productImageUrl = event.body;
-                                // this.productImageUploadProgress = 0;
                             } else if (into == 'part') {
                                 this.partImageUrl = event.body;
                                 // this.partImageUploadProgress = 0;
@@ -325,8 +311,7 @@ export class CreateProductComponent implements OnInit {
                     }
                     ,
                     error: (error) => {
-                        console.log('Upload failed: ', error);
-                    }
+                        }
                 }
             );
     }
@@ -334,11 +319,8 @@ export class CreateProductComponent implements OnInit {
     onMachinePartImageChange($event: Event | any) {
         this.imageValidator($event.target.files[0]) ? this.formGroup.get('partImage')?.setErrors({'invalidFileType': true}) : this.formGroup.get('partImage')?.setErrors(null)
         this.loadPartImageToPreview($event.target.files[0])
-
-        console.log("onMachinePartImageChange", $event)
         this.uploadImage($event.target.files[0], 'part')
-
-    }
+        }
 
     onItemSelected($event: any, key: string) {
         if ($event == null) {
@@ -427,11 +409,11 @@ export class CreateProductComponent implements OnInit {
     }
 
     searchCountries($event: string) {
-        console.log('ss')
         this.countryOptions$ = this.countryOptionsBefore$.pipe(
             map((res: Country[]) => {
                 return res.filter((c: Country) => {
                     return c.nameEn.toLowerCase().includes($event.toLowerCase()) || c.nameAr.includes($event)
+
                 })
             })
         );

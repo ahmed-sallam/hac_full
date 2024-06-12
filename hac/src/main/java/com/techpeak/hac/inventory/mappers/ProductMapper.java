@@ -62,7 +62,6 @@ public class ProductMapper {
         ProductResponse response = new ProductResponse(
 
         );
-        System.out.println("aaaaa" + productL[0]);
         Product product = (Product) productL[0];
         Long totalInventory = (Long) productL[1];
         response.setId(product.getId());

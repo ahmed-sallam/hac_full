@@ -11,8 +11,6 @@ import com.techpeak.hac.purchase.models.RFPQ;
 import com.techpeak.hac.purchase.models.Supplier;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
 
-import java.util.stream.Collectors;
-
 public class SupplierQuotationMapper {
     private SupplierQuotationMapper() {
     }
@@ -87,8 +85,8 @@ public class SupplierQuotationMapper {
                 .user(UserMapper.toDtoShort(supplierQuotation.getUser()))
                 .rfpq(RFPQMapper.mapToRFPQResponseNumber(supplierQuotation.getRfpq()))
                 .supplier(SupplierMapper.mapToSupplierResponseName(supplierQuotation.getSupplier()))
-                .expenses(supplierQuotation.getExpenses().stream().map(PurchaseExpensesMapper::mapToDto).collect(Collectors.toSet()))
-                .lines(supplierQuotation.getLines().stream().map(SupplierQuotationLineMapper::mapToDto).collect(Collectors.toSet()))
+//                .expenses(supplierQuotation.getExpenses().stream().map(PurchaseExpensesMapper::mapToDto).collect(Collectors.toSet()))
+//                .lines(supplierQuotation.getLines().stream().map(SupplierQuotationLineMapper::mapToDto).collect(Collectors.toSet()))
                 .build();
     }
 

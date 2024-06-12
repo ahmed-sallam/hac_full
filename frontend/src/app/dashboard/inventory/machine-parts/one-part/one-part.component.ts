@@ -1,7 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {AsyncPipe, DatePipe} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
-import {SearchInputComponent} from "../../../components/search-input/search-input.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
+import {
+    SearchInputComponent
+} from "../../../components/search-input/search-input.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
@@ -12,7 +16,13 @@ import {Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
 import {MachinePartEntity} from "../interfaces/MachinePartResponse";
 import {LoaderService} from "../../../components/loader/loader.service";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
 
 @Component({
   selector: 'app-one-part',
@@ -31,6 +41,19 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
   styles: ``
 })
 export class OnePartComponent implements  OnInit{
+    selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
+    machinePart$!: Observable<MachinePartEntity>;
+    loader$!: Observable<boolean>;
+    partId!: number;
+    showEditMachinePartModal: boolean = false;
+    formGroup: FormGroup = new FormGroup({
+        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        isActive: new FormControl(true,),
+    });
+
     constructor(
         private loaderService: LoaderService,
         private store: Store<State>,
@@ -42,23 +65,10 @@ export class OnePartComponent implements  OnInit{
         this.selectLanguage$ = this.store.select(selectLanguage);
     }
 
-
-    selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
-    machinePart$!: Observable<MachinePartEntity>;
-    loader$!: Observable<boolean>;
-    partId!: number;
-    showEditMachinePartModal: boolean = false;
-
     ngOnInit(): void {
         this.initPageParams();
     }
-    private initPageParams() {
-        this.loaderService.show()
-        this.activeRouter.params.subscribe(params => {
-            this.partId = params['id'];
-            this.partId && this.getData()
-        })
-    }
+
     getData(){
         this.machinePart$ = this.machinePartService.getMachinePart(this.partId);
     }
@@ -69,17 +79,7 @@ export class OnePartComponent implements  OnInit{
 
     // For edit modal
 
-    formGroup: FormGroup = new FormGroup({
-        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        isActive: new FormControl(true,),
-    });
-
-
     onSubmitForm() {
-        console.log("formGroup", this.formGroup.value)
         if (this.formGroup.invalid) {
             return;
         }
@@ -100,9 +100,7 @@ export class OnePartComponent implements  OnInit{
                 this.changeEditModalVisibility(false)
             },
             error: (r) => {
-                console.log("error", r)
-
-            }
+                }
         })
     }
 
@@ -113,5 +111,13 @@ export class OnePartComponent implements  OnInit{
             this.formGroup.controls['isActive'].setValue(data.isActive)
         })
         this.changeEditModalVisibility(true)
+    }
+
+    private initPageParams() {
+        this.loaderService.show()
+        this.activeRouter.params.subscribe(params => {
+            this.partId = params['id'];
+            this.partId && this.getData()
+        })
     }
 }

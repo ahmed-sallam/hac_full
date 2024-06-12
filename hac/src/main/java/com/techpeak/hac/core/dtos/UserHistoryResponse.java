@@ -1,9 +1,6 @@
 package com.techpeak.hac.core.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -12,8 +9,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Setter
 @Getter
+@Builder
 public class UserHistoryResponse implements Serializable {
-    private Long Id;
+    private Long id;
     private String actionDetails;
     private String tableName;
     private Long recordId;

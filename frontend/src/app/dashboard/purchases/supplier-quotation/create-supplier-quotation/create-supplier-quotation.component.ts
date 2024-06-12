@@ -172,11 +172,11 @@ export class CreateSupplierQuotationComponent implements OnInit {
 
     searchProduct($event: string) {
         const productIdInLines = this.lines.value.map((i: any) => i.productId);
-        console.log(productIdInLines)
         this.products$ = this.productsService.getProducts(0, 80, $event)
             .pipe(
                 switchMap((res) => {
                     return of(res.content.filter((product: ProductEntity) => !productIdInLines.includes(product.id)));
+
                 })
             );
 
@@ -209,14 +209,9 @@ export class CreateSupplierQuotationComponent implements OnInit {
         this.formGroup.markAllAsTouched()
         this.lines.markAllAsTouched()
         this.expenses.markAllAsTouched()
-        console.log("formGroupv", this.formGroup.value)
-        console.log("formGroupe lines", this.formGroup.getError("lines"))
-        console.log("formGroupe expenses", this.formGroup.getError("expenses"))
-
         if (this.formGroup.invalid || this.lines.invalid || this.expenses.invalid) {
-            console.log("formGroup err", this.formGroup.errors)
+
         } else {
-            console.log("formGroup", this.formGroup.value)
             this.addSupplierQuotation(this.formGroup.value)
         }
     }
@@ -224,12 +219,9 @@ export class CreateSupplierQuotationComponent implements OnInit {
     addSupplierQuotation(data: CreateSupplierQuotation) {
         this.supplierQuotationService.addSupplierQuotation(data)
             .subscribe((res) => {
-                console.log("Supplier Quotation added", res)
                 this.toastService.showSuccessToast()
-                // this.toastService.showSuccess("Supplier Quotation added")
                 this.router.navigate(['/dashboard/purchases/supplier-quotations'])
             }, (err) => {
-                console.log("Supplier Quotation add error", err)
                 this.toastService.showErrorToast()
             })
     }
@@ -255,38 +247,27 @@ export class CreateSupplierQuotationComponent implements OnInit {
     }
 
     onLineSelected($event: any, index: number) {
-
-        console.log('item selected', $event)
         if ($event != null) {
             this.lines.at(index).get("productId")?.setValue($event.id);
         } else {
-            console.log(this.lines.value)
             this.lines.at(index).get('productId')?.setValue('')
-            console.log(this.lines.value)
         }
         this.searchProduct('')
     }
 
     // onExpensesLineSelected($event: any, index: number) {
-    //     console.log('item selected', $event)
-    //     if ($event != null) {
-    //         this.expenses.at(index).get("expensesTitle")?.setValue($event.id);
     //     } else {
-    //         console.log(this.expenses.value)
-    //         this.expenses.at(index).get('expensesTitle')?.setValue('')
-    //         console.log(this.expenses.value)
-    //     }
+    //         }
     // }
 
     onRfpqSelect($event: any) {
-        console.log("RFPQ ", $event)
         if ($event == null) {
             this.formGroup.get("rfpqId")?.setValue('')
             // this.formGroup.get("lines")?.setValue([]);
             this.lines.clear()
             setTimeout(()=>{
                 this.addNewLine()
-            }, 1)
+        }, 1)
         } else {
             this.formGroup.get("rfpqId")?.setValue($event.id)
             this.getRfpqData();
@@ -302,9 +283,7 @@ export class CreateSupplierQuotationComponent implements OnInit {
     }
 
     changeTotals(lineType: string, index: number, changeVat: boolean = false) {
-        console.log("Outside if")
         if (lineType == "products") {
-            console.log("in if")
             this.changeLineTotal(index, changeVat);
             this.changeSubTotal()
             this.calcSetVat()
@@ -353,11 +332,10 @@ export class CreateSupplierQuotationComponent implements OnInit {
     }
 
     changeVatTerms(event: any) {
-        console.log("vatTerms", event.target)
         this.vatTerms = event.target.value
         this.calcSetVat()
         this.setTotal()
-    }
+        }
 
     setTotal() {
         const subTotal = this.formGroup.get("subTotal")?.value | 0;
@@ -372,7 +350,7 @@ export class CreateSupplierQuotationComponent implements OnInit {
         this.lines.clear()
         this.rfpqService.getOneRFPQ(this.formGroup.get("rfpqId")?.value).subscribe({
             next: (res) => {
-                console.log("RFPQ data", res)
+
                 res.lines.forEach((line: any) => {
                     const v = line.product.productNumber +' '+( true? (line.product.mainBrandAr + ' - '+ line.product.subBrandAr  ) : (line.product.mainBrandEn + ' - '+ line.product.subBrandEn ))
                     this.lines.push(this.fb.group({

@@ -96,7 +96,7 @@ export class OneProductComponent implements OnInit {
         this.productsService.getOneProduct(this.productId)
             .subscribe({
                 next: (response: ProductEntity) => {
-                    console.log(response)
+
                     this.product = response;
 
                     this.filesService.getFile(response.image).subscribe({
@@ -104,7 +104,6 @@ export class OneProductComponent implements OnInit {
                             this.product.image = URL.createObjectURL(res)
                             this.selectedImage = this.product.image
                             this.loadImageComplete++
-                            console.log('1', this.loadImageComplete)
 
                             if (this.loadImageComplete == 2) {
                                 this.imageLoading$.next(false)
@@ -115,7 +114,6 @@ export class OneProductComponent implements OnInit {
                         next: (res) => {
                             this.product.partImage = URL.createObjectURL(res)
                             this.loadImageComplete++
-                            console.log('2', this.loadImageComplete)
                             if (this.loadImageComplete == 2) {
                                 this.imageLoading$.next(false)
                             }
@@ -141,12 +139,8 @@ export class OneProductComponent implements OnInit {
                 let sortedAndNested = Object.values(grouped).map((group:any) =>
                     group.sort((a:any, b:any) => a.locationNameEn.localeCompare(b.locationNameEn))
                 );
-
-                console.log(grouped);
-                console.log(sortedAndNested);
                 this.stock=sortedAndNested;
-
-            }
+                }
         })
     }
 

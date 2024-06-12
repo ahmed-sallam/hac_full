@@ -41,14 +41,11 @@ export class LoginComponent implements OnInit{
   }
 
   onSubmit() {
-    console.log("Form Submit")
     this.formGroup.markAllAsTouched()
     if (this.formGroup.invalid) {
-      console.log("formGroup err", this.formGroup.errors)
     }else{
-      console.log("formGroup", this.formGroup.value)
       this.login(this.formGroup.value)
-    }
+      }
   }
   login(loginData: LoginData){
     this.store.dispatch(loginAction(loginData))

@@ -1,14 +1,20 @@
 import {Component, inject} from '@angular/core';
 import {AsyncPipe} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  MainContentComponent
+} from "../../../components/main-content/main-content.component";
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
 import {Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
 import {selectLanguage} from "../../../../state/selectors/lang.selectors";
-import {BrandsService} from "../../brands/brands.service";
 import {Router} from "@angular/router";
 import {MachineryService} from "../machinery.service";
 import {CreateBrand} from "../../brands/interfaces/CreateBrand";
@@ -40,30 +46,27 @@ export class CreateMachineComponent {
 
   onSubmitForm() {
     this.formGroup.markAllAsTouched()
-    if (this.formGroup.invalid) {
-      console.log("formGroup err", this.formGroup.errors)
-    }else{
-      console.log("formGroup", this.formGroup.value)
+    if (!this.formGroup.invalid) {
       this.addMachinery(this.formGroup.value)
-    }
+      }
+  }
+
+  cancelCreateMachineryType() {
+    this.formGroup.reset();
+    this.goToMachinery()
   }
 
   private addMachinery(part: CreateBrand) {
     part.isActive = true
     this.machineryService.addMachineryType(part).subscribe({
       next: (res) => {
-        console.log("res", res)
         this.goToMachinery()
-      },
+        },
       error: (err) => {
-        console.log("err", err)
-      }
+        }
     })
   }
-  cancelCreateMachineryType() {
-    this.formGroup.reset();
-    this.goToMachinery()
-  }
+
   private goToMachinery() {
     this.router.navigate(['dashboard/inventory/machinery']);
   }

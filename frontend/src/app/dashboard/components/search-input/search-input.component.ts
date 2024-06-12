@@ -25,6 +25,5 @@ export class SearchInputComponent {
   reset() {
     this.searchChanged.emit('');
     this.value=''
-    console.log('reset')
-  }
+    }
 }

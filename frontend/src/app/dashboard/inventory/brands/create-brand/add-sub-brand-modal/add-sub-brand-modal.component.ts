@@ -1,5 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {CreateBrand} from "../../interfaces/CreateBrand";
 import {TranslatePipe} from "../../../../../pipes/translate.pipe";
 
@@ -35,11 +41,8 @@ export class AddSubBrandModalComponent {
 
   onSubmitForm() {
     this.formGroup.markAllAsTouched()
-    if (this.formGroup.invalid) {
-      console.log("formGroup err", this.formGroup.errors)
-    }else{
-      console.log("formGroup", this.formGroup.value)
+    if (!this.formGroup.invalid) {
       this.submitForm.emit(this.formGroup.value)
-    }
+      }
   }
 }

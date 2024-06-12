@@ -3,9 +3,16 @@ import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
 import {selectLanguage} from "../../../../state/selectors/lang.selectors";
 import {AsyncPipe} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
 import {Router} from "@angular/router";
 import {CreateMachinePart} from "../interfaces/CreateMachinePart";
 import {MachinePartsService} from "../machine-parts.service";
@@ -38,28 +45,24 @@ export class CreatePartsComponent {
 
     onSubmitForm() {
         this.formGroup.markAllAsTouched()
-        if (this.formGroup.invalid) {
-            console.log("formGroup err", this.formGroup.errors)
-        }else{
-            console.log("formGroup", this.formGroup.value)
+        if (!this.formGroup.invalid) {
             this.addMachinePart(this.formGroup.value)
-        }
-    }
-    private addMachinePart(part: CreateMachinePart) {
-    this.machinePartService.addMachinePart(part).subscribe({
-        next: (res) => {
-            console.log("res", res)
-            this.goToMachineParts()
-        },
-        error: (err) => {
-            console.log("err", err)
-        }
-    })
+            }
     }
 
     cancelCreatePart() {
         this.formGroup.reset();
         this.goToMachineParts()
+    }
+
+    private addMachinePart(part: CreateMachinePart) {
+    this.machinePartService.addMachinePart(part).subscribe({
+        next: (res) => {
+            this.goToMachineParts()
+            },
+        error: (err) => {
+            }
+    })
     }
 
     private goToMachineParts() {

@@ -9,14 +9,24 @@ import {LangState} from "../../../../state/reducers/lang.reducer";
 import {BrandsService} from "../brands.service";
 import {BrandEntity} from "../BrandsResponse";
 import {AsyncPipe, DatePipe} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {
     AddStoreLocationModalComponent
 } from "../../stores/one-store/add-store-location-modal/add-store-location-modal.component";
 import {CreateBrand} from "../interfaces/CreateBrand";
-import {AddSubBrandModalComponent} from "../create-brand/add-sub-brand-modal/add-sub-brand-modal.component";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+    AddSubBrandModalComponent
+} from "../create-brand/add-sub-brand-modal/add-sub-brand-modal.component";
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
 
 @Component({
     selector: 'app-one-brand',
@@ -37,6 +47,37 @@ import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} fr
 })
 export class OneBrandComponent implements OnInit {
     subBrandId!: number;
+    selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
+    brands$!: Observable<BrandEntity>;
+    loader$!: Observable<boolean>;
+    brandId!: number;
+    showAddSubBrandModal: boolean = false;
+    showEditBrandModal: boolean = false;
+    showEditSubBrandModal: boolean = false;
+    tableColumns: string[] = [
+        '#',
+        'Name',
+        'Code',
+        'Status',
+        'Last updated',
+        'Actions',
+    ];
+    editBrandForm: FormGroup = new FormGroup({
+        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        isActive: new FormControl(true,),
+    });
+    editSubBrandForm: FormGroup = new FormGroup({
+        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        code: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
+        ]),
+        isActive: new FormControl(true,),
+    });
 
     constructor(
         private loaderService: LoaderService,
@@ -49,33 +90,8 @@ export class OneBrandComponent implements OnInit {
         this.selectLanguage$ = this.store.select(selectLanguage);
     }
 
-    selectLanguage$: Observable<LangState> = this.store.select(selectLanguage)
-    brands$!: Observable<BrandEntity>;
-    loader$!: Observable<boolean>;
-    brandId!: number;
-    showAddSubBrandModal: boolean = false;
-    showEditBrandModal: boolean = false;
-    showEditSubBrandModal: boolean = false;
-
-    tableColumns: string[] = [
-        '#',
-        'Name',
-        'Code',
-        'Status',
-        'Last updated',
-        'Actions',
-    ];
-
     ngOnInit(): void {
         this.initPageParams();
-    }
-
-    private initPageParams() {
-        this.loaderService.show()
-        this.activeRouter.params.subscribe(params => {
-            this.brandId = params['id'];
-            this.brandId && this.getData()
-        })
     }
 
     getData() {
@@ -97,39 +113,22 @@ export class OneBrandComponent implements OnInit {
         $event.isActive = true
         this.brandsService.addBrand($event).subscribe({
             next: (res) => {
-                console.log("res", res)
-                this.getData()
                 this.hideAddSubBrandModal()
             },
             error: (err) => {
-                console.log("err", err)
-            }
+                }
         })
     }
-    editBrandForm: FormGroup = new FormGroup({
-        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        isActive: new FormControl(true,),
-    });
-    editSubBrandForm: FormGroup = new FormGroup({
-        nameAr: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        nameEn: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        code: new FormControl('', [Validators.required, Validators.pattern(/^(\s+\S+\s*)*(?!\s).*$/)
-        ]),
-        isActive: new FormControl(true,),
-    });
 
     changeEditBrandVisibility(b: boolean) {
         this.showEditBrandModal = b;
     }
+
     changeEditSubBrandVisibility(b: boolean) {
         this.showEditSubBrandModal = b;
         b? '' : this.subBrandId=0
     }
+
     onSubmitEditBrandForm() {
         if (this.editBrandForm.invalid) {
             return;
@@ -144,16 +143,15 @@ export class OneBrandComponent implements OnInit {
             nameEn,
             isActive}).subscribe({
             next: (res) => {
-                console.log("res", res)
                 this.editBrandForm.reset()
                 this.getData()
                 this.changeEditBrandVisibility(false)
-            },
+                },
             error: (err) => {
-                console.log("err", err)
-            }
+                }
         })
     }
+
     onSubmitEditSubBrandForm() {
         if (this.editSubBrandForm.invalid) {
             return;
@@ -170,16 +168,15 @@ export class OneBrandComponent implements OnInit {
             code,
             isActive}).subscribe({
             next: (res) => {
-                console.log("res", res)
                 this.editSubBrandForm.reset()
                 this.getData()
                 this.changeEditSubBrandVisibility(false)
-            },
+                },
             error: (err) => {
-                console.log("err", err)
-            }
+                }
         })
     }
+
     onshowEditSubBrandModal($event: BrandEntity) {
         this.subBrandId = $event.id
         this.editSubBrandForm.setValue({
@@ -190,6 +187,7 @@ export class OneBrandComponent implements OnInit {
         })
         this.changeEditSubBrandVisibility(true)
     }
+
     onshowEditBrandModal() {
         this.brands$.subscribe((data) => {
             this.editBrandForm.controls['nameEn'].setValue(data.nameEn)
@@ -197,5 +195,13 @@ export class OneBrandComponent implements OnInit {
             this.editBrandForm.controls['isActive'].setValue(data.isActive)
         })
         this.changeEditBrandVisibility(true)
+    }
+
+    private initPageParams() {
+        this.loaderService.show()
+        this.activeRouter.params.subscribe(params => {
+            this.brandId = params['id'];
+            this.brandId && this.getData()
+        })
     }
 }

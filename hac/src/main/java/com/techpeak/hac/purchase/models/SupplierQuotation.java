@@ -1,15 +1,13 @@
 package com.techpeak.hac.purchase.models;
 
-import com.techpeak.hac.core.models.BaseEntity;
-import com.techpeak.hac.core.models.CurrencyEntity;
-import com.techpeak.hac.core.models.InternalRef;
-import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.core.models.*;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
 import com.techpeak.hac.purchase.enums.ReceiveTypes;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "SupplierQuotation")
@@ -52,7 +50,7 @@ public class SupplierQuotation extends BaseEntity {
 
     @Column(name = "supplier_ref")
     private String supplierRef;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="internal_ref_id", nullable = false)
     private InternalRef internalRef;
     @ManyToOne
@@ -67,8 +65,19 @@ public class SupplierQuotation extends BaseEntity {
     @OneToMany(mappedBy = "supplierQuotation")
     @ToString.Exclude
     private Set<SupplierQuotationExpenses> expenses;
-    @OneToMany(mappedBy = "supplierQuotation")
+    @OneToMany(mappedBy = "supplierQuotation", cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<SupplierQuotationLine> lines;
+    private Set<SupplierQuotationLine> lines = new HashSet<>();
+    @OneToMany
+    @ToString.Exclude
+    private Set<UserHistory> userHistories = new HashSet<>();
+    public void setLines(Set<SupplierQuotationLine> lines) {
+        this.lines = new HashSet<>();
+        this.lines.addAll(lines);
+    }
+    public void setUserHistories(Set<UserHistory> userHistories) {
+        this.userHistories = new HashSet<>();
+        this.userHistories.addAll(userHistories);
+    }
 
 }

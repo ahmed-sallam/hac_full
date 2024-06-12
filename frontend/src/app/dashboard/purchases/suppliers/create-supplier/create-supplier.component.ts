@@ -51,11 +51,10 @@ export class CreateSupplierComponent {
   onSubmitForm() {
     this.formGroup.markAllAsTouched()
     if (this.formGroup.invalid) {
-      console.log("formGroup err", this.formGroup.errors)
-    }else{
-      console.log("formGroup", this.formGroup.value)
+      }else{
       this.addSupplier(this.formGroup.value)
-    }
+
+      }
   }
 
   cancelCreate() {
@@ -67,12 +66,11 @@ export class CreateSupplierComponent {
     supplier.isActive = true
     this.suppliersService.addSupplier(supplier).subscribe({
       next: (res) => {
-        console.log("res", res)
         this.gotoSuppliers()
-      },
+
+        },
       error: (err) => {
-        console.log("err", err)
-      }
+        }
     })
   }
 

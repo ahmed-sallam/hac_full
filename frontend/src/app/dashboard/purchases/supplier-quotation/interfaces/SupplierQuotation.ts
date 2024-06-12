@@ -21,7 +21,7 @@ export interface SupplierQuotation {
     rfpq: Rfpq
     supplier: Supplier
     expenses: any[]
-    lines: any[]
+    lines: Line[]
 }
 
 export interface Currency {
@@ -48,4 +48,29 @@ export interface Supplier {
     id: number
     nameAr: string
     nameEn: string
+}
+
+export interface Line {
+    id: number
+    createdAt: string
+    updatedAt: string
+    isActive: boolean
+    quantity: number
+    price: number
+    discount: number
+    total: number
+    notes: string
+    product: Product
+}
+
+export interface Product {
+    id: number
+    productNumber: string
+    descriptionAr: string
+    descriptionEn: string
+    mainBrandAr: string
+    mainBrandEn: string
+    subBrandAr: string
+    subBrandEn: string
+    totalInventory: number
 }

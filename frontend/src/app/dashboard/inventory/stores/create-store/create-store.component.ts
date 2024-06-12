@@ -2,9 +2,16 @@ import {Component, inject} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
 import {selectLanguage} from "../../../../state/selectors/lang.selectors";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators
+} from "@angular/forms";
 import {AsyncPipe} from "@angular/common";
-import {MainContentComponent} from "../../../components/main-content/main-content.component";
+import {
+    MainContentComponent
+} from "../../../components/main-content/main-content.component";
 import {TranslatePipe} from "../../../../pipes/translate.pipe";
 import {StoresService} from "../stores.service";
 import {ToastService} from "../../../../toast/toast.service";
@@ -38,7 +45,6 @@ export class CreateStoreComponent {
     });
 
     onSubmitForm() {
-        console.log("formGroup", this.formGroup.value)
         if (this.formGroup.invalid) {
             return;
         }
@@ -49,10 +55,8 @@ export class CreateStoreComponent {
                 this.goBack()
             },
             error: (r) => {
-                console.log("error", r)
                 this.toastService.showErrorToast()
-
-            }
+                }
         })
     }
 

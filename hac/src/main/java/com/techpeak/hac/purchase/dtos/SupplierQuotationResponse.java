@@ -2,6 +2,7 @@ package com.techpeak.hac.purchase.dtos;
 
 import com.techpeak.hac.core.dtos.InternalRefDto;
 import com.techpeak.hac.core.dtos.UserDtoShort;
+import com.techpeak.hac.core.dtos.UserHistoryResponse;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
 import com.techpeak.hac.purchase.enums.ReceiveTypes;
 import lombok.Builder;
@@ -41,5 +42,12 @@ public class SupplierQuotationResponse implements Serializable {
     SupplierResponseName supplier;
     Set<SupplierQuotationExpensesDto> expenses;
     Set<SupplierQuotationLineDto> lines;
+    Set<UserHistoryResponse> userHistories;
+
+//    public void setUserHistories(Set<UserHistoryResponse> userHistories) {
+//        for (UserHistoryResponse userHistory : userHistories) {
+//            userHistory.setRecordId(this.id);
+//        }
+//    }
 }
 

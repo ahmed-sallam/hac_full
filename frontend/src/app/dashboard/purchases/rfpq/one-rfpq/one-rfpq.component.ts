@@ -73,7 +73,7 @@ export class OneRfpqComponent implements OnInit{
     this.rfpqService.updateRFPQStatus(this.requestId, status).subscribe({
       next:()=>{this.getData()},
       error:(e)=>{
-        console.log(e)}
+        }
     })
   }
 

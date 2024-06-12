@@ -122,14 +122,8 @@ export class ReplenishmentComponent implements OnInit {
     onSubmitForm(confirm = false) {
         this.formGroup.markAllAsTouched()
         this.lines.markAllAsTouched()
-        console.log("formGroupv", this.formGroup.value)
-        console.log("formGroupe", this.formGroup.getError("lines"))
-        console.log("aa", this.lines.invalid)
-
         if (this.formGroup.invalid || this.lines.invalid) {
-            console.log("formGroup err", this.formGroup.errors)
         } else {
-            console.log("formGroup", this.formGroup.value)
             this.addReplenishment(this.formGroup.value, confirm)
         }
     }
@@ -164,7 +158,6 @@ export class ReplenishmentComponent implements OnInit {
 
     searchProduct($event: string) {
         const productIdInLines = this.lines.value.map((i: any) => i.product);
-        console.log(productIdInLines)
         this.products$ = this.productsService.getProducts(0, 20, $event)
             .pipe(
                 switchMap((res) => {
@@ -180,14 +173,11 @@ export class ReplenishmentComponent implements OnInit {
 
     onItemSelected($event: any, index: number) {
 
-        console.log('item selected', $event)
         if ($event != null) {
             this.lines.at(index).get("product")?.setValue($event.id);
         } else {
-            console.log(this.lines.value)
             this.lines.at(index).get('product')?.setValue('')
-            console.log(this.lines.value)
-        }
+            }
         this.products$ = null
     }
 

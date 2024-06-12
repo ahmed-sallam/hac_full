@@ -19,6 +19,6 @@ public class SupplierQuotationExpenses extends BaseEntity {
     private Double amount;
     private String notes;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_quotation_id")
+    @JoinColumn(name = "supplier_quotation_id", nullable = false)
     private SupplierQuotation supplierQuotation;
 }

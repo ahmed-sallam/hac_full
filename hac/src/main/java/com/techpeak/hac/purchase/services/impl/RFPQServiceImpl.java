@@ -101,7 +101,6 @@ public class RFPQServiceImpl implements RFPQService {
     @Override
     public RFPQResponse getOne(Long id) {
         Tuple a = rfpqRepository.findByIdWithHistory(id);
-        System.out.println("iiiiiii " + a);
         try {
             return RFPQMapper.mapToRFPQResponse(a);
         } catch (IOException e) {
