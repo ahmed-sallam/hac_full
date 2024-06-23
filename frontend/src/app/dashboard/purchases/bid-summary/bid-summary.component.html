@@ -1,1 +1,18 @@
-<p>bid-summary works!</p>
+@if (selectLanguage$ | async; as language){
+    <app-main-content
+            [language]="language"
+            [headerText]="'Bid Summaries' | translate : language.lang"
+            [noDataMessage]="'There is no data to show' | translate : language?.lang"
+            [noData]="bidSummaries.length === 0"
+    >
+        <div headerActions >
+            <button
+                    [routerLink]="['/dashboard/purchases/bid-summaries/create']"
+                    class="w-auto p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 hover:border-secondary/70 border border-secondary"
+            >
+                {{ "Add Bid Summary" | translate : language.lang }}
+            </button>
+        </div>
+
+    </app-main-content>
+}
