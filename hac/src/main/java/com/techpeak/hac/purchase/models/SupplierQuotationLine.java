@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity(name = "SupplierQuotationLine")
-@Table(name = "supplier_quotation_lines")
+@Table(name = "supplier_quotation_lines", indexes = {
+        @Index(name = "idx_product_id", columnList = "product_id"),
+        @Index(name = "idx_supplier_quotation_id", columnList = "supplier_quotation_id")
+} )
 @Setter
 @Getter
 @AllArgsConstructor

@@ -2,6 +2,7 @@ package com.techpeak.hac.purchase.controllers;
 
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.utils.AuthUtils;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationGroubBySupplier;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponse;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
@@ -11,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/supplier-quotations")
@@ -51,5 +55,10 @@ public class SupplierQuotationController {
         User user = AuthUtils.getCurrentUser();
         SupplierQuotation supplierQuotation = supplierQuotationService.createSupplierQuotation(request, user);
         return ResponseEntity.ok(supplierQuotation.getId());
+    }
+
+    @GetMapping("/group-by-supplier")
+    public ResponseEntity<List<SupplierQuotationGroubBySupplier>> getSupplierQuotationsGroupBySupplier(@RequestParam("productNumber") String productNumber, @RequestParam("fromDate") LocalDate fromDate) {
+        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(productNumber, fromDate));
     }
 }

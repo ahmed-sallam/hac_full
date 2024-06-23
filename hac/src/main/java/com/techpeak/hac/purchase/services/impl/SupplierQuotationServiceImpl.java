@@ -29,6 +29,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,12 +70,12 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         if (date != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("date"), date));
         }
-        if(rfpq != null) {
-            spec = spec.and((root, query, cb) -> cb.like(root.get("rfpq").get("number"), "%" + rfpq + "%" ));
+        if (rfpq != null) {
+            spec = spec.and((root, query, cb) -> cb.like(root.get("rfpq").get("number"), "%" + rfpq + "%"));
         }
 
         Pageable pageRequest = PageRequest.of(page, size, Sort.by(sort));
-        Page<SupplierQuotation> all = supplierQuotationRepository.findAll( spec, pageRequest);
+        Page<SupplierQuotation> all = supplierQuotationRepository.findAll(spec, pageRequest);
         return all.map(SupplierQuotationMapper::mapToResponseShort);
     }
 
@@ -101,7 +104,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
                                                 .getProductOrThrow(l.getProductId())))
                 .collect(Collectors.toSet()));
         Set<SupplierQuotationExpensesRequest> expenses = request.getExpenses();
-        if(!expenses.isEmpty())  supplierQuotation.setExpenses(expenses
+        if (!expenses.isEmpty()) supplierQuotation.setExpenses(expenses
                 .stream()
                 .map(e ->
                         SupplierQuotationExpensesMapper
@@ -130,6 +133,27 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         supplierQuotation.setUserHistories(userHistories);
         return SupplierQuotationMapper.mapToResponse(supplierQuotation);
     }
+
+    @Override
+    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(String productNumber, LocalDate fromDate) {
+
+
+        List<Object[]> all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(productNumber, fromDate);
+        // map supplierQuotationsGroupBySupplier to List<SupplierQuotationGroubBySupplier>
+        if (all.isEmpty()) {
+            return new ArrayList<>();
+        }
+        return all.stream().map(supplierQuotation ->
+                {
+                    try {
+                        return SupplierQuotationMapper.mapToSupplierQuotationGroubBySupplier(supplierQuotation);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).toList();
+    }
+
 
     private SupplierQuotation getSupplierQuotation(Long id) {
         return supplierQuotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id));

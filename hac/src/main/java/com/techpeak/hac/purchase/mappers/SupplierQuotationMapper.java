@@ -1,16 +1,21 @@
 package com.techpeak.hac.purchase.mappers;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.techpeak.hac.core.mappers.UserMapper;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationResponse;
-import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
+import com.techpeak.hac.purchase.dtos.*;
 import com.techpeak.hac.purchase.models.RFPQ;
 import com.techpeak.hac.purchase.models.Supplier;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class SupplierQuotationMapper {
@@ -91,6 +96,21 @@ public class SupplierQuotationMapper {
                 .lines(supplierQuotation.getLines().stream().map(SupplierQuotationLineMapper::mapToDto).collect(Collectors.toSet()))
                 .userHistories(supplierQuotation.getUserHistories().stream().map(UserHistoryMapper::mapToDto).collect(Collectors.toSet()))
                 .build();
+    }
+
+
+    public static SupplierQuotationGroubBySupplier mapToSupplierQuotationGroubBySupplier(Object[] obj) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ObjectReader reader = objectMapper.readerFor(new TypeReference<List<ProductQuotationDto>>() {
+        });
+        JsonNode historyN = objectMapper.readTree(obj[3].toString());
+        return new SupplierQuotationGroubBySupplier(
+                (Long) obj[0],
+                (String) obj[1],
+                (String) obj[2],
+                reader.readValue(historyN)
+        );
     }
 
 }

@@ -11,7 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "SupplierQuotation")
-@Table(name = "supplier_quotations")
+@Table(name = "supplier_quotations", indexes = {
+        @Index(name = "idx_date", columnList = "date"),
+        @Index(name = "idx_supplier_id", columnList = "supplier_id"),
+        @Index(name = "idx_currency_id", columnList = "currency_id")
+})
 @Setter
 @Getter
 @AllArgsConstructor
@@ -44,14 +48,14 @@ public class SupplierQuotation extends BaseEntity {
     @Column(name = "is_local")
     private Boolean isLocal = true;
 
-    @Column(name="payment_terms")
+    @Column(name = "payment_terms")
     @Enumerated(EnumType.STRING)
     private PaymentTerms paymentTerms = PaymentTerms.IMMEDIATELY;
 
     @Column(name = "supplier_ref")
     private String supplierRef;
     @ManyToOne
-    @JoinColumn(name="internal_ref_id", nullable = false)
+    @JoinColumn(name = "internal_ref_id", nullable = false)
     private InternalRef internalRef;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -71,12 +75,16 @@ public class SupplierQuotation extends BaseEntity {
     @OneToMany
     @ToString.Exclude
     private Set<UserHistory> userHistories = new HashSet<>();
+
     public void setLines(Set<SupplierQuotationLine> lines) {
         this.lines = new HashSet<>();
+        lines.forEach(l -> l.setSupplierQuotation(this));
         this.lines.addAll(lines);
     }
+
     public void setUserHistories(Set<UserHistory> userHistories) {
         this.userHistories = new HashSet<>();
+        userHistories.forEach(uh -> uh.setRecordId(this.getId()));
         this.userHistories.addAll(userHistories);
     }
 

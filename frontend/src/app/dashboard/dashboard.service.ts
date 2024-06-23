@@ -6,7 +6,7 @@ import {BehaviorSubject} from "rxjs";
 })
 export class DashboardService {
 
-  sidebarVisibility = new BehaviorSubject<boolean>(false);
+  sidebarVisibility = new BehaviorSubject<boolean>(true);
 
   constructor() {
 
