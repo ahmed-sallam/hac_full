@@ -135,10 +135,14 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
     }
 
     @Override
-    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(String productNumber, LocalDate fromDate) {
+    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier( LocalDate fromDate, String productNumber,List<String> numbers ) {
+        List<Object[]> all = new ArrayList<>();
+        if(productNumber == null){
+        all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(numbers, fromDate);
 
-
-        List<Object[]> all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(productNumber, fromDate);
+        }else {
+         all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(productNumber, fromDate);
+        }
         // map supplierQuotationsGroupBySupplier to List<SupplierQuotationGroubBySupplier>
         if (all.isEmpty()) {
             return new ArrayList<>();
@@ -153,6 +157,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
                 }
         ).toList();
     }
+
 
 
     private SupplierQuotation getSupplierQuotation(Long id) {

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/supplier-quotations")
@@ -45,10 +46,12 @@ public class SupplierQuotationController {
     public ResponseEntity<SupplierQuotationResponse> getOne(@PathVariable Long id) {
         return ResponseEntity.ok(supplierQuotationService.getOne(id));
     }
+
     @GetMapping("/active")
     public ResponseEntity<Page<SupplierQuotationResponseShort>> getAllActiveSupplierQuotations() {
         return ResponseEntity.ok(supplierQuotationService.getAllActiveSupplierQuotations());
     }
+
     // create new supplier quotation
     @PostMapping
     public ResponseEntity<Long> createSupplierQuotation(@RequestBody SupplierQuotationRequest request) {
@@ -59,6 +62,11 @@ public class SupplierQuotationController {
 
     @GetMapping("/group-by-supplier")
     public ResponseEntity<List<SupplierQuotationGroubBySupplier>> getSupplierQuotationsGroupBySupplier(@RequestParam("productNumber") String productNumber, @RequestParam("fromDate") LocalDate fromDate) {
-        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(productNumber, fromDate));
+        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(fromDate, productNumber, null));
+    }
+
+    @PostMapping("/group-by-supplier")
+    public ResponseEntity<List<SupplierQuotationGroubBySupplier>> getSupplierQuotationsGroupBySupplier(@RequestBody Map<String, List<String>> numbers, @RequestParam("fromDate") LocalDate fromDate) {
+        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(fromDate, null, numbers.get("numbers")));
     }
 }

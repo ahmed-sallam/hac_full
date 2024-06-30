@@ -1,1 +1,196 @@
-<p>create-bid-summary works!</p>
+@if (selectLanguage$ | async; as language) {
+    <app-main-content [language]="language"
+                      [headerText]="'Generate a Bid Summary' | translate: language?.lang"
+                      [noDataMessage]="'There is no data to show' | translate: language?.lang"
+                      [noData]="false">
+        <div headerActions>
+            <!--                    (click)="cancelCreateProduct()"-->
+            <button
+                    class=" border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
+                {{ 'Cancel' | translate: language?.lang }}
+            </button>
+            <!--                    (click)="onSubmitForm()"-->
+            <button
+                    class=" bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
+                {{ 'Save' | translate: language?.lang }}
+            </button>
+        </div>
+
+
+        <div contentWithData class="h-full min-h-max w-full p-8 relative">
+            <form [formGroup]="formGroup">
+                <div class="flex flex-grow items-center justify-start w-full gap-2">
+                    <div class="mb-5 max-w-96 w-full">
+                        <label
+                                class="block mb-2 text-sm font-medium text-secondary/90"
+                        >{{ "RFPQ" | translate : language.lang }} <span
+                                class="text-danger">*</span></label
+                        >
+                        <app-select-with-search
+                                [language]="language.lang"
+                                (searchInput)="searchRFPQ($event)"
+                                [searchOptions]="rfpq$ | async"
+                                (selectedItem)="onRfpqSelect($event)"
+                                [request]="true"
+                        />
+                        @if (formGroup.get('rfpq')?.touched && formGroup.get('rfpq')?.errors) {
+                            <p class="text-xs text-danger font-light">
+                                {{ "RFPQ" | translate : language.lang }}
+                                {{ "has errors" | translate : language.lang }}
+                            </p>
+                        }
+                    </div>
+                    <div class="mb-5 max-w-96 w-full">
+                        <label
+                                for="fromDate"
+                                class="block mb-2 text-sm font-medium text-secondary/90"
+                        >{{ "From date" | translate : language.lang }} <span
+                                class="text-danger">*</span></label
+                        >
+                        <input
+                                formControlName="fromDate"
+                                type="date"
+                                id="fromDate"
+                                class="bg-accent/5 border-0  text-secondary/70 text-sm  focus:border-0 ring-transparent block w-full p-2.5 "
+                        />
+                        @if (formGroup.get('fromDate')?.touched && formGroup.get('fromDate')?.errors) {
+                            <p class="text-xs text-danger font-light">
+                                {{ "From date" | translate : language.lang }}
+                                {{ "has errors" | translate : language.lang }}
+                            </p>
+                        }
+                    </div>
+                    <button
+                            (click)="getAllQuotations()"
+                            class=" bg-transparent text-primary font-medium w-40 p-4 ms-3 my-1 hover:text-secondary  disabled:text-secondary/70 ">
+                        {{ 'Load quotations' | translate: language?.lang }}
+                    </button>
+                </div>
+
+                <div class="w-full   shadow-sm-light shadow-secondary/20 p-2 mt-4 ">
+                    <h3 class="text-lg font-semibold underline">{{ "Products" | translate: language.lang }}</h3>
+                    <div class="flex justify-start items-start  overflow-x-auto overflow-y-auto h-[calc(100vh-350px)] w-[90vw]  flex-col relative"
+                         style="flex: 0 0 1px">
+                        <!--                Lines Header -->
+                        <div class=" px-1 py-2 flex items-center gap-1 justify-start   text-secondary/50  my-2.5 sticky top-0  z-20 w-full min-w-fit"
+                             style="background-color: #e6e6e5">
+                            <div class="flex w-[200px] top-0 start-0  justify-center items-center sticky z-10 h-full"
+                                 style="background-color: #e6e6e5">
+                                <div class=" w-[200px] ps-1.5 ">{{ 'Product' | translate : language }}</div>
+                            </div>
+                            <div class=" w-[50px] text-xs">{{ 'Quantity' | translate : language }}</div>
+                            <div class=" w-[50px] text-xs">{{ 'Sold Qty' | translate : language }}</div>
+                            <div class=" w-[50px] text-xs">{{ 'Sale Q' | translate : language }}</div>
+                            <div class=" w-[80px] text-sm">{{ 'Selected' | translate : language }}</div>
+                            <!--                            Suppliers header-->
+                            @for (item of suppliers; track $index) {
+
+                                <div class="flex-col items-center justify-center  w-[270px] gap-0.5">
+
+                                    <div class="text-center font-semibold mb-0.5">{{ language.lang == 'ar' ? item.nameAr : item.nameEn }}</div>
+                                    <div class="flex items-center justify-center gap-0.5">
+                                        <div class=" w-[55px] text-xs">{{ 'Price' | translate : language }}</div>
+                                        <div class=" w-[55px] text-xs">{{ 'SAR' | translate : language }}</div>
+                                        <div class=" w-[50px] text-xs">{{ 'Brand' | translate : language }}</div>
+                                        <div class=" w-[50px] text-xs">{{ 'Is Local' | translate : language }}</div>
+                                        <div class=" w-[50px] text-xs">{{ 'Other' | translate : language }}</div>
+                                    </div>
+                                </div>
+                            }
+
+                        </div>
+                        <!--                Lines data -->
+
+                        @for (item of products; track $index) {
+                            <div class="  flex items-center gap-1 justify-start   text-secondary/50  bg-white py-1 relative w-full min-w-fit hover:bg-secondary/5 border-b border-secondary/20 ">
+                                <div class="flex w-[200px]  start-0  justify-center items-center sticky z-10  h-full"
+                                     style="background-color: inherit"
+                                >
+                                    <div class=" w-[200px]  ps-1.5 ">{{ item.product.productNumber + ' ' + (language.lang == 'ar' ? item.product.subBrandAr : item.product.subBrandEn) }}</div>
+                                </div>
+                                <div class=" w-[50px] text-xs">{{ item.quantity }}</div>
+                                <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
+                                <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
+                                <div class=" w-[80px] text-sm">{{ '--' }}</div>
+                                <!--                            Suppliers header-->
+                                <!--                                @for (qq of quotations; track $index) {-->
+                                @for (supplier of suppliers; track $index) {
+                                    @if (loadOneQuotation(item.product.productNumber, supplier.id); as qq) {
+                                        @if (qq.length > 0) {
+
+                                            <div class="flex items-center justify-center w-[270px] gap-0.5"
+                                                 (mouseleave)="onItemHoverLeave()"
+                                            >
+                                                <!--                                             (mouseenter)="onItemHoverEnter(item.product.productNumber, supplier.id)"-->
+
+                                                <div class=" w-[55px] text-xs">{{ qq[0]['price'] + ' ' + qq[0]['supplierQuotation']['currency']['code'] }}</div>
+                                                <div class=" w-[55px] text-xs underline">
+                                                    @if (qq[0]['supplierQuotation']['currency']['exchangeRate'] == 1) {
+                                                        {{ qq[0]['price'] + ' SAR' }}
+                                                    } @else {
+                                                        {{ qq[0]['price'] * qq[0]['supplierQuotation']['currency']['exchangeRate'] + ' SAR' }}
+                                                    }
+                                                </div>
+                                                <div class=" w-[50px] text-xs">{{ language.lang == 'ar' ? qq[0]['product']['subBrandAr'] : qq[0]['product']['subBrandEn'] }}</div>
+                                                <div class=" w-[50px] text-xs">
+                                                    @if (qq[0]['supplierQuotation']['isLocal']) {
+                                                        <svg
+                                                                class="w-4 h-4 text-green-500"
+                                                                style="color: green !important"
+                                                                aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                    fill-rule="evenodd"
+                                                                    d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                                                    clip-rule="evenodd"
+                                                            />
+                                                        </svg>
+
+                                                    } @else {
+                                                        <svg
+                                                                style="color: red !important"
+                                                                class="w-4 h-4 text-red-500"
+                                                                aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                    fill-rule="evenodd"
+                                                                    d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                                                    clip-rule="evenodd"
+                                                            />
+                                                        </svg>
+
+                                                    }
+                                                </div>
+                                                <div class=" w-[50px] text-xs">
+                                                    <div class="rounded-full border border-secondary cursor-pointer p-0.5 w-5 text-center">{{ qq.length - 1 }}</div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+
+                                    <!--                                    @else {-->
+                                            <!--                                        <div class="flex items-center justify-center w-[270px] gap-0.5">-->
+
+                                            <!--                                            <div class=" w-[55px] text-xs">{{ '&#45;&#45;' }}</div>-->
+                                            <!--                                            <div class=" w-[55px] text-xs">{{ '&#45;&#45;' }}</div>-->
+                                            <!--                                            <div class=" w-[50px] text-xs">{{ '&#45;&#45;' }}</div>-->
+                                            <!--                                            <div class=" w-[50px] text-xs">{{ '&#45;&#45;' }}</div>-->
+                                            <!--                                            <div class=" w-[50px] text-xs">{{ '&#45;&#45;' }}</div>-->
+                                            <!--                                        </div>-->
+                                            <!--                                    }-->
+                                }
+
+                            </div>
+                        }
+                    </div>
+                </div>
+            </form>
+        </div>
+    </app-main-content>
+}

@@ -18,5 +18,6 @@ public interface SupplierQuotationService {
 
     SupplierQuotationResponse getOne(Long id);
 
-    List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(String productNumber, LocalDate fromDate);
+    List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier( LocalDate fromDate,String productNumber,  List<String> numbers);
+//    List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(List<String> numbers, LocalDate fromDate);
 }

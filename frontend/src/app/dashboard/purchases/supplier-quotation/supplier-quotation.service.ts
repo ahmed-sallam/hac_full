@@ -52,6 +52,10 @@ export class SupplierQuotationService {
     return this.http.get<SupplierQuotationResponse>(link);
   }
 
+  getQuotationsGroupedBySupplier(productNumber: string, fromDate: string): Observable<any> {
+    let link: string = `${this.appService.baseApi}/supplier-quotations/group-by-supplier?productNumber=${productNumber}&fromDate=${fromDate}`;
+    return this.http.get<any>(link);
+  }
 
   getOne(id: number): Observable<SupplierQuotation> {
     let link: string = `${this.appService.baseApi}/supplier-quotations/${id}`;
