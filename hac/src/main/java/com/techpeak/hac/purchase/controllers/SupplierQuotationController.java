@@ -6,6 +6,7 @@ import com.techpeak.hac.purchase.dtos.SupplierQuotationGroubBySupplier;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponse;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
+import com.techpeak.hac.purchase.dtos.bid_summary.GenerateBidSummaryDto;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
 import com.techpeak.hac.purchase.services.SupplierQuotationService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/supplier-quotations")
@@ -64,9 +64,14 @@ public class SupplierQuotationController {
     public ResponseEntity<List<SupplierQuotationGroubBySupplier>> getSupplierQuotationsGroupBySupplier(@RequestParam("productNumber") String productNumber, @RequestParam("fromDate") LocalDate fromDate) {
         return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(fromDate, productNumber, null));
     }
-
-    @PostMapping("/group-by-supplier")
-    public ResponseEntity<List<SupplierQuotationGroubBySupplier>> getSupplierQuotationsGroupBySupplier(@RequestBody Map<String, List<String>> numbers, @RequestParam("fromDate") LocalDate fromDate) {
-        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(fromDate, null, numbers.get("numbers")));
+    @GetMapping("/grouped")
+    public ResponseEntity<GenerateBidSummaryDto> getSupplierQuotationsGroupBySupplier(@RequestParam("rfpq") Long rfpq, @RequestParam("fromDate") LocalDate fromDate) {
+        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGrouped(rfpq, fromDate, LocalDate.now()));
     }
+
+//    @PostMapping("/group-by-supplier")
+//    public ResponseEntity<List<SupplierQuotationGroubBySupplier>> getSupplierQuotationsGroupBySupplier(@RequestBody Map<String, List<String>> numbers, @RequestParam("fromDate") LocalDate fromDate) {
+//        return ResponseEntity.ok(supplierQuotationService.getSupplierQuotationsGroupBySupplier(fromDate, null, numbers.get("numbers")));
+//    }
+
 }

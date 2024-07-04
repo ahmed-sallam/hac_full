@@ -284,4 +284,4 @@ INSERT INTO currencies (name, code, exchange_rate, created_at, updated_at,
 VALUES ('ريال سعودي', 'SAR', 1, NOW(), NOW(), TRUE),
        ('دولار أمريكي', 'USD', 3.75, NOW(), NOW(), TRUE),
        ('يورو', 'EUR', 4.5, NOW(), NOW(), TRUE),
-       ('درهم إماراتي', 'AED', 1.02, NOW(), NOW(), TRUE);
+       ('درهم إماراتي', 'AED', 1.02, NOW(), NOW(), TRUE);x

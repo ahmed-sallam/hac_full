@@ -5,6 +5,7 @@ import com.techpeak.hac.purchase.dtos.SupplierQuotationGroubBySupplier;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponse;
 import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
+import com.techpeak.hac.purchase.dtos.bid_summary.GenerateBidSummaryDto;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
 import org.springframework.data.domain.Page;
 
@@ -19,5 +20,6 @@ public interface SupplierQuotationService {
     SupplierQuotationResponse getOne(Long id);
 
     List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier( LocalDate fromDate,String productNumber,  List<String> numbers);
-//    List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(List<String> numbers, LocalDate fromDate);
+
+    GenerateBidSummaryDto getSupplierQuotationsGrouped(Long rfpq, LocalDate fromDate, LocalDate toDate);
 }

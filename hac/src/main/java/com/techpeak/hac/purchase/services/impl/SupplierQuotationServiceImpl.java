@@ -1,5 +1,11 @@
 package com.techpeak.hac.purchase.services.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
@@ -10,6 +16,7 @@ import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.purchase.dtos.*;
+import com.techpeak.hac.purchase.dtos.bid_summary.GenerateBidSummaryDto;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationExpensesMapper;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationLineMapper;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationMapper;
@@ -135,13 +142,14 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
     }
 
     @Override
-    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier( LocalDate fromDate, String productNumber,List<String> numbers ) {
+    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(LocalDate fromDate, String productNumber, List<String> numbers) {
+        // todo
         List<Object[]> all = new ArrayList<>();
-        if(productNumber == null){
-        all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(numbers, fromDate);
+        if (productNumber == null) {
+            all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(numbers, fromDate);
 
-        }else {
-         all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(productNumber, fromDate);
+        } else {
+            all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(productNumber, fromDate);
         }
         // map supplierQuotationsGroupBySupplier to List<SupplierQuotationGroubBySupplier>
         if (all.isEmpty()) {
@@ -158,6 +166,32 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         ).toList();
     }
 
+    @Override
+    public GenerateBidSummaryDto getSupplierQuotationsGrouped(Long rfpq, LocalDate fromDate, LocalDate toDate) {
+        Object[] all = supplierQuotationRepository.getSupplierQuotationsGrouped(rfpq, fromDate, toDate); // map it to GenerateBidSummaryDto
+        GenerateBidSummaryDto generateBidSummaryDto = new GenerateBidSummaryDto();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        ObjectReader readerPS = objectMapper.readerFor(new TypeReference<GenerateBidSummaryDto>() {
+        });
+        JsonNode historyN = null;
+        try {
+            historyN = objectMapper.readTree(all[0].toString());
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        try {
+            System.out.println("allll " + readerPS.readValue(historyN));
+            generateBidSummaryDto = readerPS.readValue(historyN);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return generateBidSummaryDto;
+    }
 
 
     private SupplierQuotation getSupplierQuotation(Long id) {
