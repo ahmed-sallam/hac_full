@@ -172,9 +172,9 @@ public interface SupplierQuotationRepository extends JpaRepository<SupplierQuota
                                                                                                                        'rfpqId',
                                                                                                                        q.rfpq_id,
                                                                                                                        'netPrice',
-                                                                                                                       ql.price,
+                                                                                                                       ql.price - COALESCE(ql.discount, 0),
                                                                                                                        'sarPrice',
-                                                                                                                       ql.price,
+                                                                                                                       (ql.price - COALESCE(ql.discount, 0)) * c.exchange_rate,
                                                                                                                        'product',
                                                                                                                        JSON_BUILD_OBJECT(
                                                                                                                                'id',

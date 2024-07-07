@@ -11,3 +11,36 @@
 /*    display: block;*/
 /*}*/
 }
+
+.fade-in-out {
+    animation: fadeInOut ease-in-out 700ms;
+    -webkit-animation: fadeInOut ease-in-out 700ms;
+    -moz-animation: fadeInOut ease-in-out 700ms;
+    -o-animation: fadeInOut ease-in-out 700ms;
+    -ms-animation: fadeInOut ease-in-out 700ms;
+}
+
+@keyframes fadeInOut {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+
+@-moz-keyframes fadeInOut {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+
+@-webkit-keyframes fadeInOut {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+
+@-o-keyframes fadeInOut {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+
+@-ms-keyframes fadeInOut {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}

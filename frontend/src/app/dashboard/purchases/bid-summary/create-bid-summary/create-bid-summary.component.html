@@ -101,89 +101,94 @@
                         </div>
                         <!--                Lines data -->
 
-                        @for (item of products; track $index) {
+                        @for (product of products; track $index) {
                             <div class="  flex items-center gap-1 justify-start   text-secondary/50  bg-white py-1 relative w-full min-w-fit hover:bg-secondary/5 border-b border-secondary/20 ">
                                 <div class="flex w-[200px]  start-0  justify-center items-center sticky z-10  h-full"
                                      style="background-color: inherit"
                                 >
-                                    <div class=" w-[200px]  ps-1.5 ">{{ item.product.productNumber + ' ' + (language.lang == 'ar' ? item.product.subBrandAr : item.product.subBrandEn) }}</div>
+                                    <div class=" w-[200px]  ps-1.5 ">{{ product.productNumber + ' ' + (language.lang == 'ar' ? product.subBrandAr : product.subBrandEn) }}</div>
                                 </div>
-                                <div class=" w-[50px] text-xs">{{ item.quantity }}</div>
-                                <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
+                                <div class=" w-[50px] text-xs">{{ product.quantity }}</div>
+                                <div class=" w-[50px] text-xs">{{ product.soldQuantity }}</div>
                                 <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
                                 <div class=" w-[80px] text-sm">{{ '--' }}</div>
                                 <!--                            Suppliers header-->
                                 <!--                                @for (qq of quotations; track $index) {-->
-                                @for (supplier of suppliers; track $index) {
-                                    @if (loadOneQuotation(item.product.productNumber, supplier.id); as qq) {
-                                        @if (qq.length > 0) {
+                                @for (supplier of suppliers; track supplier.id) {
+                                    @if (quotations[supplier.id + '/' + product.productNumber]) {
 
+                                        @if (quotations[supplier.id + '/' + product.productNumber][0]; as qq) {
                                             <div class="flex items-center justify-center w-[270px] gap-0.5"
                                                  (mouseleave)="onItemHoverLeave()"
+                                                 (mouseenter)="onItemHoverEnter(product.productNumber, supplier.id)"
                                             >
-                                                <!--                                             (mouseenter)="onItemHoverEnter(item.product.productNumber, supplier.id)"-->
+                                                @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
+                                                    <div class=" bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out ">
+                                                       <div class="cursor-pointer hover:underline text-sm">{{'Details' | translate : language.lang}}</div>
+                                                       <div class="cursor-pointer hover:underline  text-sm">{{'Select' | translate : language.lang}}</div>
+                                                       <div class="cursor-pointer hover:underline  text-sm" (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber])">{{'Quotations' | translate : language.lang}}</div>
+                                                    </div>
+                                                } @else {
+                                                    <div class=" w-[55px] text-xs">{{ qq['netPrice'] + ' ' + qq['currency']['code'] }}</div>
+                                                    <div class=" w-[55px] text-xs underline">
+                                                        {{ qq['sarPrice'] + ' SAR' }}
+                                                    </div>
+                                                    <div class=" w-[50px] text-xs">{{ language.lang == 'ar' ? qq['product']['subBrandAr'] : qq['product']['subBrandEn'] }}</div>
+                                                    <div class=" w-[50px] text-xs">
+                                                        @if (qq['isLocal']) {
+                                                            <svg
+                                                                    class="w-4 h-4 text-green-500"
+                                                                    style="color: green !important"
+                                                                    aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                        fill-rule="evenodd"
+                                                                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                                                        clip-rule="evenodd"
+                                                                />
+                                                            </svg>
 
-                                                <div class=" w-[55px] text-xs">{{ qq[0]['price'] + ' ' + qq[0]['supplierQuotation']['currency']['code'] }}</div>
-                                                <div class=" w-[55px] text-xs underline">
-                                                    @if (qq[0]['supplierQuotation']['currency']['exchangeRate'] == 1) {
-                                                        {{ qq[0]['price'] + ' SAR' }}
-                                                    } @else {
-                                                        {{ qq[0]['price'] * qq[0]['supplierQuotation']['currency']['exchangeRate'] + ' SAR' }}
-                                                    }
-                                                </div>
-                                                <div class=" w-[50px] text-xs">{{ language.lang == 'ar' ? qq[0]['product']['subBrandAr'] : qq[0]['product']['subBrandEn'] }}</div>
-                                                <div class=" w-[50px] text-xs">
-                                                    @if (qq[0]['supplierQuotation']['isLocal']) {
-                                                        <svg
-                                                                class="w-4 h-4 text-green-500"
-                                                                style="color: green !important"
-                                                                aria-hidden="true"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                fill="currentColor"
-                                                                viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                    fill-rule="evenodd"
-                                                                    d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
-                                                                    clip-rule="evenodd"
-                                                            />
-                                                        </svg>
+                                                        } @else {
+                                                            <svg
+                                                                    style="color: red !important"
+                                                                    class="w-4 h-4 text-red-500"
+                                                                    aria-hidden="true"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="currentColor"
+                                                                    viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                        fill-rule="evenodd"
+                                                                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                                                        clip-rule="evenodd"
+                                                                />
+                                                            </svg>
 
-                                                    } @else {
-                                                        <svg
-                                                                style="color: red !important"
-                                                                class="w-4 h-4 text-red-500"
-                                                                aria-hidden="true"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                fill="currentColor"
-                                                                viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                    fill-rule="evenodd"
-                                                                    d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
-                                                                    clip-rule="evenodd"
-                                                            />
-                                                        </svg>
+                                                        }
+                                                    </div>
+                                                    <div class=" w-[50px] text-xs">
+                                                        <div class="rounded-full border border-secondary cursor-pointer p-0.5 w-5 text-center">{{ quotations[supplier.id + '/' + product.productNumber].length - 1 }}</div>
+                                                    </div>
+                                                }
 
-                                                    }
-                                                </div>
-                                                <div class=" w-[50px] text-xs">
-                                                    <div class="rounded-full border border-secondary cursor-pointer p-0.5 w-5 text-center">{{ qq.length - 1 }}</div>
-                                                </div>
                                             </div>
+
                                         }
+                                    } @else {
+                                        <div class="flex items-center justify-center w-[270px] gap-0.5">
+
+                                            <div class=" w-[55px] text-xs">{{ '--' }}</div>
+                                            <div class=" w-[55px] text-xs">{{ '--' }}</div>
+                                            <div class=" w-[50px] text-xs">{{ '--' }}</div>
+                                            <div class=" w-[50px] text-xs">{{ '--' }}</div>
+                                            <div class=" w-[50px] text-xs">{{ '--' }}</div>
+                                        </div>
                                     }
 
-                                    <!--                                    @else {-->
-                                            <!--                                        <div class="flex items-center justify-center w-[270px] gap-0.5">-->
 
-                                            <!--                                            <div class=" w-[55px] text-xs">{{ '&#45;&#45;' }}</div>-->
-                                            <!--                                            <div class=" w-[55px] text-xs">{{ '&#45;&#45;' }}</div>-->
-                                            <!--                                            <div class=" w-[50px] text-xs">{{ '&#45;&#45;' }}</div>-->
-                                            <!--                                            <div class=" w-[50px] text-xs">{{ '&#45;&#45;' }}</div>-->
-                                            <!--                                            <div class=" w-[50px] text-xs">{{ '&#45;&#45;' }}</div>-->
-                                            <!--                                        </div>-->
-                                            <!--                                    }-->
                                 }
 
                             </div>
@@ -193,4 +198,12 @@
             </form>
         </div>
     </app-main-content>
+
+<!--    Show Quotations modal-->
+    @if(showQuotationsModal){
+     <app-quotations-modal [language]="language.lang" [quotations]="showQuotations" [supplier]="showSupplier"
+     (closeModal)="hideQuotationFun()"
+                           (selectQuotation)="selectQuotationFun($event)"
+     />
+    }
 }

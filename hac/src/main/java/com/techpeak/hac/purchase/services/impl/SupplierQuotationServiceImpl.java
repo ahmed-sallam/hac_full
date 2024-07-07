@@ -168,7 +168,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
 
     @Override
     public GenerateBidSummaryDto getSupplierQuotationsGrouped(Long rfpq, LocalDate fromDate, LocalDate toDate) {
-        Object[] all = supplierQuotationRepository.getSupplierQuotationsGrouped(rfpq, fromDate, toDate); // map it to GenerateBidSummaryDto
+        Object[] all = supplierQuotationRepository.getSupplierQuotationsGrouped(rfpq, fromDate, toDate);
         GenerateBidSummaryDto generateBidSummaryDto = new GenerateBidSummaryDto();
 
         ObjectMapper objectMapper = new ObjectMapper();

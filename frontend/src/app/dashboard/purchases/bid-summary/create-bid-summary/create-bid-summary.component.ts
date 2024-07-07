@@ -22,12 +22,18 @@ import {
 } from "../../../inventory/products/create-product/select-with-search/select-with-search.component";
 import {RFPQResponse, RFPQShort} from "../../rfpq/interfaces/RFPQResponse";
 import {RfpqService} from "../../rfpq/rfpq.service";
-import {Line} from "../../material-request/interfaces/OneMaterialRequest";
 import {
     SupplierQuotationService
 } from "../../supplier-quotation/supplier-quotation.service";
+import {
+    Product,
+    QuotationS,
+    Supplier
+} from "../../supplier-quotation/interfaces/SupplierQuotationsGrouped";
+import {
+    QuotationsModalComponent
+} from "../quotations-modal/quotations-modal.component";
 
-type SupplierInfo = { id: number, nameAr: string, nameEn: string };
 
 @Component({
     selector: 'app-create-bid-summary',
@@ -38,10 +44,14 @@ type SupplierInfo = { id: number, nameAr: string, nameEn: string };
         TranslatePipe,
         FormsModule,
         ReactiveFormsModule,
-        SelectWithSearchComponent
+        SelectWithSearchComponent,
+        QuotationsModalComponent
     ],
     templateUrl: './create-bid-summary.component.html',
-    styles: ``
+    styles: `
+        
+    `
+
 })
 export class CreateBidSummaryComponent implements OnInit {
     store: Store<State> = inject(Store<State>)
@@ -54,10 +64,14 @@ export class CreateBidSummaryComponent implements OnInit {
         rfpqId: new FormControl("", [Validators.required]),
     })
     rfpqService: RfpqService = inject(RfpqService);
-    products: Line[] = []
-    sortedQuotations: any[] = []
-    suppliers: SupplierInfo[] = []
-    quotations: any[] = []
+    products: Product[] = []
+    suppliers: Supplier[] = []
+    quotations:   any ;
+    showHoverForItem:String='';
+    showQuotationsModal: boolean = false;
+    showQuotations: any;
+    showSupplier: any;
+    protected readonly Array = Array;
 
     ngOnInit(): void {
         this.searchRFPQ('')
@@ -76,107 +90,86 @@ export class CreateBidSummaryComponent implements OnInit {
     }
 
     onRfpqSelect($event: any) {
-        this.sortedQuotations = []
         this.suppliers = []
         this.products = []
         this.quotations = []
+        // this.sortedQuotationsOld = []
+        // this.suppliersOld = []
+        // this.productsOld = []
+        // this.quotationsOld = []
         if ($event == null) {
             this.formGroup.get("rfpqId")?.setValue('')
             // this.lines.clear()
-            setTimeout(() => {
-                // this.addNewLine()
-            }, 1)
+            // setTimeout(() => {
+            //     // this.addNewLine()
+            // }, 1)
         } else {
             this.formGroup.get("rfpqId")?.setValue($event.id)
-            this.getRfpqData();
+            // this.getRfpqData();
         }
     }
-
-    getRfpqData() {
-
-        this.rfpqService.getOneRFPQ(this.formGroup.get("rfpqId")?.value).subscribe({
-            next: (res) => {
-                console.log(res)
-                this.products = res.lines
-            }
-        })
-    }
-
     getAllQuotations() {
         this.formGroup.get("fromDate")?.markAsTouched()
         this.formGroup.get("rfpqId")?.markAsTouched()
         if (this.formGroup.invalid) {
             return
         }
-        this.sortedQuotations = []
+        this.loadAllQuotations()
+    }
+
+    loadAllQuotations(){
+        this.resetData()
+    this.supplierQuotationService.getSupplierQuotationsGrouped(this.formGroup.get("rfpqId")?.value, this.formGroup.get("fromDate")?.value).subscribe({
+        next: (res) => {
+            const sortedQuotations = res.quotations.sort((a: any, b: any) => {
+                const A:any= Object.values(a)[0];
+                const B:any = Object.values(b)[0];
+                return A.date < B.date ? 1  :  A.date > B.date? -1 : 0;
+            })
+            this.quotations =  sortedQuotations.reduce((acc:QuotationS | any , item) => {
+                const key = Object.keys(item)[0];
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(item[key]);
+                return acc;
+            }, {});
+            this.products = res.products
+            this.suppliers = res.suppliers
+            console.log("quotations => ", this.quotations)
+
+        }
+    })
+    }
+
+    resetData(){
+        this.products = []
         this.suppliers = []
         this.quotations = []
-        this.products.forEach(async (line) => {
-            const date = new Date(this.formGroup.get("fromDate")?.value)
-            console.log("date => ", date.toISOString().split('T')[0])
-            this.getOneQuotation(line.product.productNumber, date.toISOString().split('T')[0]).subscribe({
-                next: (res) => {
-                    this.sortedQuotations.push(res);
-                },
-            })
-        });
-        setTimeout(() => {
-                    this.loadAllQuotations()
-                    console.log("this.sortedQuotations ", this.sortedQuotations)
-                    console.log("this.suppliers ", this.suppliers)
-        }, this.products.length * 100)
-    }
-
-    getOneQuotation(productNumber: string, fromDate: string) {
-        return this.supplierQuotationService.getQuotationsGroupedBySupplier(productNumber, fromDate)
-            .pipe(
-                map((res) => {
-                        let data = {productNumber, supplierQuotations: []}
-                        let supplierQuotations = res.map((item: any) => {
-                            !this.suppliers.find((i: SupplierInfo) => i.id == item.id) && this.suppliers.push({
-                                id: item.id,
-                                nameAr: item.nameAr,
-                                nameEn: item.nameEn
-                            })
-                            return {
-                                ...item,
-                                quotations: item.quotations.sort((a: any, b: any) => a.supplierQuotation.date > b.supplierQuotation.date ? -1 : a.supplierQuotation.date > b.supplierQuotation.date ? 1 : 0)
-                            };
-                        });
-                        console.log("productNumber sorted => ", supplierQuotations);
-                        return data = {...data, supplierQuotations};
-                    }
-                )
-            )
-    }
-
-    loadAllQuotations() {
-        this.products.forEach((line) => {
-            this.suppliers.forEach((supplier) => {
-                this.quotations.push(this.loadOneQuotation(line.product.productNumber, supplier.id));
-            });
-        });
-    }
-
-    loadOneQuotation(productNumber: string, supplierId: number) {
-        let quotations = [];
-        let product = this.sortedQuotations.find((item) => item.productNumber == productNumber)
-        if (product) {
-            let supplier = product.supplierQuotations.find((item: any) => item.id == supplierId)
-            if (supplier) {
-                console.log("supplier => ", supplier)
-                quotations = supplier.quotations
-                console.log("quotations => ", quotations)
-            }
-        }
-        return quotations
     }
 
     onItemHoverEnter(productNumber: string, id: number) {
         console.log("productNumber => ", productNumber + " id => " + id)
+        this.showHoverForItem = id+'/'+ productNumber
     }
 
     onItemHoverLeave() {
         console.log("leave ",)
+        this.showHoverForItem = ''
+    }
+
+    showQuotationFun(supplier: Supplier, quotation: any) {
+        this.showQuotationsModal = true;
+        this.showQuotations = quotation;
+        this.showSupplier = supplier;
+    }
+    hideQuotationFun() {
+        this.showQuotationsModal = false;
+        this.showQuotations = null;
+        this.showSupplier = null;
+    }
+
+    selectQuotationFun($event: any) {
+        console.log("selectQuotationFun => ", $event)
     }
 }

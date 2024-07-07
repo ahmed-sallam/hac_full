@@ -4,9 +4,12 @@ import {AppService} from "../../../app.service";
 import {Observable} from "rxjs";
 import {CreateSupplierQuotation} from "./interfaces/CreateSupplierQuotation";
 import {
-  SupplierQuotationResponse
+    SupplierQuotationResponse
 } from "./interfaces/SupplierQuotationResponse";
 import {SupplierQuotation} from "./interfaces/SupplierQuotation";
+import {
+    SupplierQuotationsGrouped
+} from "./interfaces/SupplierQuotationsGrouped";
 
 @Injectable({
   providedIn: 'root'
@@ -60,5 +63,10 @@ export class SupplierQuotationService {
   getOne(id: number): Observable<SupplierQuotation> {
     let link: string = `${this.appService.baseApi}/supplier-quotations/${id}`;
     return this.http.get<SupplierQuotation>(link);
+  }
+
+  getSupplierQuotationsGrouped(rfpq:number, fromDate:string): Observable<SupplierQuotationsGrouped> {
+    let link: string = `${this.appService.baseApi}/supplier-quotations/grouped?rfpq=${rfpq}&fromDate=${fromDate}`;
+    return this.http.get<SupplierQuotationsGrouped>(link);
   }
 }
