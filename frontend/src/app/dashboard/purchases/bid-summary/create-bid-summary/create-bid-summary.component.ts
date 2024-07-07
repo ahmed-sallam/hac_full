@@ -33,6 +33,9 @@ import {
 import {
     QuotationsModalComponent
 } from "../quotations-modal/quotations-modal.component";
+import {
+    PurchaseQuotationModalComponent
+} from "../purchase-quotation-modal/purchase-quotation-modal.component";
 
 
 @Component({
@@ -45,7 +48,8 @@ import {
         FormsModule,
         ReactiveFormsModule,
         SelectWithSearchComponent,
-        QuotationsModalComponent
+        QuotationsModalComponent,
+        PurchaseQuotationModalComponent
     ],
     templateUrl: './create-bid-summary.component.html',
     styles: `
@@ -71,6 +75,8 @@ export class CreateBidSummaryComponent implements OnInit {
     showQuotationsModal: boolean = false;
     showQuotations: any;
     showSupplier: any;
+    showOneQuotationDetails: boolean = false;
+    showOneQuotation!: any;
     protected readonly Array = Array;
 
     ngOnInit(): void {
@@ -163,6 +169,12 @@ export class CreateBidSummaryComponent implements OnInit {
         this.showQuotations = quotation;
         this.showSupplier = supplier;
     }
+
+    showOneQuotationDetailsFun(quotation: any, supplier:any) {
+        this.showOneQuotationDetails = true;
+        this.showOneQuotation = quotation;
+        this.showSupplier = supplier;
+    }
     hideQuotationFun() {
         this.showQuotationsModal = false;
         this.showQuotations = null;
@@ -171,5 +183,11 @@ export class CreateBidSummaryComponent implements OnInit {
 
     selectQuotationFun($event: any) {
         console.log("selectQuotationFun => ", $event)
+    }
+
+    hideOneQuotationDetailsFun() {
+        this.showOneQuotationDetails = false;
+        this.showSupplier = null;
+        this.showOneQuotation = null;
     }
 }

@@ -124,7 +124,7 @@
                                             >
                                                 @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
                                                     <div class=" bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out ">
-                                                       <div class="cursor-pointer hover:underline text-sm">{{'Details' | translate : language.lang}}</div>
+                                                       <div class="cursor-pointer hover:underline text-sm" (click)="showOneQuotationDetailsFun(qq, supplier)">{{'Details' | translate : language.lang}}</div>
                                                        <div class="cursor-pointer hover:underline  text-sm">{{'Select' | translate : language.lang}}</div>
                                                        <div class="cursor-pointer hover:underline  text-sm" (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber])">{{'Quotations' | translate : language.lang}}</div>
                                                     </div>
@@ -204,6 +204,12 @@
      <app-quotations-modal [language]="language.lang" [quotations]="showQuotations" [supplier]="showSupplier"
      (closeModal)="hideQuotationFun()"
                            (selectQuotation)="selectQuotationFun($event)"
+     />
+    }
+
+    @if(showOneQuotationDetails){
+        <app-purchase-quotation-modal [language]="language.lang" [quotation]="showOneQuotation" [supplier]="showSupplier"
+     (closeModal)="hideOneQuotationDetailsFun()"
      />
     }
 }

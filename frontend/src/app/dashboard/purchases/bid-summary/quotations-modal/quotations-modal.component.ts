@@ -19,14 +19,14 @@ export class QuotationsModalComponent {
 
 
   tableColumns = [
-      'id',
-      'date',
-      'product',
-      'netPrice',
-      'sarPrice',
-      'isLocal',
-      'paymentTerms',
-        'delivery'
+      'Id',
+      'Date',
+      'Product',
+      'Net Price',
+      'Sar Price',
+      'Is Local',
+      'Payment Terms',
+        'Delivery'
   ]
     @Input() quotations!: any;
     @Input() supplier!: any;
