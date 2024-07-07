@@ -10,6 +10,7 @@ export interface Product {
     subBrandAr: string
     subBrandEn: string
     quantity: number
+    selectedQuantity?: number
     soldQuantity: number
 }
 

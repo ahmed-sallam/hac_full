@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {Store} from "@ngrx/store";
 import {State} from "../../../../state/reducers";
-import {catchError, map, Observable} from "rxjs";
+import {BehaviorSubject, catchError, map, Observable} from "rxjs";
 import {LangState} from "../../../../state/reducers/lang.reducer";
 import {selectLanguage} from "../../../../state/selectors/lang.selectors";
 import {Router} from "@angular/router";
@@ -36,6 +36,8 @@ import {
 import {
     PurchaseQuotationModalComponent
 } from "../purchase-quotation-modal/purchase-quotation-modal.component";
+import {LoaderService} from "../../../components/loader/loader.service";
+import {LoaderComponent} from "../../../components/loader/loader.component";
 
 
 @Component({
@@ -49,13 +51,20 @@ import {
         ReactiveFormsModule,
         SelectWithSearchComponent,
         QuotationsModalComponent,
-        PurchaseQuotationModalComponent
+        PurchaseQuotationModalComponent,
+        LoaderComponent
     ],
     templateUrl: './create-bid-summary.component.html',
     styles: `
-        
-    `
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
 
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }`
 })
 export class CreateBidSummaryComponent implements OnInit {
     store: Store<State> = inject(Store<State>)
@@ -68,16 +77,19 @@ export class CreateBidSummaryComponent implements OnInit {
         rfpqId: new FormControl("", [Validators.required]),
     })
     rfpqService: RfpqService = inject(RfpqService);
+    loaderService = inject(LoaderService)
     products: Product[] = []
     suppliers: Supplier[] = []
-    quotations:   any ;
-    showHoverForItem:String='';
+    quotations: any;
+    showHoverForItem: String = '';
     showQuotationsModal: boolean = false;
     showQuotations: any;
     showSupplier: any;
     showOneQuotationDetails: boolean = false;
     showOneQuotation!: any;
-    protected readonly Array = Array;
+    selectedProducts: SelectedProduct[] | any = [];
+    showProduct: any;
+    isLoading: BehaviorSubject<boolean> = this.loaderService.isLoading;
 
     ngOnInit(): void {
         this.searchRFPQ('')
@@ -96,9 +108,7 @@ export class CreateBidSummaryComponent implements OnInit {
     }
 
     onRfpqSelect($event: any) {
-        this.suppliers = []
-        this.products = []
-        this.quotations = []
+        this.resetData();
         // this.sortedQuotationsOld = []
         // this.suppliersOld = []
         // this.productsOld = []
@@ -114,6 +124,7 @@ export class CreateBidSummaryComponent implements OnInit {
             // this.getRfpqData();
         }
     }
+
     getAllQuotations() {
         this.formGroup.get("fromDate")?.markAsTouched()
         this.formGroup.get("rfpqId")?.markAsTouched()
@@ -123,40 +134,49 @@ export class CreateBidSummaryComponent implements OnInit {
         this.loadAllQuotations()
     }
 
-    loadAllQuotations(){
+    loadAllQuotations() {
         this.resetData()
-    this.supplierQuotationService.getSupplierQuotationsGrouped(this.formGroup.get("rfpqId")?.value, this.formGroup.get("fromDate")?.value).subscribe({
-        next: (res) => {
-            const sortedQuotations = res.quotations.sort((a: any, b: any) => {
-                const A:any= Object.values(a)[0];
-                const B:any = Object.values(b)[0];
-                return A.date < B.date ? 1  :  A.date > B.date? -1 : 0;
-            })
-            this.quotations =  sortedQuotations.reduce((acc:QuotationS | any , item) => {
-                const key = Object.keys(item)[0];
-                if (!acc[key]) {
-                    acc[key] = [];
-                }
-                acc[key].push(item[key]);
-                return acc;
-            }, {});
-            this.products = res.products
-            this.suppliers = res.suppliers
-            console.log("quotations => ", this.quotations)
-
-        }
-    })
+        this.loaderService.show()
+        this.supplierQuotationService.getSupplierQuotationsGrouped(this.formGroup.get("rfpqId")?.value, this.formGroup.get("fromDate")?.value).subscribe({
+            next: (res) => {
+                const sortedQuotations = res.quotations.sort((a: any, b: any) => {
+                    const A: any = Object.values(a)[0];
+                    const B: any = Object.values(b)[0];
+                    return A.date < B.date ? 1 : A.date > B.date ? -1 : 0;
+                })
+                this.quotations = sortedQuotations.reduce((acc: QuotationS | any, item) => {
+                    const key = Object.keys(item)[0];
+                    if (!acc[key]) {
+                        acc[key] = [];
+                    }
+                    acc[key].push(item[key]);
+                    return acc;
+                }, {});
+                this.products = res.products.map((item: any) => {
+                    return {
+                        ...item,
+                        selectedQuantity: item.quantity
+                    }
+                })
+                this.suppliers = res.suppliers
+                console.log("quotations => ", this.quotations)
+                console.log("products => ", this.products)
+                this.loaderService.hide()
+            } // todo: handle error
+        })
     }
 
-    resetData(){
+    resetData() {
         this.products = []
         this.suppliers = []
         this.quotations = []
+        this.selectedProducts = []
+        this.showHoverForItem = ''
     }
 
     onItemHoverEnter(productNumber: string, id: number) {
         console.log("productNumber => ", productNumber + " id => " + id)
-        this.showHoverForItem = id+'/'+ productNumber
+        this.showHoverForItem = id + '/' + productNumber
     }
 
     onItemHoverLeave() {
@@ -164,25 +184,54 @@ export class CreateBidSummaryComponent implements OnInit {
         this.showHoverForItem = ''
     }
 
-    showQuotationFun(supplier: Supplier, quotation: any) {
+    showQuotationFun(supplier: Supplier, quotation: any, product?: any) {
         this.showQuotationsModal = true;
         this.showQuotations = quotation;
         this.showSupplier = supplier;
+        this.showProduct = product;
     }
 
-    showOneQuotationDetailsFun(quotation: any, supplier:any) {
+    showOneQuotationDetailsFun(quotation: any, supplier: any, product?: any) {
         this.showOneQuotationDetails = true;
         this.showOneQuotation = quotation;
         this.showSupplier = supplier;
+        this.showProduct = product;
     }
+
     hideQuotationFun() {
         this.showQuotationsModal = false;
         this.showQuotations = null;
-        this.showSupplier = null;
+        // to let select collect product & supplier data
+        setTimeout(() => {
+            this.showSupplier = null;
+            this.showProduct = null;
+        }, 500)
     }
 
     selectQuotationFun($event: any) {
         console.log("selectQuotationFun => ", $event)
+        this.loaderService.show()
+        this.selectedProducts = this.selectedProducts.filter((item: any) => item.productNumber != $event.product.productNumber)
+        this.selectedProducts.push({
+            productId: this.showProduct.id,
+            productNumber: this.showProduct.productNumber,
+            quantity: this.showProduct.quantity,
+            selectedQuantity: this.showProduct.selectedQuantity,
+            selectedQuotationId: $event.id,
+            selectedQuotationDate: $event.date,
+            selectedSupplierId: this.showSupplier.id,
+            selectedSupplierNameAr: this.showSupplier.nameAr,
+            selectedSupplierNameEn: this.showSupplier.nameEn,
+            netPrice: $event.netPrice,
+            currencyCode: $event.currency.code,
+            sarPrice: $event.sarPrice,
+            selectedProductId: $event.product.id,
+            selectedProductNumber: $event.product.productNumber,
+            selectedProductSubBrandAr: $event.product.subBrandAr,
+            selectedProductSubBrandEn: $event.product.subBrandEn
+        })
+        console.log("selectedProducts => ", this.selectedProducts)
+        this.loaderService.hide()
     }
 
     hideOneQuotationDetailsFun() {
@@ -190,4 +239,45 @@ export class CreateBidSummaryComponent implements OnInit {
         this.showSupplier = null;
         this.showOneQuotation = null;
     }
+
+    getOneOfSelectedProduct($event: any): SelectedProduct {
+        return this.selectedProducts.find((item: any) => item.selectedProductNumber == $event.productNumber)
+    }
+
+    setProdcutQuantity($event: Event, product: Product) {
+        this.products = this.products.map((item: Product) => {
+            if (item.id == product.id) {
+                item.selectedQuantity = Number(($event.target as HTMLInputElement).value)
+            }
+            return item
+        })
+
+        this.selectedProducts = this.selectedProducts.map((item: SelectedProduct) => {
+                if (item.selectedProductNumber == product.productNumber) {
+                    item.selectedQuantity = Number(($event.target as HTMLInputElement).value)
+                }
+                return item
+
+            }
+        )
+    }
+}
+
+interface SelectedProduct {
+    productId: number
+    productNumber: string
+    quantity: number
+    selectedQuantity: number
+    selectedQuotationId: number
+    selectedQuotationDate: string
+    selectedSupplierId: number
+    selectedSupplierNameAr: string
+    selectedSupplierNameEn: string
+    netPrice: number
+    currencyCode: string
+    sarPrice: number
+    selectedProductId: number
+    selectedProductNumber: string
+    selectedProductSubBrandAr: string
+    selectedProductSubBrandEn: string
 }

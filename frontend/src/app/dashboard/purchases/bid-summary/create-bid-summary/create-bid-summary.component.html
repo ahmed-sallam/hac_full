@@ -79,6 +79,8 @@
                                 <div class=" w-[200px] ps-1.5 ">{{ 'Product' | translate : language }}</div>
                             </div>
                             <div class=" w-[50px] text-xs">{{ 'Quantity' | translate : language }}</div>
+                            <div class=" w-[60px] text-xs">{{ 'Selected QTY' | translate : language }}</div>
+                            <div class=" w-[50px] text-xs">{{ 'Balance' | translate : language }}</div>
                             <div class=" w-[50px] text-xs">{{ 'Sold Qty' | translate : language }}</div>
                             <div class=" w-[50px] text-xs">{{ 'Sale Q' | translate : language }}</div>
                             <div class=" w-[80px] text-sm">{{ 'Selected' | translate : language }}</div>
@@ -101,6 +103,9 @@
                         </div>
                         <!--                Lines data -->
 
+                        @if(isLoading | async){
+                            <app-loader/>
+                        } @else{
                         @for (product of products; track $index) {
                             <div class="  flex items-center gap-1 justify-start   text-secondary/50  bg-white py-1 relative w-full min-w-fit hover:bg-secondary/5 border-b border-secondary/20 ">
                                 <div class="flex w-[200px]  start-0  justify-center items-center sticky z-10  h-full"
@@ -109,9 +114,16 @@
                                     <div class=" w-[200px]  ps-1.5 ">{{ product.productNumber + ' ' + (language.lang == 'ar' ? product.subBrandAr : product.subBrandEn) }}</div>
                                 </div>
                                 <div class=" w-[50px] text-xs">{{ product.quantity }}</div>
+                                <div class=" w-[60px] text-xs">
+                                    <input class="w-full border-0" type="number"
+                                           min="0" (change)="setProdcutQuantity($event, product)"
+                                           [value]="product.selectedQuantity" name="product.selectedQuantity" />
+
+                                </div>
+                                <div class=" w-[50px] text-xs">{{ '--' }}</div>
                                 <div class=" w-[50px] text-xs">{{ product.soldQuantity }}</div>
                                 <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
-                                <div class=" w-[80px] text-sm">{{ '--' }}</div>
+                                <div class=" w-[80px] text-sm">{{ getOneOfSelectedProduct(product) ? getOneOfSelectedProduct(product)['sarPrice'] :'' }}</div>
                                 <!--                            Suppliers header-->
                                 <!--                                @for (qq of quotations; track $index) {-->
                                 @for (supplier of suppliers; track supplier.id) {
@@ -124,9 +136,9 @@
                                             >
                                                 @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
                                                     <div class=" bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out ">
-                                                       <div class="cursor-pointer hover:underline text-sm" (click)="showOneQuotationDetailsFun(qq, supplier)">{{'Details' | translate : language.lang}}</div>
+                                                       <div class="cursor-pointer hover:underline text-sm" (click)="showOneQuotationDetailsFun(qq, supplier, product)">{{'Details' | translate : language.lang}}</div>
                                                        <div class="cursor-pointer hover:underline  text-sm">{{'Select' | translate : language.lang}}</div>
-                                                       <div class="cursor-pointer hover:underline  text-sm" (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber])">{{'Quotations' | translate : language.lang}}</div>
+                                                       <div class="cursor-pointer hover:underline  text-sm" (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber], product)">{{'Quotations' | translate : language.lang}}</div>
                                                     </div>
                                                 } @else {
                                                     <div class=" w-[55px] text-xs">{{ qq['netPrice'] + ' ' + qq['currency']['code'] }}</div>
@@ -192,6 +204,8 @@
                                 }
 
                             </div>
+                        }
+
                         }
                     </div>
                 </div>
