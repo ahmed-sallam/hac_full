@@ -2,6 +2,7 @@ package com.techpeak.hac.inventory.mappers;
 
 import com.techpeak.hac.inventory.dtos.CreateStore;
 import com.techpeak.hac.inventory.dtos.StoreResponse;
+import com.techpeak.hac.inventory.dtos.StoreResponseShort;
 import com.techpeak.hac.inventory.models.Store;
 import com.techpeak.hac.inventory.models.StoreLocation;
 
@@ -35,5 +36,13 @@ public class StoreMapper {
                 .map(StoreLocationMapper::toStoreLocationResponse)
                 .collect(java.util.stream.Collectors.toList()));
         return storeResponse;
+    }
+
+    public static StoreResponseShort toShort(Store store) {
+        return StoreResponseShort.builder()
+                .id(store.getId())
+                .nameAr(store.getNameAr())
+                .nameEn(store.getNameEn())
+                .build();
     }
 }

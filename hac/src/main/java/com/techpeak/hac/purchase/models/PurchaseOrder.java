@@ -32,8 +32,8 @@ public class PurchaseOrder extends BaseEntity {
     @OneToOne
     @JoinColumn(name="internal_ref_id", nullable = false)
     private InternalRef internalRef;
-    @Column(name = "supplier_ref")
-    private String supplierRef;
+//    @Column(name = "supplier_ref")
+//    private String supplierRef;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

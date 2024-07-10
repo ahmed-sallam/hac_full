@@ -78,6 +78,10 @@ public class BidSummaryServiceImpl implements BidSummaryService {
         if (status == RequestStatus.PENDING) {
             bidSummary.getInternalRef().setCurrentPhase(InternalPhase.BID_SUMMARY);
         }
+        if (status == RequestStatus.PROCESSING) {
+            bidSummary.getInternalRef().setCurrentPhase(InternalPhase.PURCHASE_ORDER);
+            // adding POs according to selected suppliers.
+        }
         bidSummary.setStatus(status);
         bidSummaryRepository.save(bidSummary);
         String actionDetails = "Updated the status of Bid Summary with number:" + bidSummary.getNumber() + " and internal id: " + bidSummary.getInternalRef().getId() + " to " + status.name();
