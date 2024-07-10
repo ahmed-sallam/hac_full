@@ -38,6 +38,7 @@ import {
 } from "../purchase-quotation-modal/purchase-quotation-modal.component";
 import {LoaderService} from "../../../components/loader/loader.service";
 import {LoaderComponent} from "../../../components/loader/loader.component";
+import {BidSummaryService} from "../bid-summary.service";
 
 
 @Component({
@@ -78,6 +79,7 @@ export class CreateBidSummaryComponent implements OnInit {
     })
     rfpqService: RfpqService = inject(RfpqService);
     loaderService = inject(LoaderService)
+    bidSummaryService: BidSummaryService = inject(BidSummaryService)
     products: Product[] = []
     suppliers: Supplier[] = []
     quotations: any;
@@ -234,6 +236,12 @@ export class CreateBidSummaryComponent implements OnInit {
         this.loaderService.hide()
     }
 
+    selectQuotationProduct(product: any, supplier: any, quotation: any) {
+        this.showProduct = product;
+        this.showSupplier = supplier;
+        this.selectQuotationFun(quotation)
+    }
+
     hideOneQuotationDetailsFun() {
         this.showOneQuotationDetails = false;
         this.showSupplier = null;
@@ -260,6 +268,52 @@ export class CreateBidSummaryComponent implements OnInit {
 
             }
         )
+    }
+
+    cancelCreateBidSummary() {
+        this.goToBidSummary()
+    }
+
+    onSubmitForm() {
+        this.formGroup.markAllAsTouched()
+        if (this.formGroup.invalid) {
+            return
+        }
+        const data = {
+            rfpqId: this.formGroup.get("rfpqId")?.value,
+            fromDate: this.formGroup.get("fromDate")?.value,
+            lines: this.selectedProducts.map((item: any) => {
+                return {
+                    productId: item.selectedProductId,
+                    quantity: item.selectedQuantity,
+                    quotationId: item.selectedQuotationId,
+                    supplierId: item.selectedSupplierId
+                }
+            })
+
+        }
+
+        this.addBidSummary(data)
+    }
+
+    addBidSummary(r
+                      :
+                      any, confirm
+                      :
+                      boolean = false
+    ) {
+        this.loaderService.show()
+        confirm ? r.status = "PENDING" : "DRAFT"
+        this.bidSummaryService.addBidSummary(r).subscribe({
+            next: (res: any) => {
+                this.loaderService.hide()
+                this.goToBidSummary()
+            }
+        })
+    }
+
+    goToBidSummary() {
+        this.router.navigate(["/dashboard/purchases/bid-summaries"]);
     }
 }
 

@@ -4,13 +4,13 @@
                       [noDataMessage]="'There is no data to show' | translate: language?.lang"
                       [noData]="false">
         <div headerActions>
-            <!--                    (click)="cancelCreateProduct()"-->
             <button
+                                (click)="cancelCreateBidSummary()"
                     class=" border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
                 {{ 'Cancel' | translate: language?.lang }}
             </button>
-            <!--                    (click)="onSubmitForm()"-->
             <button
+                                (click)="onSubmitForm()"
                     class=" bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
                 {{ 'Save' | translate: language?.lang }}
             </button>
@@ -137,7 +137,7 @@
                                                 @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
                                                     <div class=" bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out ">
                                                        <div class="cursor-pointer hover:underline text-sm" (click)="showOneQuotationDetailsFun(qq, supplier, product)">{{'Details' | translate : language.lang}}</div>
-                                                       <div class="cursor-pointer hover:underline  text-sm">{{'Select' | translate : language.lang}}</div>
+                                                       <div class="cursor-pointer hover:underline  text-sm" (click)="selectQuotationProduct(product,supplier, qq)">{{'Select' | translate : language.lang}}</div>
                                                        <div class="cursor-pointer hover:underline  text-sm" (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber], product)">{{'Quotations' | translate : language.lang}}</div>
                                                     </div>
                                                 } @else {
