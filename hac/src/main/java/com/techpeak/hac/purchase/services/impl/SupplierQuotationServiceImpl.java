@@ -194,7 +194,8 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
     }
 
 
-    private SupplierQuotation getSupplierQuotation(Long id) {
+    @Override
+    public SupplierQuotation getSupplierQuotation(Long id) {
         return supplierQuotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id));
     }
 

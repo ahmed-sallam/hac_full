@@ -16,22 +16,9 @@ import lombok.*;
 public class BidSummaryLine extends BaseEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
-    @Column(name = "price", nullable = false)
-    private Double price;
-    @Column(name = "discount")
-    private Double discount = 0d;
-    @Column(name = "vat")
-    private Double vat = 0d;
-    @Column(name = "sub_total")
-    private Double subTotal = 0d;
-    @Column(name = "expenses")
-    private Double expenses;
-    @Column(name = "total")
-    private Double total = 0d;
-    @Column(name = "is_local")
-    private Boolean isLocal = true;
-    @Column(name = "notes")
-    private String notes;
+    @ManyToOne
+    @JoinColumn(name = "quotation_id")
+    private SupplierQuotation quotation;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

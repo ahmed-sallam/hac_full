@@ -22,4 +22,6 @@ public interface SupplierQuotationService {
     List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier( LocalDate fromDate,String productNumber,  List<String> numbers);
 
     GenerateBidSummaryDto getSupplierQuotationsGrouped(Long rfpq, LocalDate fromDate, LocalDate toDate);
+
+    SupplierQuotation getSupplierQuotation(Long id);
 }
