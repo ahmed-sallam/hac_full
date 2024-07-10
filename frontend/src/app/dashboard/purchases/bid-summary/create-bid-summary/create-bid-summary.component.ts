@@ -274,7 +274,7 @@ export class CreateBidSummaryComponent implements OnInit {
         this.goToBidSummary()
     }
 
-    onSubmitForm() {
+    onSubmitForm(confirm = false) {
         this.formGroup.markAllAsTouched()
         if (this.formGroup.invalid) {
             return
@@ -290,10 +290,9 @@ export class CreateBidSummaryComponent implements OnInit {
                     supplierId: item.selectedSupplierId
                 }
             })
-
         }
 
-        this.addBidSummary(data)
+        this.addBidSummary(data, confirm)
     }
 
     addBidSummary(r
