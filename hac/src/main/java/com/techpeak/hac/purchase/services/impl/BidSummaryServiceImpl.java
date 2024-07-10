@@ -47,6 +47,8 @@ public class BidSummaryServiceImpl implements BidSummaryService {
                 .status(item.getStatus().name())
                 .internalRef(item.getInternalRef().getId())
                 .rfpqId(item.getRfpq().getId())
+                .rfpqNumber(item.getRfpq().getNumber())
+                .currentPhase(item.getInternalRef().getCurrentPhase().name())
                 .user(new UserDtoShort(item.getUser().getId(), item.getUser().getUsername()))
                 .build();
     }
