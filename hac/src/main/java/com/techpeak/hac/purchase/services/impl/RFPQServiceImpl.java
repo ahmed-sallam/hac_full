@@ -66,7 +66,7 @@ public class RFPQServiceImpl implements RFPQService {
         // for user history
         String actionDetails = "Created a new Request for purchase quotation (" + rfpq.getStatus().name() + ") with number:" + rfpq.getNumber() + " and internal id: " + rfpq.getInternalRef().getId();
         createUserHistory(user, saved, actionDetails);
-        return null;
+        return saved;
     }
 
     @Override

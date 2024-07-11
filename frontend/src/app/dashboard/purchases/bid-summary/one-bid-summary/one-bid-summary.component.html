@@ -1,0 +1,65 @@
+@if (selectLanguage$ | async; as language) {
+    <app-main-content [language]="language"
+                      [headerText]="'xxxxxxxxxxx'"
+                      [noDataMessage]="'There is no data to show' | translate: language?.lang"
+                      [noData]="false"
+                      [loader]="loader$ | async"
+    >
+        <div headerActions>
+
+
+<!--            @if (materialRequest.status == "CANCELED") {-->
+<!--                <button-->
+<!--                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"-->
+<!--                        (click)="updateMaterialRequestStatus('DRAFT')"-->
+<!--                >-->
+<!--                    {{ "DRAFT" | translate : language.lang }}-->
+<!--                </button>-->
+<!--            } @else   if (materialRequest.status == "DRAFT") {-->
+<!--                &lt;!&ndash;            todo&ndash;&gt;-->
+<!--                <button-->
+<!--                        (click)="updateMaterialRequestStatus('CANCELED')"-->
+<!--                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"-->
+<!--                >-->
+<!--                    {{ "Cancel " | translate : language.lang }}-->
+<!--                </button>-->
+
+<!--                <button-->
+<!--                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"-->
+<!--                        (click)="updateMaterialRequestStatus('PENDING')"-->
+<!--                >-->
+<!--                    {{ "Confirm" | translate : language.lang }}-->
+<!--                </button>-->
+<!--&lt;!&ndash;                <button&ndash;&gt;-->
+<!--&lt;!&ndash;                        [routerLink]="['edit',materialRequest.id]"&ndash;&gt;-->
+<!--&lt;!&ndash;                        class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"&ndash;&gt;-->
+<!--&lt;!&ndash;                >&ndash;&gt;-->
+<!--&lt;!&ndash;                    {{ "Edit " | translate : language.lang }}&ndash;&gt;-->
+<!--&lt;!&ndash;                </button>&ndash;&gt;-->
+<!--            } @else   if (materialRequest.status == "PENDING") {-->
+<!--                &lt;!&ndash;            todo&ndash;&gt;-->
+<!--                <button-->
+
+<!--                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"-->
+<!--                >-->
+<!--                    {{ "Cancel " | translate : language.lang }}-->
+<!--                </button>-->
+<!--                <button-->
+<!--                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"-->
+<!--                        (click)="updateMaterialRequestStatus('PROCESSING')"-->
+<!--                >-->
+<!--                    {{ "Process" | translate : language.lang }}-->
+<!--                </button>-->
+<!--&lt;!&ndash;                <button&ndash;&gt;-->
+<!--&lt;!&ndash;                        [routerLink]="['edit',materialRequest.id]"&ndash;&gt;-->
+<!--&lt;!&ndash;                        class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"&ndash;&gt;-->
+<!--&lt;!&ndash;                >&ndash;&gt;-->
+<!--&lt;!&ndash;                    {{ "Edit " | translate : language.lang }}&ndash;&gt;-->
+<!--&lt;!&ndash;                </button>&ndash;&gt;-->
+<!--            }-->
+
+
+        </div>
+
+    </app-main-content>
+}

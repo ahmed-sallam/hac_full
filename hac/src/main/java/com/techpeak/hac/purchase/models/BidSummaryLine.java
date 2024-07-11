@@ -14,6 +14,13 @@ import lombok.*;
 @ToString
 @Builder
 public class BidSummaryLine extends BaseEntity {
+    // todo add price, vat, total
+    @Column(name = "price")
+    private Double price;
+    @Column(name = "vat")
+    private Double vat;
+    @Column(name = "total")
+    private Double total;
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
     @ManyToOne

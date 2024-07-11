@@ -29,5 +29,6 @@ public class PurchaseOrderLine extends BaseEntity {
     private Product product;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "purchase_order_id", nullable = false)
+    @ToString.Exclude
     private PurchaseOrder purchaseOrder;
 }

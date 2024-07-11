@@ -41,6 +41,7 @@ public class PurchaseOrder extends BaseEntity {
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
     @OneToMany(mappedBy = "purchaseOrder")
+    @ToString.Exclude
     private Set<PurchaseOrderLine> lines;
 
     @Column(name = "sub_total")

@@ -16,6 +16,7 @@ import com.techpeak.hac.purchase.models.BidSummaryLine;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
 import com.techpeak.hac.purchase.repositories.BidSummaryRepository;
 import com.techpeak.hac.purchase.services.BidSummaryService;
+import com.techpeak.hac.purchase.services.PurchaseOrderService;
 import com.techpeak.hac.purchase.services.SupplierQuotationService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
     private final ProductService productService;
     private final SupplierQuotationService supplierQuotationService;
     private final UserHistoryService userHistoryService;
+    private final PurchaseOrderService purchaseOrderService;
 
     private static BidSummaryResponseShort mapToShortResponse(BidSummary item) {
         return BidSummaryResponseShort.builder()
@@ -81,6 +83,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
         if (status == RequestStatus.PROCESSING) {
             bidSummary.getInternalRef().setCurrentPhase(InternalPhase.PURCHASE_ORDER);
             // adding POs according to selected suppliers.
+            purchaseOrderService.createPurchaseOrderInternal(bidSummary, user);
         }
         bidSummary.setStatus(status);
         bidSummaryRepository.save(bidSummary);
@@ -132,6 +135,9 @@ public class BidSummaryServiceImpl implements BidSummaryService {
                             .quantity(line.quantity())
                             .quotation(supplierQuotation)
                             .supplier(supplierQuotation.getSupplier())
+                            .price(line.price())
+                            .vat(line.vat())
+                            .total( line.quantity() * (line.price() + line.vat()))
                             .build();
                 })
                 .collect(Collectors.toSet());

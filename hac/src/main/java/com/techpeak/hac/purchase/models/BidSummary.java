@@ -35,7 +35,7 @@ public class BidSummary extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @OneToMany(mappedBy = "bidSummary")
+    @OneToMany(mappedBy = "bidSummary", cascade = CascadeType.ALL)
     private Set<BidSummaryLine> lines;
 
     public void setLines(Set<BidSummaryLine> lines) {

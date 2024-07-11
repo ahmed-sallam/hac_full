@@ -227,6 +227,7 @@ export class CreateBidSummaryComponent implements OnInit {
             netPrice: $event.netPrice,
             currencyCode: $event.currency.code,
             sarPrice: $event.sarPrice,
+            vat: $event.vat,
             selectedProductId: $event.product.id,
             selectedProductNumber: $event.product.productNumber,
             selectedProductSubBrandAr: $event.product.subBrandAr,
@@ -287,7 +288,10 @@ export class CreateBidSummaryComponent implements OnInit {
                     productId: item.selectedProductId,
                     quantity: item.selectedQuantity,
                     quotationId: item.selectedQuotationId,
-                    supplierId: item.selectedSupplierId
+                    supplierId: item.selectedSupplierId,
+                    price: item.sarPrice,
+                    vat: item.vat,
+                    total: item.selectedQuantity * (item.sarPrice + item.vat),
                 }
             })
         }
@@ -329,6 +333,7 @@ interface SelectedProduct {
     netPrice: number
     currencyCode: string
     sarPrice: number
+    vat: number
     selectedProductId: number
     selectedProductNumber: string
     selectedProductSubBrandAr: string

@@ -8,5 +8,8 @@ import java.io.Serializable;
 public record CreateBidSummaryLineDto(@Positive Integer quantity,
                                       @NotNull Long quotationId,
                                       @NotNull Long productId,
-                                      @NotNull Long supplierId) implements Serializable {
+                                      @NotNull Long supplierId,
+                                      Double price,
+                                      Double vat,
+                                      Double total) implements Serializable {
 }
