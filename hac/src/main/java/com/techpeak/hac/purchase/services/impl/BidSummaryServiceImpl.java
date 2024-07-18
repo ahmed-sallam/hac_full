@@ -137,7 +137,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
                             .supplier(supplierQuotation.getSupplier())
                             .price(line.price())
                             .vat(line.vat())
-                            .total( line.quantity() * (line.price() + line.vat()))
+                            .total(line.quantity() * (line.price() + line.vat()))
                             .build();
                 })
                 .collect(Collectors.toSet());
