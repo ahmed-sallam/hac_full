@@ -7,7 +7,9 @@ import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryLineDto;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.models.BidSummaryLine;
 
+import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BidSummaryMapper {
     private BidSummaryMapper() {
@@ -30,13 +32,13 @@ public class BidSummaryMapper {
     public static OneBidSummaryDto mapToOneBidSummaryDto(BidSummary item) {
         Set<OneBidSummaryLineDto> lines = item.getLines().stream()
                 .map(BidSummaryMapper::mapToOneBidSummaryLineDto)
-                .collect(java.util.stream.Collectors.toSet());
+                .collect(Collectors.toSet());
         return OneBidSummaryDto.builder()
                 .id(item.getId())
                 .number(item.getNumber())
                 .status(item.getStatus().name())
                 .fromDate(item.getFromDate().toString())
-                .updatedAt(item.getUpdatedAt().toString())
+                .updatedAt(LocalDate.from(item.getUpdatedAt()).toString())
                 .internalRef(item.getInternalRef().getId())
                 .currentPhase(item.getInternalRef().getCurrentPhase().name())
                 .rfpqId(item.getRfpq().getId())

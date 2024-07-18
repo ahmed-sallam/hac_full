@@ -9,6 +9,7 @@ import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.dtos.BidSummaryResponseShort;
 import com.techpeak.hac.purchase.dtos.bid_summary.CreateBidSummaryDto;
+import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryDto;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.mappers.BidSummaryMapper;
 import com.techpeak.hac.purchase.models.BidSummary;
@@ -27,6 +28,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,7 +54,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
         Optional<BidSummary> lastOne = bidSummaryRepository.findTopByOrderByNumberDesc();
         String bidSummaryNumber = GenerateRequestNumber.generateRequestNumber("BS", lastOne.map(BidSummary::getNumber).orElse(null));
         BidSummary bidSummary = buildBidSummary(request, user, bidSummaryNumber, internalRef);
-        Set<BidSummaryLine> lines = getBidSummaryLines(request);
+        Set<BidSummaryLine> lines = createBidSummaryLines(request);
         bidSummary.setLines(lines);
         BidSummary savedBidSummary = bidSummaryRepository.save(bidSummary);
         String actionDetails = "Generated a new Bid Summary (" + savedBidSummary.getStatus().name() + ") with number:" + savedBidSummary.getNumber() + " and internal id: " + savedBidSummary.getInternalRef().getId();
@@ -102,6 +104,15 @@ public class BidSummaryServiceImpl implements BidSummaryService {
         return bidSummaries.map(BidSummaryMapper::mapToShortResponse);
     }
 
+    @Override
+    public OneBidSummaryDto getOneBidSummary(Long id) {
+        BidSummary bidSummary = getOrElseThrow(id);
+//        Hibernate.initialize(bidSummary.getLines());
+        OneBidSummaryDto oneBidSummaryDto = BidSummaryMapper.mapToOneBidSummaryDto(bidSummary);
+        oneBidSummaryDto.setGenerateBidSummary(supplierQuotationService.getSupplierQuotationsGrouped(bidSummary.getRfpq().getId(), bidSummary.getFromDate(), LocalDate.from(bidSummary.getUpdatedAt())));
+        return oneBidSummaryDto;
+    }
+
     private BidSummary buildBidSummary(CreateBidSummaryDto request, User user, String bidSummaryNumber, InternalRef internalRef) {
         return BidSummary.builder()
                 .number(bidSummaryNumber)
@@ -113,7 +124,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
                 .build();
     }
 
-    private Set<BidSummaryLine> getBidSummaryLines(CreateBidSummaryDto request) {
+    private Set<BidSummaryLine> createBidSummaryLines(CreateBidSummaryDto request) {
         return request.lines().stream()
                 .map(line -> {
                     SupplierQuotation supplierQuotation = supplierQuotationService.getSupplierQuotation(line.quotationId());

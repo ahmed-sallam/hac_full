@@ -4,6 +4,7 @@ import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.utils.AuthUtils;
 import com.techpeak.hac.purchase.dtos.BidSummaryResponseShort;
 import com.techpeak.hac.purchase.dtos.bid_summary.CreateBidSummaryDto;
+import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryDto;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.services.BidSummaryService;
@@ -51,6 +52,11 @@ public class BidSummaryController {
             @RequestParam(value = "user", required = false) Long user,
             @RequestParam(value = "phase", required = false) String phase,
             @RequestParam(value = "status", required = false) String status) {
-        return ResponseEntity.ok(bidSummaryService.search(page, size, sort, search, ref,  user, phase, status));
+        return ResponseEntity.ok(bidSummaryService.search(page, size, sort, search, ref, user, phase, status));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OneBidSummaryDto> getOneBidSummary(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(bidSummaryService.getOneBidSummary(id));
     }
 }
