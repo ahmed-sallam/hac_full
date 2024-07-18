@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/user-histories")
+@RequestMapping("/api/v1/user-histories")
 @RequiredArgsConstructor
-@Tag(name = "User Histories")
+@Tag(name = "User Histories", description = "User Histories API")
 public class UserHistoryController {
     private final UserHistoryService userHistoryService;
 
