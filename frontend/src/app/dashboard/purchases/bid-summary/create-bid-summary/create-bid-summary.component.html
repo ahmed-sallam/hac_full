@@ -5,12 +5,12 @@
                       [noData]="false">
         <div headerActions>
             <button
-                                (click)="cancelCreateBidSummary()"
+                    (click)="cancelCreateBidSummary()"
                     class=" border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10">
                 {{ 'Cancel' | translate: language?.lang }}
             </button>
             <button
-                                (click)="onSubmitForm()"
+                    (click)="onSubmitForm()"
                     class=" bg-secondary text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/70  disabled:bg-secondary/70 ">
                 {{ 'Save' | translate: language?.lang }}
             </button>
@@ -108,108 +108,118 @@
                         </div>
                         <!--                Lines data -->
 
-                        @if(isLoading | async){
+                        @if (isLoading | async) {
                             <app-loader/>
-                        } @else{
-                        @for (product of products; track $index) {
-                            <div class="  flex items-center gap-1 justify-start   text-secondary/50  bg-white py-1 relative w-full min-w-fit hover:bg-secondary/5 border-b border-secondary/20 ">
-                                <div class="flex w-[200px]  start-0  justify-center items-center sticky z-10  h-full"
-                                     style="background-color: inherit"
-                                >
-                                    <div class=" w-[200px]  ps-1.5 ">{{ product.productNumber + ' ' + (language.lang == 'ar' ? product.subBrandAr : product.subBrandEn) }}</div>
-                                </div>
-                                <div class=" w-[50px] text-xs">{{ product.quantity }}</div>
-                                <div class=" w-[60px] text-xs">
-                                    <input class="w-full border-0" type="number"
-                                           min="0" (change)="setProdcutQuantity($event, product)"
-                                           [value]="product.selectedQuantity" name="product.selectedQuantity" />
+                        } @else {
+                            @for (product of products; track $index) {
+                                <div class="  flex items-center gap-1 justify-start   text-secondary/50  bg-white py-1 relative w-full min-w-fit hover:bg-secondary/5 border-b border-secondary/20 ">
+                                    <div class="flex w-[200px]  start-0  justify-center items-center sticky z-10  h-full"
+                                         style="background-color: inherit"
+                                    >
+                                        <div class=" w-[200px]  ps-1.5 ">{{ product.productNumber + ' ' + (language.lang == 'ar' ? product.subBrandAr : product.subBrandEn) }}</div>
+                                    </div>
+                                    <div class=" w-[50px] text-xs">{{ product.quantity }}</div>
+                                    <div class=" w-[60px] text-xs">
+                                        <input class="w-full border-0"
+                                               type="number"
+                                               min="0"
+                                               (change)="setProdcutQuantity($event, product)"
+                                               (keydown.enter)="$event.preventDefault()"
+                                               [value]="product.selectedQuantity"
+                                               name="product.selectedQuantity"/>
 
-                                </div>
-                                <div class=" w-[50px] text-xs">{{ '--' }}</div>
-                                <div class=" w-[50px] text-xs">{{ product.soldQuantity }}</div>
-                                <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
-                                <div class=" w-[80px] text-sm">{{ getOneOfSelectedProduct(product) ? getOneOfSelectedProduct(product)['sarPrice'] :'' }}</div>
-                                <!--                            Suppliers header-->
-                                <!--                                @for (qq of quotations; track $index) {-->
-                                @for (supplier of suppliers; track supplier.id) {
-                                    @if (quotations[supplier.id + '/' + product.productNumber]) {
+                                    </div>
+                                    <div class=" w-[50px] text-xs">{{ '--' }}</div>
+                                    <div class=" w-[50px] text-xs">{{ product.soldQuantity }}</div>
+                                    <div class=" w-[50px] text-xs">{{ '--' | translate : language }}</div>
+                                    <div class=" w-[80px] text-sm">{{ getOneOfSelectedProduct(product) ? getOneOfSelectedProduct(product)['sarPrice'] : '' }}</div>
+                                    <!--                            Suppliers header-->
+                                    <!--                                @for (qq of quotations; track $index) {-->
+                                    @for (supplier of suppliers; track supplier.id) {
+                                        @if (quotations[supplier.id + '/' + product.productNumber]) {
 
-                                        @if (quotations[supplier.id + '/' + product.productNumber][0]; as qq) {
-                                            <div class="flex items-center justify-center w-[270px] gap-0.5"
-                                                 (mouseleave)="onItemHoverLeave()"
-                                                 (mouseenter)="onItemHoverEnter(product.productNumber, supplier.id)"
-                                            >
-                                                @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
-                                                    <div class=" bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out ">
-                                                       <div class="cursor-pointer hover:underline text-sm" (click)="showOneQuotationDetailsFun(qq, supplier, product)">{{'Details' | translate : language.lang}}</div>
-                                                       <div class="cursor-pointer hover:underline  text-sm" (click)="selectQuotationProduct(product,supplier, qq)">{{'Select' | translate : language.lang}}</div>
-                                                       <div class="cursor-pointer hover:underline  text-sm" (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber], product)">{{'Quotations' | translate : language.lang}}</div>
-                                                    </div>
-                                                } @else {
-                                                    <div class=" w-[55px] text-xs">{{ qq['netPrice'] + ' ' + qq['currency']['code'] }}</div>
-                                                    <div class=" w-[55px] text-xs underline">
-                                                        {{ qq['sarPrice'] + ' SAR' }}
-                                                    </div>
-                                                    <div class=" w-[50px] text-xs">{{ language.lang == 'ar' ? qq['product']['subBrandAr'] : qq['product']['subBrandEn'] }}</div>
-                                                    <div class=" w-[50px] text-xs">
-                                                        @if (qq['isLocal']) {
-                                                            <svg
-                                                                    class="w-4 h-4 text-green-500"
-                                                                    style="color: green !important"
-                                                                    aria-hidden="true"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="currentColor"
-                                                                    viewBox="0 0 24 24"
-                                                            >
-                                                                <path
-                                                                        fill-rule="evenodd"
-                                                                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
-                                                                        clip-rule="evenodd"
-                                                                />
-                                                            </svg>
+                                            @if (quotations[supplier.id + '/' + product.productNumber][0]; as qq) {
+                                                <div class="flex items-center justify-center w-[270px] gap-0.5"
+                                                     (mouseleave)="onItemHoverLeave()"
+                                                     (mouseenter)="onItemHoverEnter(product.productNumber, supplier.id)"
+                                                >
+                                                    @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
+                                                        <div class=" bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out ">
+                                                            <div class="cursor-pointer hover:underline text-sm"
+                                                                 (click)="showOneQuotationDetailsFun(qq, supplier, product)">{{ 'Details' | translate : language.lang }}
+                                                            </div>
+                                                            <div class="cursor-pointer hover:underline  text-sm"
+                                                                 (click)="selectQuotationProduct(product,supplier, qq)">{{ 'Select' | translate : language.lang }}
+                                                            </div>
+                                                            <div class="cursor-pointer hover:underline  text-sm"
+                                                                 (click)="showQuotationFun(supplier, quotations[supplier.id + '/' + product.productNumber], product)">{{ 'Quotations' | translate : language.lang }}
+                                                            </div>
+                                                        </div>
+                                                    } @else {
+                                                        <div class=" w-[55px] text-xs">{{ qq['netPrice'] + ' ' + qq['currency']['code'] }}</div>
+                                                        <div class=" w-[55px] text-xs underline">
+                                                            {{ qq['sarPrice'] + ' SAR' }}
+                                                        </div>
+                                                        <div class=" w-[50px] text-xs">{{ language.lang == 'ar' ? qq['product']['subBrandAr'] : qq['product']['subBrandEn'] }}</div>
+                                                        <div class=" w-[50px] text-xs">
+                                                            @if (qq['isLocal']) {
+                                                                <svg
+                                                                        class="w-4 h-4 text-green-500"
+                                                                        style="color: green !important"
+                                                                        aria-hidden="true"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="currentColor"
+                                                                        viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                            fill-rule="evenodd"
+                                                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                                                            clip-rule="evenodd"
+                                                                    />
+                                                                </svg>
 
-                                                        } @else {
-                                                            <svg
-                                                                    style="color: red !important"
-                                                                    class="w-4 h-4 text-red-500"
-                                                                    aria-hidden="true"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    fill="currentColor"
-                                                                    viewBox="0 0 24 24"
-                                                            >
-                                                                <path
-                                                                        fill-rule="evenodd"
-                                                                        d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
-                                                                        clip-rule="evenodd"
-                                                                />
-                                                            </svg>
+                                                            } @else {
+                                                                <svg
+                                                                        style="color: red !important"
+                                                                        class="w-4 h-4 text-red-500"
+                                                                        aria-hidden="true"
+                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                        fill="currentColor"
+                                                                        viewBox="0 0 24 24"
+                                                                >
+                                                                    <path
+                                                                            fill-rule="evenodd"
+                                                                            d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                                                            clip-rule="evenodd"
+                                                                    />
+                                                                </svg>
 
-                                                        }
-                                                    </div>
-                                                    <div class=" w-[50px] text-xs">
-                                                        <div class="rounded-full border border-secondary cursor-pointer p-0.5 w-5 text-center">{{ quotations[supplier.id + '/' + product.productNumber].length - 1 }}</div>
-                                                    </div>
-                                                }
+                                                            }
+                                                        </div>
+                                                        <div class=" w-[50px] text-xs">
+                                                            <div class="rounded-full border border-secondary cursor-pointer p-0.5 w-5 text-center">{{ quotations[supplier.id + '/' + product.productNumber].length - 1 }}</div>
+                                                        </div>
+                                                    }
 
+                                                </div>
+
+                                            }
+                                        } @else {
+                                            <div class="flex items-center justify-center w-[270px] gap-0.5">
+
+                                                <div class=" w-[55px] text-xs">{{ '--' }}</div>
+                                                <div class=" w-[55px] text-xs">{{ '--' }}</div>
+                                                <div class=" w-[50px] text-xs">{{ '--' }}</div>
+                                                <div class=" w-[50px] text-xs">{{ '--' }}</div>
+                                                <div class=" w-[50px] text-xs">{{ '--' }}</div>
                                             </div>
-
                                         }
-                                    } @else {
-                                        <div class="flex items-center justify-center w-[270px] gap-0.5">
 
-                                            <div class=" w-[55px] text-xs">{{ '--' }}</div>
-                                            <div class=" w-[55px] text-xs">{{ '--' }}</div>
-                                            <div class=" w-[50px] text-xs">{{ '--' }}</div>
-                                            <div class=" w-[50px] text-xs">{{ '--' }}</div>
-                                            <div class=" w-[50px] text-xs">{{ '--' }}</div>
-                                        </div>
+
                                     }
 
-
-                                }
-
-                            </div>
-                        }
+                                </div>
+                            }
 
                         }
                     </div>
@@ -218,17 +228,21 @@
         </div>
     </app-main-content>
 
-<!--    Show Quotations modal-->
-    @if(showQuotationsModal){
-     <app-quotations-modal [language]="language.lang" [quotations]="showQuotations" [supplier]="showSupplier"
-     (closeModal)="hideQuotationFun()"
-                           (selectQuotation)="selectQuotationFun($event)"
-     />
+    <!--    Show Quotations modal-->
+    @if (showQuotationsModal) {
+        <app-quotations-modal [language]="language.lang"
+                              [quotations]="showQuotations"
+                              [supplier]="showSupplier"
+                              (closeModal)="hideQuotationFun()"
+                              (selectQuotation)="selectQuotationFun($event)"
+        />
     }
 
-    @if(showOneQuotationDetails){
-        <app-purchase-quotation-modal [language]="language.lang" [quotation]="showOneQuotation" [supplier]="showSupplier"
-     (closeModal)="hideOneQuotationDetailsFun()"
-     />
+    @if (showOneQuotationDetails) {
+        <app-purchase-quotation-modal [language]="language.lang"
+                                      [quotation]="showOneQuotation"
+                                      [supplier]="showSupplier"
+                                      (closeModal)="hideOneQuotationDetailsFun()"
+        />
     }
 }
