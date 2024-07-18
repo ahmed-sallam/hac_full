@@ -1,6 +1,5 @@
 package com.techpeak.hac.purchase.services.impl;
 
-import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.core.enums.InternalPhase;
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.InternalRef;
@@ -11,6 +10,7 @@ import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.dtos.BidSummaryResponseShort;
 import com.techpeak.hac.purchase.dtos.bid_summary.CreateBidSummaryDto;
 import com.techpeak.hac.purchase.enums.RequestStatus;
+import com.techpeak.hac.purchase.mappers.BidSummaryMapper;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.models.BidSummaryLine;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
@@ -41,19 +41,6 @@ public class BidSummaryServiceImpl implements BidSummaryService {
     private final UserHistoryService userHistoryService;
     private final PurchaseOrderService purchaseOrderService;
 
-    private static BidSummaryResponseShort mapToShortResponse(BidSummary item) {
-        return BidSummaryResponseShort.builder()
-                .id(item.getId())
-                .createdAt(item.getCreatedAt())
-                .number(item.getNumber())
-                .status(item.getStatus().name())
-                .internalRef(item.getInternalRef().getId())
-                .rfpqId(item.getRfpq().getId())
-                .rfpqNumber(item.getRfpq().getNumber())
-                .currentPhase(item.getInternalRef().getCurrentPhase().name())
-                .user(new UserDtoShort(item.getUser().getId(), item.getUser().getUsername()))
-                .build();
-    }
 
     @Override
     @Transactional
@@ -112,7 +99,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
         }
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
         Page<BidSummary> bidSummaries = bidSummaryRepository.findAll(specification, pageable);
-        return bidSummaries.map(BidSummaryServiceImpl::mapToShortResponse);
+        return bidSummaries.map(BidSummaryMapper::mapToShortResponse);
     }
 
     private BidSummary buildBidSummary(CreateBidSummaryDto request, User user, String bidSummaryNumber, InternalRef internalRef) {
