@@ -10,11 +10,13 @@ import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.dtos.BidSummaryResponseShort;
 import com.techpeak.hac.purchase.dtos.bid_summary.CreateBidSummaryDto;
 import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryDto;
+import com.techpeak.hac.purchase.dtos.bid_summary.UpdateBidSummaryLineDto;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.mappers.BidSummaryMapper;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.models.BidSummaryLine;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
+import com.techpeak.hac.purchase.repositories.BidSummaryLineRepository;
 import com.techpeak.hac.purchase.repositories.BidSummaryRepository;
 import com.techpeak.hac.purchase.services.BidSummaryService;
 import com.techpeak.hac.purchase.services.PurchaseOrderService;
@@ -29,6 +31,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,6 +46,7 @@ public class BidSummaryServiceImpl implements BidSummaryService {
     private final SupplierQuotationService supplierQuotationService;
     private final UserHistoryService userHistoryService;
     private final PurchaseOrderService purchaseOrderService;
+    private final BidSummaryLineRepository bidSummaryLineRepository;
 
 
     @Override
@@ -113,6 +118,74 @@ public class BidSummaryServiceImpl implements BidSummaryService {
         return oneBidSummaryDto;
     }
 
+    @Override
+    @Transactional
+    public void updateBidSummary(Long id, List<UpdateBidSummaryLineDto> request, User user) {
+        //TODO: improve user history .
+        BidSummary bidSummary = getOrElseThrow(id);
+        List<UpdateBidSummaryLineDto> updateItemsDto = new ArrayList<>();
+        List<UpdateBidSummaryLineDto> newItems = new ArrayList<>();
+        for (UpdateBidSummaryLineDto item : request) {
+            if (item.id() != null) {
+                updateItemsDto.add(item);
+            } else {
+                newItems.add(item);
+            }
+        }
+        List<BidSummaryLine> previousItems = new ArrayList<>(bidSummary.getLines());
+        List<BidSummaryLine> deletedItems = previousItems.stream()
+                .filter(previousItem -> updateItemsDto.stream()
+                        .noneMatch(updateItem -> updateItem.id().equals(previousItem.getId())))
+                .toList();
+
+        bidSummary.getLines().forEach(bidSummaryLine -> {
+            Optional<UpdateBidSummaryLineDto> updateItem = updateItemsDto.stream()
+                    .filter(item -> item.id().equals(bidSummaryLine.getId()))
+                    .findFirst();
+            updateItem.ifPresent(item -> {
+                bidSummaryLine.setPrice(item.price());
+                bidSummaryLine.setQuantity(item.quantity());
+                bidSummaryLine.setVat(item.vat());
+                bidSummaryLine.setTotal(item.quantity() * (item.price() + item.vat()));
+                bidSummaryLine.setProduct(productService.getProductOrThrow(item.productId()));
+                bidSummaryLine.setQuotation(supplierQuotationService.getSupplierQuotation(item.quotationId()));
+                bidSummaryLine.setSupplier(bidSummaryLine.getQuotation().getSupplier());
+            });
+        });
+
+        bidSummary.getLines().addAll(updateBidSummaryLines(newItems, bidSummary));
+
+        bidSummary.getLines().removeAll(deletedItems);
+        bidSummaryLineRepository.deleteAll(deletedItems);
+
+        setUserHistoryForUpdatedBidsummary(user, bidSummary, newItems, updateItemsDto, deletedItems);
+        bidSummaryRepository.save(bidSummary);
+    }
+
+    private void setUserHistoryForUpdatedBidsummary(User user, BidSummary bidSummary, List<UpdateBidSummaryLineDto> newItems, List<UpdateBidSummaryLineDto> updateItemsDto, List<BidSummaryLine> deletedItems) {
+        String actionDetails = "Updated the Bid Summary with number:" + bidSummary.getNumber() + " and internal id: " + bidSummary.getInternalRef().getId();
+        if (newItems.size() > 0) {
+            actionDetails += " with new items: ";
+            for (UpdateBidSummaryLineDto item : newItems) {
+                actionDetails += "Product: " + productService.getProductOrThrow(item.productId()).getProductNumber() + " Quantity: " + item.quantity() + " Price: " + item.price() + " VAT: " + item.vat() + " Total: " + item.total() + " \n";
+            }
+        }
+        if (updateItemsDto.size() > 0) {
+            actionDetails += " with updated items: ";
+            for (UpdateBidSummaryLineDto item : updateItemsDto) {
+                actionDetails += "Product: " + productService.getProductOrThrow(item.productId()).getProductNumber() + " Quantity: " + item.quantity() + " Price: " + item.price() + " VAT: " + item.vat() + " Total: " + item.total() + " \n";
+            }
+        }
+        if (deletedItems.size() > 0) {
+            actionDetails += " with deleted items: ";
+            for (BidSummaryLine item : deletedItems) {
+                actionDetails += "Product: " + item.getProduct().getProductNumber() + " Quantity: " + item.getQuantity() + " Price: " + item.getPrice() + " VAT: " + item.getVat() + " Total: " + item.getTotal() + " \n";
+            }
+        }
+
+        userHistoryService.createUserHistory(user, bidSummary.getId(), actionDetails, "bid_summary");
+    }
+
     private BidSummary buildBidSummary(CreateBidSummaryDto request, User user, String bidSummaryNumber, InternalRef internalRef) {
         return BidSummary.builder()
                 .number(bidSummaryNumber)
@@ -137,6 +210,25 @@ public class BidSummaryServiceImpl implements BidSummaryService {
                             .vat(line.vat())
                             .total(line.quantity() * (line.price() + line.vat()))
                             .build();
+                })
+                .collect(Collectors.toSet());
+    }
+
+    private Set<BidSummaryLine> updateBidSummaryLines(List<UpdateBidSummaryLineDto> lines, BidSummary bidSummary) {
+        return lines.stream()
+                .map(line -> {
+                    SupplierQuotation supplierQuotation = supplierQuotationService.getSupplierQuotation(line.quotationId());
+                    BidSummaryLine bidSummaryLine = BidSummaryLine.builder()
+                            .product(productService.getProductOrThrow(line.productId()))
+                            .quantity(line.quantity())
+                            .quotation(supplierQuotation)
+                            .supplier(supplierQuotation.getSupplier())
+                            .price(line.price())
+                            .vat(line.vat())
+                            .total(line.quantity() * (line.price() + line.vat()))
+                            .build();
+                    bidSummaryLine.setBidSummary(bidSummary);
+                    return bidSummaryLine;
                 })
                 .collect(Collectors.toSet());
     }

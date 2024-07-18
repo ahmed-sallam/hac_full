@@ -4,6 +4,7 @@ import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.purchase.dtos.BidSummaryResponseShort;
 import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryDto;
 import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryLineDto;
+import com.techpeak.hac.purchase.dtos.bid_summary.UpdateBidSummaryLineDto;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.models.BidSummaryLine;
 
@@ -60,5 +61,15 @@ public class BidSummaryMapper {
                 .productId(item.getProduct().getId())
                 .supplierId(item.getSupplier().getId())
                 .build();
+    }
+
+    public static BidSummaryLine mapToBidSummaryLine(UpdateBidSummaryLineDto item) {
+        return BidSummaryLine.builder()
+                .price(item.price())
+                .vat(item.vat())
+                .total(item.total())
+                .quantity(item.quantity())
+                .build(); // product, supplier, quotations are not set here ,
+        // will be set in the service layer
     }
 }

@@ -5,6 +5,7 @@ import com.techpeak.hac.core.utils.AuthUtils;
 import com.techpeak.hac.purchase.dtos.BidSummaryResponseShort;
 import com.techpeak.hac.purchase.dtos.bid_summary.CreateBidSummaryDto;
 import com.techpeak.hac.purchase.dtos.bid_summary.OneBidSummaryDto;
+import com.techpeak.hac.purchase.dtos.bid_summary.UpdateBidSummaryLineDto;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.services.BidSummaryService;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/v1/bid_summaries")
@@ -58,5 +61,13 @@ public class BidSummaryController {
     @GetMapping("/{id}")
     public ResponseEntity<OneBidSummaryDto> getOneBidSummary(@PathVariable("id") Long id) {
         return ResponseEntity.ok(bidSummaryService.getOneBidSummary(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Resource> updateBidSummary(@PathVariable("id") Long id,
+                                                     @RequestBody List<UpdateBidSummaryLineDto> request) {
+        User user = AuthUtils.getCurrentUser();
+        bidSummaryService.updateBidSummary(id, request, user);
+        return ResponseEntity.ok().build();
     }
 }
