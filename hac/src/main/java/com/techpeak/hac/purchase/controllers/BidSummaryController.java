@@ -9,6 +9,7 @@ import com.techpeak.hac.purchase.dtos.bid_summary.UpdateBidSummaryLineDto;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.purchase.models.BidSummary;
 import com.techpeak.hac.purchase.services.BidSummaryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.List;
 @RequestMapping(path = "/api/v1/bid_summaries")
 @RequiredArgsConstructor
 @Validated
+@Tag(name = "Bid Summary")
 public class BidSummaryController {
     private final BidSummaryService bidSummaryService;
 
