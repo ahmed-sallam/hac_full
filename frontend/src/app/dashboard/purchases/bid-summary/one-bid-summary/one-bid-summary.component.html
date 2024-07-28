@@ -1,65 +1,410 @@
-@if (selectLanguage$ | async; as language) {
-    <app-main-content [language]="language"
-                      [headerText]="'xxxxxxxxxxx'"
-                      [noDataMessage]="'There is no data to show' | translate: language?.lang"
-                      [noData]="false"
-                      [loader]="loader$ | async"
+@if (bidSummary && selectLanguage$ | async; as language) {
+    <app-main-content
+            [language]="language"
+            [headerText]="bidSummary.number"
+            [noDataMessage]="'There is no data to show' | translate : language?.lang"
+            [noData]="false"
+            [loader]="loader$ | async"
     >
         <div headerActions>
+            @if (bidSummary.status == "CANCELED") {
+                <button
+                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                        (click)="updateBidSummaryStatus('DRAFT')"
+                >
+                    {{ "DRAFT" | translate : language.lang }}
+                </button>
+            } @else   if (bidSummary.status == "DRAFT") {
+                <!--            todo-->
+                <button
+                        (click)="updateBidSummaryStatus('CANCELED')"
+                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
+                >
+                    {{ "Cancel " | translate : language.lang }}
+                </button>
 
-
-<!--            @if (materialRequest.status == "CANCELED") {-->
-<!--                <button-->
-<!--                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"-->
-<!--                        (click)="updateMaterialRequestStatus('DRAFT')"-->
-<!--                >-->
-<!--                    {{ "DRAFT" | translate : language.lang }}-->
-<!--                </button>-->
-<!--            } @else   if (materialRequest.status == "DRAFT") {-->
-<!--                &lt;!&ndash;            todo&ndash;&gt;-->
-<!--                <button-->
-<!--                        (click)="updateMaterialRequestStatus('CANCELED')"-->
-<!--                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"-->
-<!--                >-->
-<!--                    {{ "Cancel " | translate : language.lang }}-->
-<!--                </button>-->
-
-<!--                <button-->
-<!--                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"-->
-<!--                        (click)="updateMaterialRequestStatus('PENDING')"-->
-<!--                >-->
-<!--                    {{ "Confirm" | translate : language.lang }}-->
-<!--                </button>-->
-<!--&lt;!&ndash;                <button&ndash;&gt;-->
-<!--&lt;!&ndash;                        [routerLink]="['edit',materialRequest.id]"&ndash;&gt;-->
-<!--&lt;!&ndash;                        class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"&ndash;&gt;-->
-<!--&lt;!&ndash;                >&ndash;&gt;-->
-<!--&lt;!&ndash;                    {{ "Edit " | translate : language.lang }}&ndash;&gt;-->
-<!--&lt;!&ndash;                </button>&ndash;&gt;-->
-<!--            } @else   if (materialRequest.status == "PENDING") {-->
-<!--                &lt;!&ndash;            todo&ndash;&gt;-->
-<!--                <button-->
-
-<!--                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"-->
-<!--                >-->
-<!--                    {{ "Cancel " | translate : language.lang }}-->
-<!--                </button>-->
-<!--                <button-->
-<!--                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"-->
-<!--                        (click)="updateMaterialRequestStatus('PROCESSING')"-->
-<!--                >-->
-<!--                    {{ "Process" | translate : language.lang }}-->
-<!--                </button>-->
-<!--&lt;!&ndash;                <button&ndash;&gt;-->
-<!--&lt;!&ndash;                        [routerLink]="['edit',materialRequest.id]"&ndash;&gt;-->
-<!--&lt;!&ndash;                        class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"&ndash;&gt;-->
-<!--&lt;!&ndash;                >&ndash;&gt;-->
-<!--&lt;!&ndash;                    {{ "Edit " | translate : language.lang }}&ndash;&gt;-->
-<!--&lt;!&ndash;                </button>&ndash;&gt;-->
-<!--            }-->
+                <button
+                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                        (click)="updateBidSummaryStatus('PENDING')"
+                >
+                    {{ "Pending" | translate : language.lang }}
+                </button>
+                <!--                <button-->
+                        <!--                        [routerLink]="['edit',bidSummary.id]"-->
+                        <!--                        class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"-->
+                        <!--                >-->
+                        <!--                    {{ "Edit " | translate : language.lang }}-->
+                        <!--                </button>-->
+            } @else   if (bidSummary.status == "PENDING") {
+                <!--            todo-->
+                <button
+                        (click)="updateBidSummaryStatus('CANCELED')"
+                        class="w-40 p-4 my-1 font-medium text-danger  bg-white ms-3 hover:bg-danger/70 border-danger border hover:text-white"
+                >
+                    {{ "Cancel " | translate : language.lang }}
+                </button>
+                <button
+                        class="w-40 p-4 my-1 font-medium text-mustard  bg-white ms-3 hover:bg-mustard/70 border-mustard  border hover:text-white"
+                        (click)="updateBidSummaryStatus('PROCESSING')"
+                >
+                    {{ "Process" | translate : language.lang }}
+                </button>
+                <!--                <button-->
+                        <!--                        [routerLink]="['edit',bidSummary.id]"-->
+                        <!--                        class="w-40 p-4 my-1 font-medium text-white  bg-secondary ms-3 hover:bg-secondary/70 border-secondary border"-->
+                        <!--                >-->
+                        <!--                    {{ "Edit " | translate : language.lang }}-->
+                        <!--                </button>-->
+            }
 
 
         </div>
 
+        <div contentWithData class="relative w-full h-full p-8 min-h-max">
+            <div class="flex items-center justify-end w-full gap-1">
+                @if (bidSummary.status == "CANCELED") {
+                    <div
+                            [class]="
+          'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center' +
+          (bidSummary.status == 'CANCELED'
+            ? ' border-primary/50 text-white bg-primary/70 '
+            : ' border-secondary/30 text-secondary/30 ')
+        "
+                    >
+                        {{ "CANCELED " | translate : language.lang }}
+                    </div>
+                } @else {
+                    <div
+                            [class]="
+          'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center' +
+          (bidSummary.status == 'DRAFT'
+            ? ' border-primary/50 text-white bg-primary/70 '
+            : ' border-secondary/30 text-secondary/30 ')
+        "
+                    >
+                        {{ "DRAFT " | translate : language.lang }}
+                    </div>
+                    <div
+                            [class]="
+          'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center' +
+          (bidSummary.status == 'PENDING'
+            ? ' border-primary/50 text-white bg-primary/70 '
+            : ' border-secondary/30 text-secondary/30 ')
+        "
+                    >
+                        {{ "PENDING " | translate : language.lang }}
+                    </div>
+                    <div
+                            [class]="
+          'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center' +
+          (bidSummary.status == 'PROCESSING'
+            ? ' border-primary/50 text-white bg-primary/70 '
+            : ' border-secondary/30 text-secondary/30 ')
+        "
+                    >
+                        {{ "PROCESSING " | translate : language.lang }}
+                    </div>
+                    <div
+                            [class]="
+          'py-2 px-4 border rounded-e-full border-s-0 w-32 text-center' +
+          (bidSummary.status == 'COMPLETED'
+            ? ' border-primary/50 text-white bg-primary/70 '
+            : ' border-secondary/30 text-secondary/30 ')
+        "
+                    >
+                        {{ "COMPLETED " | translate : language.lang }}
+                    </div>
+                }
+            </div>
+            <div class="flex items-start justify-start w-full gap-4 mt-6">
+                <div class="w-full max-w-md gap-1">
+                    <div class="flex items-center justify-start gap-2">
+                        <div class="w-40 font-semibold">
+                            {{ "RFPQ" | translate : language.lang }}
+                        </div>
+                        <div class="w-full">{{ bidSummary.rfpqNumber }}</div>
+                    </div>
+
+                    <div class="flex items-center justify-start gap-2">
+                        <div class="w-40 font-semibold">
+                            {{ "From Date" | translate : language.lang }}
+                        </div>
+                        <div class="w-full">{{ bidSummary.fromDate }}</div>
+                    </div>
+
+                    <div class="flex items-center justify-start gap-2">
+                        <div class="w-40 font-semibold">
+                            {{ "To Date" | translate : language.lang }}
+                        </div>
+                        <div class="w-full">{{ bidSummary.updatedAt }}</div>
+                    </div>
+                </div>
+                <div class="w-full max-w-md gap-1">
+                    <div class="flex items-center justify-start gap-2">
+                        <div class="w-40 font-semibold">
+                            {{ "Internal Ref" | translate : language.lang }}
+                        </div>
+                        <div class="w-full">{{ bidSummary.internalRef }}</div>
+                    </div>
+                    <div class="flex items-center justify-start gap-2">
+                        <div class="w-40 font-semibold">
+                            {{ "Created By" | translate : language.lang }}
+                        </div>
+                        <div class="w-full">{{ bidSummary.user.username }}</div>
+                    </div>
+                    <div class="flex items-center justify-start gap-2">
+                        <div class="w-40 font-semibold">
+                            {{ "Phase" | translate : language.lang }}
+                        </div>
+                        <div class="w-full">{{ bidSummary.currentPhase }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-full p-2 mt-4 shadow-sm-light shadow-secondary/20">
+                <h3 class="text-lg font-semibold underline">
+                    {{ "Products" | translate : language.lang }}
+                </h3>
+                <div
+                        class="flex justify-start items-start overflow-x-auto overflow-y-auto pb-6 w-[90vw] flex-col relative"
+                        style="flex: 0 0 1px"
+                >
+                    <!--                Lines Header -->
+                    <div
+                            class="px-1 py-2 flex items-center gap-1 justify-start text-secondary/50 my-2.5 sticky top-0 z-20 w-full min-w-fit"
+                            style="background-color: #e6e6e5"
+                    >
+                        <div
+                                class="flex w-[200px] top-0 start-0 justify-center items-center sticky z-10 h-full"
+                                style="background-color: #e6e6e5"
+                        >
+                            <div class="w-[200px] ps-1.5">
+                                {{ "Product" | translate : language }}
+                            </div>
+                        </div>
+                        <div class="w-[50px] text-xs">
+                            {{ "Quantity" | translate : language }}
+                        </div>
+                        <div class="w-[60px] text-xs">
+                            {{ "Selected QTY" | translate : language }}
+                        </div>
+                        <div class="w-[50px] text-xs">
+                            {{ "Balance" | translate : language }}
+                        </div>
+                        <div class="w-[50px] text-xs">
+                            {{ "Sold Qty" | translate : language }}
+                        </div>
+                        <div class="w-[50px] text-xs">
+                            {{ "Sale Q" | translate : language }}
+                        </div>
+                        <div class="w-[80px] text-sm">
+                            {{ "Selected" | translate : language }}
+                        </div>
+                        <!--                            Suppliers header-->
+                        @for (item of bidSummary.generateBidSummary.suppliers; track $index) {
+
+                            <div class="flex-col items-center justify-center w-[270px] gap-0.5">
+                                <div class="text-center font-semibold mb-0.5">
+                                    {{ language.lang == "ar" ? item.nameAr : item.nameEn }}
+                                </div>
+                                <div class="flex items-center justify-center gap-0.5">
+                                    <div class="w-[55px] text-xs">
+                                        {{ "Price" | translate : language }}
+                                    </div>
+                                    <div class="w-[55px] text-xs">
+                                        {{ "SAR" | translate : language }}
+                                    </div>
+                                    <div class="w-[50px] text-xs">
+                                        {{ "Brand" | translate : language }}
+                                    </div>
+                                    <div class="w-[50px] text-xs">
+                                        {{ "Is Local" | translate : language }}
+                                    </div>
+                                    <div class="w-[50px] text-xs">
+                                        {{ "Other" | translate : language }}
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <!--                Lines data -->
+
+                    @for (product of bidSummary.generateBidSummary.products; track $index) {
+                        <div
+                                class="relative flex items-center justify-start w-full gap-1 py-1 bg-white border-b text-secondary/50 min-w-fit hover:bg-secondary/5 border-secondary/20"
+                        >
+                            <div
+                                    class="flex w-[200px] start-0 justify-center items-center sticky z-10 h-full"
+                                    style="background-color: inherit"
+                            >
+                                <div class="w-[200px] ps-1.5">
+                                    {{
+                                        product.productNumber +
+                                        " " +
+                                        (language.lang == "ar"
+                                            ? product.subBrandAr
+                                            : product.subBrandEn)
+                                    }}
+                                </div>
+                            </div>
+                            <div class="w-[50px] text-xs">{{ product.quantity }}</div>
+                            <div class="w-[60px] text-xs">
+                                <!--                                       (change)="setProdcutQuantity($event, product)"-->
+                                <input
+                                        class="w-full border-0"
+                                        type="number"
+                                        min="0"
+                                        (keydown.enter)="$event.preventDefault()"
+                                        [value]="getOneOfSelectedProduct(product)?.quantity"
+                                        name="product.selectedQuantity"
+                                />
+                            </div>
+                            <div class="w-[50px] text-xs">{{ "--" }}</div>
+                            <div class="w-[50px] text-xs">{{ product.soldQuantity }}</div>
+                            <div class="w-[50px] text-xs">
+                                {{ "--" | translate : language }}
+                            </div>
+                            <div class="w-[80px] text-sm">
+                                {{
+                                    getOneOfSelectedProduct(product)
+                                        ?
+                                        getOneOfSelectedProduct(product)["price"]
+                                        : ""
+                                }}
+                            </div>
+                            <!--                            Suppliers header-->
+                            <!--                                @for (qq of quotations; track $index) {-->
+                            @for (supplier of bidSummary.generateBidSummary.suppliers; track
+                                supplier.id) {
+                                @if (getOneSupplierProduct(supplier.id + '/' +
+                                    product.productNumber).length > 0) {
+                                    @if (getOneSupplierProduct(supplier.id + '/' +
+                                        product.productNumber)[0][supplier.id + '/' + product.productNumber];
+                                        as qq) {
+                                        <div
+                                                class="flex items-center justify-center w-[270px] gap-0.5"
+                                                (mouseleave)="onItemHoverLeave()"
+                                                (mouseenter)="onItemHoverEnter(product.productNumber, supplier.id)"
+                                        >
+                                            @if (showHoverForItem == supplier.id + '/' + product.productNumber) {
+                                                <div
+                                                        class="bg-secondary text-white flex items-center justify-center w-full gap-1.5 fade-in-out"
+                                                >
+                                                    <div
+                                                            class="text-sm cursor-pointer hover:underline"
+                                                            (click)="showOneQuotationDetailsFun(qq, supplier, product)"
+                                                    >
+                                                        {{ "Details" | translate : language.lang }}
+                                                    </div>
+                                                    <div
+                                                            class="text-sm cursor-pointer hover:underline"
+                                                            (click)="selectQuotationProduct(product, supplier, qq)"
+                                                    >
+                                                        {{ "Select" | translate : language.lang }}
+                                                    </div>
+                                                    <div
+                                                            class="text-sm cursor-pointer hover:underline"
+                                                            (click)="
+                  showQuotationFun(
+                    supplier,
+                    getOneSupplierProduct(
+                      supplier.id + '/' + product.productNumber
+                    ),
+                    product
+                  )
+                "
+                                                    >
+                                                        {{ "Quotations" | translate : language.lang }}
+                                                    </div>
+                                                </div>
+                                            } @else {
+                                                <div class="w-[55px] text-xs">
+                                                    {{ qq["netPrice"] + " " + qq["currency"]["code"] }}
+                                                </div>
+                                                <div class="w-[55px] text-xs underline">
+                                                    {{ qq["sarPrice"] + " SAR" }}
+                                                </div>
+                                                <div class="w-[50px] text-xs">
+                                                    {{
+                                                        language.lang == "ar"
+                                                            ? qq["product"]["subBrandAr"]
+                                                            : qq["product"]["subBrandEn"]
+                                                    }}
+                                                </div>
+                                                <div class="w-[50px] text-xs">
+                                                    @if (qq['isLocal']) {
+                                                        <svg
+                                                                class="w-4 h-4 text-green-500"
+                                                                style="color: green !important"
+                                                                aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                    fill-rule="evenodd"
+                                                                    d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+                                                                    clip-rule="evenodd"
+                                                            />
+                                                        </svg>
+
+                                                    } @else {
+                                                        <svg
+                                                                style="color: red !important"
+                                                                class="w-4 h-4 text-red-500"
+                                                                aria-hidden="true"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                        >
+                                                            <path
+                                                                    fill-rule="evenodd"
+                                                                    d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+                                                                    clip-rule="evenodd"
+                                                            />
+                                                        </svg>
+
+                                                    }
+                                                </div>
+                                                <div class="w-[50px] text-xs">
+                                                    <div
+                                                            class="rounded-full border border-secondary cursor-pointer p-0.5 w-5 text-center"
+                                                    >
+                                                        {{
+                                                            getOneSupplierProduct(
+                                                                supplier.id + "/" + product.productNumber
+                                                            ).length - 1
+                                                        }}
+                                                    </div>
+                                                </div>
+                                            }
+                                        </div>
+
+                                    }
+                                } @else {
+                                    <div class="flex items-center justify-center w-[270px] gap-0.5">
+                                        <div class="w-[55px] text-xs">{{ "--" }}</div>
+                                        <div class="w-[55px] text-xs">{{ "--" }}</div>
+                                        <div class="w-[50px] text-xs">{{ "--" }}</div>
+                                        <div class="w-[50px] text-xs">{{ "--" }}</div>
+                                        <div class="w-[50px] text-xs">{{ "--" }}</div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </app-main-content>
+    @if (userHistoryLoading && !(loader$ | async)) {
+        <div
+                class="flex flex-col items-center justify-center w-full h-full p-10 min-h-96"
+        >
+            <app-loader/>
+        </div>
+    } @else {
+
+        <app-history-section [language]="language.lang"
+                             [history]="userHistory"/>
+    }
 }

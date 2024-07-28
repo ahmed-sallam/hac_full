@@ -10,7 +10,7 @@ spring:
       max-file-size: 50MB
 app:
   jwt-secret: "KpmEgF/39ZnTZK63C5y7DOJKYN0f5Iwf0YwFYMQyyYY="
-  jwt-expiration-milliseconds: 604800000
+  jwt-expiration-milliseconds: 32000000000
 
 springdoc:
   api-docs:

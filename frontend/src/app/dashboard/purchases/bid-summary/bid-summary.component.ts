@@ -61,10 +61,10 @@ export class BidSummaryComponent implements OnInit {
     pageSize!: number;
     searchName: string = '';
     sort!: string | undefined;
-    ref!: number|undefined;
-    phase!: string|undefined;
-    user!: number|undefined;
-    status!: string|undefined;
+    ref!: number | undefined;
+    phase!: string | undefined;
+    user!: number | undefined;
+    status!: string | undefined;
 
     all: boolean = true;
 
@@ -75,10 +75,11 @@ export class BidSummaryComponent implements OnInit {
         this.initPageParams();
         this.getData();
     }
-    getAll(){
+
+    getAll() {
         this.resetParamsAndSearch()
-        this.all= true;
-        this.onSearchChanged({search:''})
+        this.all = true;
+        this.onSearchChanged({search: ''})
     }
 
     onSearchChanged($event: any) {
@@ -112,10 +113,10 @@ export class BidSummaryComponent implements OnInit {
         this.getData();
     }
 
-    getMyRequests(id: number){
+    getMyRequests(id: number) {
         this.user = id;
-        this.all= false;
-        this.onSearchChanged({search:'', user: id})
+        this.all = false;
+        this.onSearchChanged({search: '', user: id})
     }
 
     private initPageParams() {
@@ -145,8 +146,8 @@ export class BidSummaryComponent implements OnInit {
             });
     }
 
-    private resetParamsAndSearch(){
-        this.searchName =  '';
+    private resetParamsAndSearch() {
+        this.searchName = '';
         this.currentPage = 0;
         this.pageSize = 80;
         this.sort = undefined

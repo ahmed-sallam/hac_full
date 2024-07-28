@@ -320,7 +320,7 @@ export class CreateBidSummaryComponent implements OnInit {
     }
 }
 
-interface SelectedProduct {
+export interface SelectedProduct {
     productId: number
     productNumber: string
     quantity: number

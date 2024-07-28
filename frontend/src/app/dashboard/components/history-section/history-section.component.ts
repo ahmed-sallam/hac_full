@@ -6,17 +6,17 @@ import {
 } from "../../purchases/material-request/interfaces/OneMaterialRequest";
 
 @Component({
-  selector: 'app-history-section',
-  standalone: true,
-  imports: [
-    TranslatePipe,
-    DatePipe
-  ],
-  templateUrl: './history-section.component.html',
-  styles: ``
+    selector: 'app-history-section',
+    standalone: true,
+    imports: [
+        TranslatePipe,
+        DatePipe
+    ],
+    templateUrl: './history-section.component.html',
+    styles: ``
 })
 export class HistorySectionComponent {
-  @Input() language!: string;
-  @Input() history!: History[];
+    @Input() language!: string;
+    @Input() history!: History[] | any;
 
 }
