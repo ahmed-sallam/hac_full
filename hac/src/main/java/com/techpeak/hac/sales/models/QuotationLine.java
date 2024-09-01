@@ -1,14 +1,14 @@
-package com.techpeak.hac.purchase.models;
+package com.techpeak.hac.sales.models;
 
 import com.techpeak.hac.core.models.BaseEntity;
 import com.techpeak.hac.inventory.models.Product;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name = "SupplierQuotationLine")
-@Table(name = "supplier_quotation_lines", indexes = {
-        @Index(name = "idx_product_id", columnList = "product_id"),
-        @Index(name = "idx_supplier_quotation_id", columnList = "supplier_quotation_id")
+@Entity(name = "QuotationLine")
+@Table(name = "quotation_lines", indexes = {
+        @Index(name = "idx_sales_product_id", columnList = "product_id"),
+        @Index(name = "idx_sales_quotation_id", columnList = "quotation_id")
 })
 @Setter
 @Getter
@@ -16,17 +16,13 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Builder
-public class SupplierQuotationLine extends BaseEntity {
+public class QuotationLine extends BaseEntity {
     @Column(name = "quantity")
     private Integer quantity = 1;
     @Column(name = "price", nullable = false)
     private Double price;
     @Column(name = "discount")
     private Double discount = 0d;
-    //    @Column(name = "vat")
-//    private Double vat = 0d;
-//    @Column(name = "sub_total")
-//    private Double subTotal = 0d;
     @Column(name = "total")
     private Double total = 0d;
     @Column(name = "notes")
@@ -35,7 +31,7 @@ public class SupplierQuotationLine extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "supplier_quotation_id", nullable = false)
+    @JoinColumn(name = "quotation_id", nullable = false)
     @ToString.Exclude
-    private SupplierQuotation supplierQuotation;
+    private Quotation quotation;
 }
