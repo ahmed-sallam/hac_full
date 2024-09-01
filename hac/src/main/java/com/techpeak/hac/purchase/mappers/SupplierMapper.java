@@ -36,7 +36,7 @@ public class SupplierMapper {
 
     }
 
-    public static SupplierResponseName mapToSupplierResponseName(Supplier supplier){
+    public static SupplierResponseName mapToSupplierResponseName(Supplier supplier) {
         return SupplierResponseName.builder()
                 .id(supplier.getId())
                 .nameAr(supplier.getNameAr())
