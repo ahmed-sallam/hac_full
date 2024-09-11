@@ -15,4 +15,6 @@ public interface CustomerService {
     Customer get(Long id);
 
     CustomerResponse getCustomerResponse(Long id);
+
+    void update(Long id, CreateCustomer createCustomer);
 }

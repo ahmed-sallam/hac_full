@@ -1,0 +1,285 @@
+@if (selectLanguage$ | async; as language) {
+<app-main-content
+  [language]="language"
+  [headerText]="'Customer' | translate : language.lang"
+  [noDataMessage]="'There is no data to show' | translate : language?.lang"
+  [noData]="false"
+>
+  <div headerActions>
+    <button
+      (click)="changeEditModalStatus(true)"
+      class="w-40 p-4 my-1 font-medium text-white bg-secondary ms-3 hover:bg-secondary/70"
+    >
+      {{ "Edit" | translate : language.lang }}
+    </button>
+  </div>
+
+  <div contentWithData class="relative w-full h-full p-8 min-h-max">
+    <div class="relative my-4 overflow-x-auto overflow-y-auto">
+      @if (customer$ | async; as customer) {
+
+      <div class="w-full text-start my-2 flex items-center gap-1.5 max-w-96">
+        <div class="font-semibold">
+          {{ "Arabic Name" | translate : language.lang }}:
+        </div>
+        <div>{{ customer.nameAr }}</div>
+      </div>
+      <div class="w-full text-start my-2 flex items-center gap-1.5 max-w-96">
+        <div class="font-semibold">
+          {{ "English Name" | translate : language.lang }}:
+        </div>
+        <div>{{ customer.nameEn }}</div>
+      </div>
+      <div class="w-full text-start my-2 flex items-center gap-1.5 max-w-96">
+        <div class="font-semibold">
+          {{ "Email" | translate : language.lang }}:
+        </div>
+        <div>{{ customer.email }}</div>
+      </div>
+
+      <div class="w-full text-start my-2 flex items-center gap-1.5 max-w-96">
+        <div class="font-semibold">
+          {{ "Phone" | translate : language.lang }}:
+        </div>
+        <div>{{ customer.phone }}</div>
+      </div>
+
+      <div class="w-full text-start my-2 flex items-center gap-1.5 max-w-96">
+        <div class="font-semibold">
+          {{ "Address" | translate : language.lang }}:
+        </div>
+        <div>{{ customer.address }}</div>
+      </div>
+
+      <div class="w-full text-start my-2 flex items-center gap-1.5 max-w-96">
+        <div class="font-semibold">
+          {{ "Active" | translate : language.lang }}:
+        </div>
+        <div>
+          @if (customer.isActive) {
+          <svg
+            class="w-6 h-6 text-green-500"
+            style="color: green !important"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm13.7-1.3a1 1 0 0 0-1.4-1.4L11 12.6l-1.8-1.8a1 1 0 0 0-1.4 1.4l2.5 2.5c.4.4 1 .4 1.4 0l4-4Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+
+          } @else {
+          <svg
+            style="color: red !important"
+            class="w-6 h-6 text-red-500"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+
+          }
+        </div>
+      </div>
+
+      }
+    </div>
+  </div>
+</app-main-content>
+
+<!--Edit Customer form-->
+@if(showEditModal){
+<!-- Main modal -->
+<div
+  id="default-modal"
+  tabindex="-1"
+  aria-hidden="true"
+  class="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full bg-secondary/10"
+>
+  <div class="relative w-full max-w-2xl max-h-full p-4">
+    <!-- Modal content -->
+    <div class="relative bg-white shadow dark:bg-gray-700">
+      <!-- Modal header -->
+      <div
+        class="flex items-center justify-between p-4 border-b rounded-t md:p-5 dark:border-gray-600"
+      >
+        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+          {{ "Edit Customer" | translate : language.lang }}
+        </h3>
+        <button
+          (click)="changeEditModalStatus(false)"
+          class="inline-flex items-center justify-center w-8 h-8 text-sm text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 ms-auto dark:hover:bg-gray-600 dark:hover:text-white"
+          data-modal-hide="default-modal"
+        >
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <div class="p-4 space-y-4 md:p-5">
+        <form [formGroup]="formGroup">
+          <div class="mb-5 max-w-96">
+            <label
+              for="nameAr"
+              class="block mb-2 text-sm font-medium text-secondary/90"
+              >{{ "Arabic Name" | translate : language.lang }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              formControlName="nameAr"
+              type="text"
+              id="nameAr"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+            />
+            @if (formGroup.get('nameAr')?.touched &&
+            formGroup.get('nameAr')?.errors) {
+            <p class="text-xs font-light text-danger">
+              {{ "Arabic Name" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="mb-5 max-w-96">
+            <label
+              for="nameEn"
+              class="block mb-2 text-sm font-medium text-secondary/90"
+              >{{ "English Name" | translate : language.lang }}
+              <span class="text-danger">*</span></label
+            >
+            <input
+              formControlName="nameEn"
+              type="text"
+              id="nameEn"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+            />
+            @if (formGroup.get('nameEn')?.touched &&
+            formGroup.get('nameEn')?.errors) {
+            <p class="text-xs font-light text-danger">
+              {{ "English Name" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="mb-5 max-w-96">
+            <label
+              for="email"
+              class="block mb-2 text-sm font-medium text-secondary/90"
+              >{{ "Email" | translate : language.lang }}
+            </label>
+            <input
+              formControlName="email"
+              type="email"
+              id="email"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+            />
+            @if (formGroup.get('email')?.touched &&
+            formGroup.get('email')?.errors) {
+            <p class="text-xs font-light text-danger">
+              {{ "Email" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="mb-5 max-w-96">
+            <label
+              for="phone"
+              class="block mb-2 text-sm font-medium text-secondary/90"
+              >{{ "Phone" | translate : language.lang }}
+            </label>
+            <input
+              formControlName="phone"
+              type="phone"
+              id="phone"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+            />
+            @if (formGroup.get('phone')?.touched &&
+            formGroup.get('phone')?.errors) {
+            <p class="text-xs font-light text-danger">
+              {{ "Phone" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="mb-5 max-w-96">
+            <label
+              for="address"
+              class="block mb-2 text-sm font-medium text-secondary/90"
+              >{{ "Address" | translate : language.lang }}
+            </label>
+            <input
+              formControlName="address"
+              type="text"
+              id="address"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+            />
+            @if (formGroup.get('address')?.touched &&
+            formGroup.get('address')?.errors) {
+            <p class="text-xs font-light text-danger">
+              {{ "Address" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+
+          <label class="inline-flex items-center cursor-pointer me-5">
+            <input
+              type="checkbox"
+              class="sr-only peer"
+              name="isActive"
+              formControlName="isActive"
+            />
+            <div
+              class="relative w-11 h-6 bg-secondary/2s0 rounded-full peer peer-focus:ring-4 peer-focus:ring-primary/30 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-secondary/3s0 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary/40"
+            ></div>
+            <span class="text-sm font-medium ms-3 text-secondary/9s0">{{
+              "Active" | translate : language.lang
+            }}</span>
+          </label>
+        </form>
+      </div>
+      <!-- Modal footer -->
+      <div
+        class="flex items-center p-4 border-t border-gray-200 rounded-b md:p-5 dark:border-gray-600"
+      >
+        <button
+          (click)="updateCustoemr()"
+          class="w-40 p-4 my-1 font-medium text-white border bg-secondary ms-3 hover:bg-secondary/70"
+        >
+          {{ "Save" | translate : language }}
+        </button>
+
+        <button
+          (click)="changeEditModalStatus(false)"
+          class="w-40 p-4 my-1 font-medium bg-white border text-danger ms-3 border-danger hover:bg-danger/20"
+        >
+          {{ "Cancel" | translate : language }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+} }

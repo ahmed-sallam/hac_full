@@ -44,4 +44,15 @@ public class CustomerServiceImpl implements CustomerService {
         Customer custoemr = get(id);
         return CustomerMapper.entityToCustomerResponse(custoemr);
     }
+
+    @Override
+    public void update(Long id, CreateCustomer createCustomer) {
+        Customer customer = get(id);
+        customer.setNameAr(createCustomer.getNameAr());
+        customer.setNameEn(createCustomer.getNameEn());
+        customer.setEmail(createCustomer.getEmail());
+        customer.setPhone(createCustomer.getPhone());
+        customer.setAddress(createCustomer.getAddress());
+        customerRepository.save(customer);
+    }
 }
