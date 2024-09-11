@@ -90,13 +90,10 @@ export class SuppliersComponent {
     this.getData();
   }
   private initPageParams() {
-    this.activeRouter.queryParams.subscribe((params) => {
-      this.searchName = params['name'] || '';
-      this.currentPage = params['page'] || 0;
-      this.pageSize = params['size'] || 80;
-      this.getData();
-
-    });
+    this.currentPage = this.activeRouter.snapshot.queryParams['page'] || 0;
+    this.pageSize = this.activeRouter.snapshot.queryParams['size'] || 80;
+    this.searchName = this.activeRouter.snapshot.queryParams['name'] || '';
+    this.getData();
   }
 
   private getData() {
