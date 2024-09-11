@@ -2,6 +2,7 @@ package com.techpeak.hac.sales.models;
 
 import com.techpeak.hac.core.models.*;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,9 @@ import java.util.Set;
 @ToString
 @Builder
 public class Quotation extends BaseEntity {
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RequestStatus status = RequestStatus.DRAFT;
     private String number;
     @Column(name = "sub_total")
     private Double subTotal;

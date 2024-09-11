@@ -58,3 +58,5 @@ e2e/*.map
 
 
 notes.txt
+.vscode/
+.vscode/settings.json

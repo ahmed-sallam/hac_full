@@ -105,6 +105,26 @@ export const routes: Routes = [
                 loadComponent: () => import('./dashboard/sales/sales.component').then((c) => c.SalesComponent)
             },
             {
+                path: 'sales/customers',
+                loadComponent: () => import('./dashboard/sales/customers/customers.component').then((c) => c.CustomersComponent)
+            },
+            {
+                path: 'sales/customers/create',
+                loadComponent: () => import('./dashboard/sales/customers/create-customer/create-customer.component').then((c) => c.CreateCustomerComponent)
+            },
+            {
+                path: 'sales/quotations',
+                loadComponent: () => import('./dashboard/sales/quotations/quotations.component').then((c) => c.QuotationsComponent)
+            },
+            {
+                path: 'sales/orders',
+                loadComponent: () => import('./dashboard/sales/orders/orders.component').then((c) => c.OrdersComponent)
+            },
+            {
+                path: 'sales/invoices',
+                loadComponent: () => import('./dashboard/sales/invoices/invoices.component').then((c) => c.InvoicesComponent)
+            },
+            {
                 path: 'purchases',
                 loadComponent: () => import('./dashboard/purchases/purchases.component').then((c) => c.PurchasesComponent)
             },

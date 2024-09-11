@@ -24,7 +24,7 @@ public class CreateMaterialRequest {
     private LocalDate date;
 
     @NotNull(message = "Store ID cannot be null")
-    @Positive(message = "Product ID must be a positive number")
+    @Positive(message = "Store ID must be a positive number")
     private Long store;
 
 
