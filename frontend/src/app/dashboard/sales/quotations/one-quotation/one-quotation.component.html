@@ -1,0 +1,151 @@
+@if (selectLanguage$ | async; as language) {
+  @if (quotation) {
+    <app-main-content
+      [language]="language"
+      [headerText]="quotation.number"
+      [noDataMessage]="'There is no data to show' | translate: language?.lang"
+      [noData]="false"
+      [loader]="loader$ | async"
+    >
+      <div headerActions></div>
+
+      <div contentWithData class="relative w-full h-full p-8 min-h-max">
+        <div class="w-full mt-6 flex gap-4 items-start justify-start">
+          <div class="w-full max-w-md gap-1">
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Date" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.date }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Customer" | translate: language.lang }}
+              </div>
+              <div class="w-full">
+                {{
+                  language.lang == "ar"
+                    ? quotation.customer.nameAr
+                    : quotation.customer.nameEn
+                }}
+              </div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Created by" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.user.username }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Internal Ref" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.internalRef.id }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Phase" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.internalRef.currentPhase }}</div>
+            </div>
+          </div>
+          <div class="w-full max-w-md gap-1">
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Sub Total" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.subTotal }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Discount" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.discount }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Vat" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.vat }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Total" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.total }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Payment Terms" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.paymentTerms }}</div>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+              <div class="w-40 font-semibold">
+                {{ "Notes" | translate: language.lang }}
+              </div>
+              <div class="w-full">{{ quotation.notes }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="w-full mt-12 overflow-x-auto overflow-y-auto pt-2">
+          <table class="w-full text-sm text-left rtl:text-right">
+            <thead class="text-xs uppercase text-secondary/50">
+              <tr>
+                @for (col of tableColumns; track $index) {
+                  <th scope="col" class="px-6 py-3 min-w-40">
+                    {{ col | translate: language }}
+                  </th>
+                }
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of quotation.lines; track item.product.id + $index) {
+                <tr
+                  class="bg-white border-b border-secondary/15 hover:bg-secondary/5 text-secondary/80"
+                >
+                  <td class="px-6 py-4">
+                    {{ $index + 1 }}
+                  </td>
+
+                  <td class="px-6 py-4">
+                    {{
+                      item.product.productNumber +
+                        " - " +
+                        (language.lang == "ar"
+                          ? item.product.mainBrandAr +
+                            " - " +
+                            item.product.subBrandAr
+                          : item.product.mainBrandEn +
+                            " - " +
+                            item.product.subBrandEn)
+                    }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ item.quantity }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ item.price }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ item.discount }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ item.total }}
+                  </td>
+                  <td class="px-6 py-4">
+                    {{ item.notes }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </app-main-content>
+    <app-history-section
+      [language]="language.lang"
+      [history]="quotation.userHistories"
+    />
+  }
+}

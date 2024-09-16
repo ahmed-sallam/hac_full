@@ -8,6 +8,7 @@ import com.techpeak.hac.sales.dtos.CustomerResponseName;
 import lombok.Builder;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 /**
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @Builder
 public record QuotationResponseShort(Long id, Boolean isActive,
                                      RequestStatus status, String number,
-                                     Double total, LocalDate date,
+                                     BigDecimal total, LocalDate date,
                                      PaymentTerms paymentTerms,
                                      String internalRef,
                                      UserDtoShort user,
