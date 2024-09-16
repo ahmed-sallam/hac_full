@@ -6,7 +6,7 @@ export interface CreateQuotation {
   currency: number;
   lines: QuotationLine[];
   paymentTerms: string;
-  status: string;
+  status?: string;
 }
 
 export interface QuotationLine {
