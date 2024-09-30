@@ -61,3 +61,6 @@ notes.txt
 .vscode/
 .vscode/settings.json
 .aider*
+path/to/venv/*
+**/*.DS_Store
+hac/src/main/java/com/techpeak/hac/.DS_Store
