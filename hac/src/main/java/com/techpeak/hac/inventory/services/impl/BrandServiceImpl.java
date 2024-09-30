@@ -1,5 +1,9 @@
 package com.techpeak.hac.inventory.services.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.inventory.dtos.CreateBrand;
 import com.techpeak.hac.inventory.dtos.MainBrand;
@@ -7,10 +11,8 @@ import com.techpeak.hac.inventory.mappers.BrandMapper;
 import com.techpeak.hac.inventory.models.Brand;
 import com.techpeak.hac.inventory.repositories.BrandRepository;
 import com.techpeak.hac.inventory.services.BrandService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -20,18 +22,18 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public void createBrand(CreateBrand createBrand) {
         Brand brand = BrandMapper.toEntity(createBrand);
-        if (createBrand.getBrandId()!= null) {
+        if (createBrand.getBrandId() != null) {
             brand.setMainBrand(getBrandOrThrow(createBrand.getBrandId()).getId());
             brandRepository.save(brand);
         } else {
-        brand = brandRepository.save(brand);
-            Brand genuinBrnad =  Brand.builder()
+            brand = brandRepository.save(brand);
+            Brand genuinBrnad = Brand.builder()
                     .nameAr("أصلي")
                     .nameEn("Genuine")
                     .code("GG")
                     .mainBrand(brand.getId())
                     .build();
-        brandRepository.save(genuinBrnad);
+            brandRepository.save(genuinBrnad);
         }
 
     }
@@ -43,12 +45,10 @@ public class BrandServiceImpl implements BrandService {
         brand.setNameEn(updateBrand.getNameEn());
         brand.setCode(updateBrand.getCode());
         brand.setIsActive(updateBrand.getIsActive());
-        if (updateBrand.getBrandId()!= null)
+        if (updateBrand.getBrandId() != null)
             brand.setMainBrand(getBrandOrThrow(updateBrand.getBrandId()).getId());
         brandRepository.save(brand);
     }
-
-
 
     @Override
     public MainBrand getBrand(Long id) {
@@ -57,12 +57,15 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public Page<MainBrand> list(Pageable pageable, Boolean isActive, String name) {
-        Page<Brand> all = brandRepository.findByIsActiveAndNameArContainingIgnoreCaseOrNameEnContainingIgnoreCaseOrCodeContainingIgnoreCase(isActive, name, name, name, pageable);
+        Page<Brand> all = brandRepository
+                .findByIsActiveAndNameArContainingIgnoreCaseOrNameEnContainingIgnoreCaseOrCodeContainingIgnoreCase(
+                        isActive, name, name, name, pageable);
         return all.map(BrandMapper::toDto);
     }
 
     @Override
     public Brand getBrandOrThrow(Long id) {
-        return brandRepository.findById(id).orElseThrow(() -> new NotFoundException("Brand with id " + id + " does not exist"));
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Brand with id " + id + " does not exist"));
     }
 }

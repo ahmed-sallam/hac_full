@@ -1,9 +1,5 @@
 package com.techpeak.hac.sales.services.impl;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.sales.dtos.CreateCustomer;
 import com.techpeak.hac.sales.dtos.CustomerResponse;
@@ -11,8 +7,10 @@ import com.techpeak.hac.sales.dtos.mappers.CustomerMapper;
 import com.techpeak.hac.sales.models.Customer;
 import com.techpeak.hac.sales.repositories.CustomerRepository;
 import com.techpeak.hac.sales.services.CustomerService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +51,7 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setEmail(createCustomer.getEmail());
         customer.setPhone(createCustomer.getPhone());
         customer.setAddress(createCustomer.getAddress());
+        customer.setIsActive(createCustomer.getIsActive());
         customerRepository.save(customer);
     }
 }

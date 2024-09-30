@@ -1,78 +1,96 @@
 @if (nestedLinks.length == 0) {
-    <div class="w-full  hover:bg-secondary/10 flex items-center p-4 my-1 cursor-pointer"
-         [routerLink]="path"
-
-         [routerLinkActive]="'bg-secondary/5'"
-         [routerLinkActiveOptions]="{exact:true}"
-    >
-        @if (nestedLinks.length == 0) {
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                 viewBox="0 0 24 24" stroke-width="2"
-                 stroke="currentColor" class="w-6 h-6 text-secondary/80 me-3">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      [attr.d]="icon"/>
-            </svg>
-        }
-        <p class="ms-3">{{ linkText }}</p>
-    </div>
-} @else {
-    <div
-
-            class="w-full  hover:bg-secondary/10 flex items-center p-4 my-1 cursor-pointer"
-            [routerLink]="path"
-
-            [routerLinkActive]="'bg-secondary/5'"
-            [routerLinkActiveOptions]="{exact:true}"
-    >
-        <p class="ms-3">{{ linkText }}</p>
-        @if (openNestMenu) {
-            <svg class="w-6 h-6 text-secondary/80 me-0 ms-auto"
-                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                 width="24" height="24" fill="none" viewBox="0 0 24 24"
-                 (click)="toggleNestedMenu()"
-            >
-                <path stroke="currentColor" stroke-linecap="round"
-                      stroke-linejoin="round" stroke-width="1.5"
-                      d="m5 15 7-7 7 7"/>
-            </svg>
-
-        } @else {
-
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                 viewBox="0 0 24 24"
-                 stroke-width="1.5" stroke="currentColor"
-                 class="w-6 h-6 text-secondary/80 me-0 ms-auto"
-                 (click)="toggleNestedMenu()"
-            >
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
-            </svg>
-        }
-
-
-    </div>
-    @if (openNestMenu) {
-
-        @for (nl of nestedLinks; track $index) {
-
-
-            <div class="ms-4 w-[95%]   flex items-center p-2 ">
-                <div class="w-full  hover:bg-secondary/10 flex items-center p-3 my-1 cursor-pointer"
-                     [routerLink]="nl.path"
-                     [routerLinkActive]="'bg-secondary/10'"
-                     [routerLinkActiveOptions]="{exact:false}">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-                         viewBox="0 0 24 24" stroke-width="2"
-                         stroke="currentColor"
-                         class="w-6 h-6 text-secondary/80 me-3">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              [attr.d]="nl.icon"/>
-                    </svg>
-
-                    <p class="ms-3">{{ nl.text | translate: language.lang }}</p>
-                </div>
-            </div>
-        }
+  <div
+    class="w-full hover:bg-secondary/10 flex items-center p-3 cursor-pointer"
+    [routerLink]="path"
+    [routerLinkActive]="'bg-secondary/5'"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    @if (nestedLinks.length == 0) {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        class="w-6 h-6 text-secondary/80 me-3"
+      >
+        <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="icon" />
+      </svg>
     }
+    <p class="ms-3">{{ linkText }}</p>
+  </div>
+} @else {
+  <div
+    class="w-full hover:bg-secondary/10 flex items-center p-3 cursor-pointer"
+    [routerLink]="path"
+    [routerLinkActive]="'bg-secondary/5'"
+    [routerLinkActiveOptions]="{ exact: true }"
+  >
+    <p class="ms-3">{{ linkText }}</p>
+    @if (openNestMenu) {
+      <svg
+        class="w-6 h-6 text-secondary/80 me-0 ms-auto"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+        (click)="toggleNestedMenu()"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1.5"
+          d="m5 15 7-7 7 7"
+        />
+      </svg>
+    } @else {
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-6 h-6 text-secondary/80 me-0 ms-auto"
+        (click)="toggleNestedMenu()"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m19.5 8.25-7.5 7.5-7.5-7.5"
+        />
+      </svg>
+    }
+  </div>
+  @if (openNestMenu) {
+    @for (nl of nestedLinks; track $index) {
+      <div class="ms-4 w-[95%] flex items-center p-1">
+        <div
+          class="w-full hover:bg-secondary/10 flex items-center p-2 cursor-pointer"
+          [routerLink]="nl.path"
+          [routerLinkActive]="'bg-secondary/10'"
+          [routerLinkActiveOptions]="{ exact: false }"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="currentColor"
+            class="w-6 h-6 text-secondary/80 me-3"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              [attr.d]="nl.icon"
+            />
+          </svg>
+
+          <p class="ms-3">{{ nl.text | translate: language.lang }}</p>
+        </div>
+      </div>
+    }
+  }
 }

@@ -10,13 +10,11 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-/**
- * DTO for {@link com.techpeak.hac.sales.models.Quotation}
- */
 @Value
 @Builder
 public class QuotationResponse implements Serializable {
@@ -26,13 +24,13 @@ public class QuotationResponse implements Serializable {
     Boolean isActive;
     RequestStatus status;
     String number;
-    Double subTotal;
-    Double discount;
-    Double vat;
-    Double total;
+    BigDecimal subTotal;
+    BigDecimal discount;
+    BigDecimal vat;
+    BigDecimal total;
     String notes;
     LocalDate date;
-    LocalDate validTo;
+    LocalDate validUntil;
     PaymentTerms paymentTerms;
     InternalRefDto internalRef;
     UserDtoShort user;

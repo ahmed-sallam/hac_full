@@ -12,7 +12,7 @@ export const routes: Routes = [
     path: "dashboard",
     loadComponent: () =>
       import("./dashboard/dashboard.component").then(
-        (c) => c.DashboardComponent
+        (c) => c.DashboardComponent,
       ),
     children: [
       {
@@ -23,28 +23,28 @@ export const routes: Routes = [
         path: "core",
         loadComponent: () =>
           import("./dashboard/core/core.component").then(
-            (c) => c.CoreComponent
+            (c) => c.CoreComponent,
           ),
       },
       {
         path: "core/countries",
         loadComponent: () =>
           import("./dashboard/core/countries/countries.component").then(
-            (c) => c.CountriesComponent
+            (c) => c.CountriesComponent,
           ),
       },
       {
         path: "inventory",
         loadComponent: () =>
           import("./dashboard/inventory/inventory.component").then(
-            (c) => c.InventoryComponent
+            (c) => c.InventoryComponent,
           ),
       },
       {
         path: "inventory/stock",
         loadComponent: () =>
           import("./dashboard/inventory/stock/stock.component").then(
-            (c) => c.StockComponent
+            (c) => c.StockComponent,
           ),
       },
       {
@@ -58,7 +58,7 @@ export const routes: Routes = [
         path: "inventory/stores",
         loadComponent: () =>
           import("./dashboard/inventory/stores/stores.component").then(
-            (c) => c.StoresComponent
+            (c) => c.StoresComponent,
           ),
       },
       {
@@ -79,7 +79,7 @@ export const routes: Routes = [
         path: "inventory/brands",
         loadComponent: () =>
           import("./dashboard/inventory/brands/brands.component").then(
-            (c) => c.BrandsComponent
+            (c) => c.BrandsComponent,
           ),
       },
       {
@@ -121,7 +121,7 @@ export const routes: Routes = [
         path: "inventory/products",
         loadComponent: () =>
           import("./dashboard/inventory/products/products.component").then(
-            (c) => c.ProductsComponent
+            (c) => c.ProductsComponent,
           ),
       },
       {
@@ -142,7 +142,7 @@ export const routes: Routes = [
         path: "inventory/machinery",
         loadComponent: () =>
           import("./dashboard/inventory/machinery/machinery.component").then(
-            (c) => c.MachineryComponent
+            (c) => c.MachineryComponent,
           ),
       },
       {
@@ -170,14 +170,14 @@ export const routes: Routes = [
         path: "sales",
         loadComponent: () =>
           import("./dashboard/sales/sales.component").then(
-            (c) => c.SalesComponent
+            (c) => c.SalesComponent,
           ),
       },
       {
         path: "sales/customers",
         loadComponent: () =>
           import("./dashboard/sales/customers/customers.component").then(
-            (c) => c.CustomersComponent
+            (c) => c.CustomersComponent,
           ),
       },
       {
@@ -198,28 +198,42 @@ export const routes: Routes = [
         path: "sales/quotations",
         loadComponent: () =>
           import("./dashboard/sales/quotations/quotations.component").then(
-            (c) => c.QuotationsComponent
+            (c) => c.QuotationsComponent,
           ),
+      },
+      {
+        path: "sales/quotations/create",
+        loadComponent: () =>
+          import(
+            "./dashboard/sales/quotations/create-quotation/create-quotation.component"
+          ).then((c) => c.CreateQuotationComponent),
+      },
+      {
+        path: "sales/quotations/:id",
+        loadComponent: () =>
+          import(
+            "./dashboard/sales/quotations/one-quotation/one-quotation.component"
+          ).then((c) => c.OneQuotationComponent),
       },
       {
         path: "sales/orders",
         loadComponent: () =>
           import("./dashboard/sales/orders/orders.component").then(
-            (c) => c.OrdersComponent
+            (c) => c.OrdersComponent,
           ),
       },
       {
         path: "sales/invoices",
         loadComponent: () =>
           import("./dashboard/sales/invoices/invoices.component").then(
-            (c) => c.InvoicesComponent
+            (c) => c.InvoicesComponent,
           ),
       },
       {
         path: "purchases",
         loadComponent: () =>
           import("./dashboard/purchases/purchases.component").then(
-            (c) => c.PurchasesComponent
+            (c) => c.PurchasesComponent,
           ),
       },
       {
@@ -247,14 +261,14 @@ export const routes: Routes = [
         path: "purchases/rfpqs",
         loadComponent: () =>
           import("./dashboard/purchases/rfpq/rfpq.component").then(
-            (c) => c.RfpqComponent
+            (c) => c.RfpqComponent,
           ),
       },
       {
         path: "purchases/rfpqs/:id",
         loadComponent: () =>
           import("./dashboard/purchases/rfpq/one-rfpq/one-rfpq.component").then(
-            (c) => c.OneRfpqComponent
+            (c) => c.OneRfpqComponent,
           ),
       },
       {
@@ -303,7 +317,7 @@ export const routes: Routes = [
         path: "purchases/suppliers",
         loadComponent: () =>
           import("./dashboard/purchases/suppliers/suppliers.component").then(
-            (c) => c.SuppliersComponent
+            (c) => c.SuppliersComponent,
           ),
       },
       {

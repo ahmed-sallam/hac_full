@@ -1,10 +1,10 @@
-package com.techpeak.hac.sales.services;
+package com.techpeak.hac.sales.dtos;
 
+import com.techpeak.hac.core.dtos.InternalRefDto;
 import com.techpeak.hac.core.dtos.UserDtoShort;
 import com.techpeak.hac.purchase.dtos.RFPQResponseNumber;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
 import com.techpeak.hac.purchase.enums.RequestStatus;
-import com.techpeak.hac.sales.dtos.CustomerResponseName;
 import lombok.Builder;
 
 import java.io.Serializable;
@@ -19,7 +19,7 @@ public record QuotationResponseShort(Long id, Boolean isActive,
                                      RequestStatus status, String number,
                                      BigDecimal total, LocalDate date,
                                      PaymentTerms paymentTerms,
-                                     String internalRef,
+                                     InternalRefDto internalRef,
                                      UserDtoShort user,
                                      RFPQResponseNumber rfpq,
                                      CustomerResponseName customer) implements Serializable {

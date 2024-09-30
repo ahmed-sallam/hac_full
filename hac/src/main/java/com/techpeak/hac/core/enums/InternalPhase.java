@@ -7,5 +7,7 @@ public enum InternalPhase {
     BID_SUMMARY,
     PURCHASE_ORDER,
     PURCHASE_INVOICE,
-    SALES_INVOICE
+    SALES_INVOICE,
+    SALES_ORDER,
+    SALES_QUOTATION,
 }

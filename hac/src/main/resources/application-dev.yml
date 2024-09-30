@@ -10,9 +10,16 @@ spring:
         format_sql: true
     hibernate:
       ddl-auto: update
-#    show-sql: true
+    #    show-sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+    livereload:
+      enabled: true
+      additional-paths: src/main/java
 logging:
   level:
     org:

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -20,17 +21,22 @@ public class CreateQuotationRequest implements Serializable {
     @Size(max = 255, message = "Notes cannot exceed 200 characters")
     private String notes;
 
-    @NotNull(message = "Date cannot be null")
-    @PastOrPresent(message = "Date must be in the past or present")
-    private LocalDate date;
+
+//    @NotNull(message = "Date cannot be null")
+//    @PastOrPresent(message = "Date must be in the past or present")
+//    private LocalDate date = LocalDate.now();
 
     @NotNull(message = "Valid To cannot be null")
-    @PastOrPresent(message = "Valid To must be in the past or present")
-    private LocalDate validTo;
+    @FutureOrPresent(message = "Valid To must be in the future or present")
+    private LocalDate validUntil;
+    @NotNull(message = "Discount is required")
+    @Positive(message = "Discount must be a positive number")
+    private BigDecimal discount = BigDecimal.ZERO;
 
-    @NotNull(message = "Store ID cannot be null")
-    @Positive(message = "Store ID must be a positive number")
-    private Long store;
+
+    //    @NotNull(message = "Store ID cannot be null")
+//    @Positive(message = "Store ID must be a positive number")
+//    private Long store;
     @NotNull(message = "Customer ID cannot be null")
     @Positive(message = "Customer ID must be a positive number")
     private Long customer;

@@ -1,5 +1,38 @@
+// {
+//     "java.compile.nullAnalysis.mode": "automatic",
+//     "pieces.cloudCapabilities": "Blended",
+//     "pieces.telemetry": true
+// }
 {
-    "java.compile.nullAnalysis.mode": "automatic",
-    "pieces.cloudCapabilities": "Blended",
-    "pieces.telemetry": true
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  // "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+  // "java.format.settings.profile": "GoogleStyle",
+  // "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -javaagent:/path/to/lombok.jar",
+  // "java.autobuild.enabled": true,
+  // "java.completion.importOrder": [
+  //   "java",
+  //   "javax",
+  //   "com",
+  //   "org"
+  // ],
+  // "java.maven.downloadSources": true,
+  // "java.maven.updateSnapshots": true,
+  // "java.import.exclusions": [
+  //   "**/node_modules/**",
+  //   "**/.metadata/**",
+  //   "**/archetype-resources/**",
+  //   "**/META-INF/maven/**"
+  // ],
+  // "java.implementationsCodeLens.enabled": true,
+  // "java.referencesCodeLens.enabled": true,
+  // "typescript.updateImportsOnFileMove.enabled": "always",
+  // "typescript.preferences.importModuleSpecifier": "relative",
+  // "angular.enable-strict-mode-prompt": false,
+  // "spring-boot.ls.java.home": "/usr/lib/jvm/java-17-openjdk-amd64",
+  // "spring-boot.ls.java.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx1G -Xms100m"
 }

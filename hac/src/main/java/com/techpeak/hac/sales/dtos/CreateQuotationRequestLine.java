@@ -4,12 +4,16 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Setter
-@Getter
-@AllArgsConstructor
+import java.math.BigDecimal;
+
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CreateQuotationRequestLine {
 
@@ -19,17 +23,16 @@ public class CreateQuotationRequestLine {
 
     @NotNull(message = "Price is required")
     @Positive(message = "Price must be a positive number")
-    private Double price;
+    private BigDecimal price;
 
     @NotNull(message = "Discount is required")
     @Positive(message = "Discount must be a positive number")
-    private Double discount = 0d;
+    private BigDecimal discount = BigDecimal.ZERO;
 
     @Size(max = 255, message = "Notes can be up to 255 characters long")
     private String notes;
 
     @NotNull(message = "Product is required")
     @Positive(message = "Product ID must be a positive number")
-    private Long product;
-
+    private Long productId;
 }

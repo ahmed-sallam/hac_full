@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
@@ -18,9 +19,9 @@ public class QuotationLineDto implements Serializable {
     LocalDateTime updatedAt;
     Boolean isActive;
     Integer quantity;
-    Double price;
-    Double discount;
-    Double total;
+    BigDecimal price;
+    BigDecimal discount;
+    BigDecimal total;
     String notes;
     ProductResponseShort product;
 }

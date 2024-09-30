@@ -1,25 +1,37 @@
 package com.techpeak.hac.inventory.models;
 
-import com.techpeak.hac.core.models.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity(name="Store")
-@Table( name="stores")
+import com.techpeak.hac.core.models.BaseEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Entity(name = "Store")
+@Table(name = "stores")
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Builder
-public class Store  extends BaseEntity {
-  @org.hibernate.annotations.Index(name = "idx_stores_name_ar", columnNames = "LOWER(name_ar)")
+public class Store extends BaseEntity {
+  // @org.hibernate.annotations.Index(name = "idx_stores_name_ar", columnNames =
+  // "LOWER(name_ar)")
   @Column(name = "name_ar", length = 25, nullable = false)
   private String nameAr;
-  @org.hibernate.annotations.Index(name = "idx_stores_name_en", columnNames = "LOWER(name_en)")
+  // @org.hibernate.annotations.Index(name = "idx_stores_name_en", columnNames =
+  // "LOWER(name_en)")
   @Column(name = "name_en", length = 25, nullable = false)
   private String nameEn;
   @Column(name = "city_ar", length = 25, nullable = false)
@@ -28,6 +40,6 @@ public class Store  extends BaseEntity {
   private String cityEn;
   @OneToMany(mappedBy = "store", fetch = FetchType.EAGER)
   @ToString.Exclude
-  private Set<StoreLocation> locations= new HashSet<>();
-// todo add store type virtual or physical and related updates
+  private Set<StoreLocation> locations = new HashSet<>();
+  // todo add store type virtual or physical and related updates
 }

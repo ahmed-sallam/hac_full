@@ -6,8 +6,10 @@ import com.techpeak.hac.purchase.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity(name = "Quotation")
@@ -17,54 +19,89 @@ import java.util.Set;
         @Index(name = "idx_quotation_currency_id", columnList = "currency_id"),
         @Index(name = "idx_sale_quotation_number", columnList = "number")
 })
-@Setter
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Quotation extends BaseEntity {
+
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private RequestStatus status = RequestStatus.DRAFT;
+
+    @Column(name = "number", nullable = false, unique = true)
     private String number;
-    @Column(name = "sub_total")
-    private Double subTotal;
+
+    @Column(name = "sub_total", nullable = false)
+    private BigDecimal subTotal;
+
     @Column(name = "discount")
-    private Double discount;
+    private BigDecimal discount;
+
     @Column(name = "vat")
-    private Double vat;
-    @Column(name = "total")
-    private Double total;
+    private BigDecimal vat;
+
+    @Column(name = "total", nullable = false)
+    private BigDecimal total;
+
     @Column(name = "notes")
     private String notes;
+
+    @Column(name = "date", nullable = false)
     private LocalDate date;
+
     @Column(name = "valid_to")
-    private LocalDate validTo;
+    private LocalDate validUntil;
+
     @Column(name = "payment_terms")
     @Enumerated(EnumType.STRING)
     private PaymentTerms paymentTerms = PaymentTerms.IMMEDIATELY;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "internal_ref_id", nullable = false)
+    @ToString.Exclude
     private InternalRef internalRef;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id", nullable = false)
+    @ToString.Exclude
     private CurrencyEntity currency;
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
+    @ToString.Exclude
     private Customer customer;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quotation")
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "quotation", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<QuotationLine> lines = new HashSet<>();
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
     private User user;
-    @OneToMany
+
+    @OneToMany(fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<UserHistory> userHistories = new HashSet<>();
 
     public void setLines(Set<QuotationLine> lines) {
-        this.lines.clear();
+        this.lines = new HashSet<>();
+        lines.forEach(l -> l.setQuotation(this));
         this.lines.addAll(lines);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Quotation that)) return false;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

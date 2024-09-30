@@ -1,23 +1,23 @@
+import { AsyncPipe } from "@angular/common";
 import { Component, OnInit, inject } from "@angular/core";
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Observable } from "rxjs";
+import { TranslatePipe } from "../../../../pipes/translate.pipe";
+import { State } from "../../../../state/reducers";
 import { LangState } from "../../../../state/reducers/lang.reducer";
 import { selectLanguage } from "../../../../state/selectors/lang.selectors";
-import { State } from "../../../../state/reducers";
-import { CustomersService } from "../customers.service";
 import { LoaderService } from "../../../components/loader/loader.service";
-import { CustomerEntity } from "../interfaces/CustomersResponse";
-import { AsyncPipe } from "@angular/common";
-import { TranslatePipe } from "../../../../pipes/translate.pipe";
 import { MainContentComponent } from "../../../components/main-content/main-content.component";
-import {
-  FormGroup,
-  FormControl,
-  Validators,
-  FormsModule,
-  ReactiveFormsModule,
-} from "@angular/forms";
+import { CustomersService } from "../customers.service";
+import { CustomerEntity } from "../interfaces/CustomersResponse";
 
 @Component({
   selector: "app-one-customer",
@@ -97,6 +97,7 @@ export class OneCustomerComponent implements OnInit {
             this.getData();
             this.changeEditModalStatus(false);
           },
+
           error: (error) => {},
         });
     }
