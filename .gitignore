@@ -64,3 +64,4 @@ notes.txt
 path/to/venv/*
 **/*.DS_Store
 hac/src/main/java/com/techpeak/hac/.DS_Store
+upload/
