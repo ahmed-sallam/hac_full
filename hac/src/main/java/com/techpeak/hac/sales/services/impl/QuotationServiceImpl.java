@@ -26,6 +26,7 @@ import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.sales.dtos.CreateQuotationRequest;
 import com.techpeak.hac.sales.dtos.CreateQuotationRequestLine;
 import com.techpeak.hac.sales.dtos.QuotationResponse;
@@ -37,6 +38,7 @@ import com.techpeak.hac.sales.models.QuotationLine;
 import com.techpeak.hac.sales.repositories.QuotationRepository;
 import com.techpeak.hac.sales.services.CustomerService;
 import com.techpeak.hac.sales.services.QuotationService;
+import com.techpeak.hac.sales.services.SaleOrderService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,7 @@ public class QuotationServiceImpl implements QuotationService {
     private final ProductService productService;
     private final UserHistoryService userHistoryService;
     private final CustomerService customerService;
+    private final SaleOrderService saleOrderService;
 
     @Override
     @Transactional
@@ -134,5 +137,22 @@ public class QuotationServiceImpl implements QuotationService {
     @Override
     public Page<QuotationResponseShort> getAllActiveQuotations() {
         return null;
+    }
+
+    @Override
+    public void updateStatus(Long id, RequestStatus status, User user) {
+        // // implement logic to update quotation status and create sale order draft if
+        // status is approved
+
+        // Optional<Quotation> quotation = repository.findById(id);
+        // if (quotation.isPresent()) {
+        // quotation.get().setRequestStatus(status);
+        // repository.save(quotation.get());
+        // }
+        // // create sale order draft
+        // if(status == RequestStatus.APPROVED) {
+        // // create sale order draft
+        // SaleOrder saleOrder = saleOrderService.crea;
+        // }
     }
 }

@@ -19,10 +19,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity(name = "SaleOrderLine")
-@Table(name = "sale_order_lines", indexes = {
+@Entity(name = "SaleInvoiceLine")
+@Table(name = "sale_invoice_lines", indexes = {
         @Index(name = "idx_sales_product_id", columnList = "product_id"),
-        @Index(name = "idx_sales_order_id", columnList = "sale_order_id")
+        @Index(name = "idx_sales_invoice_id", columnList = "sale_invoice_id")
 })
 @Getter
 @Setter
@@ -30,7 +30,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SaleOrderLine extends BaseEntity {
+public class SaleInvoiceLine extends BaseEntity {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity = 1;
@@ -53,8 +53,8 @@ public class SaleOrderLine extends BaseEntity {
     private Product product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sale_order_id", nullable = false)
+    @JoinColumn(name = "sale_invoice_id", nullable = false)
     @ToString.Exclude
-    private SaleOrder saleOrder;
+    private SaleInvoice saleInvoice;
 
 }

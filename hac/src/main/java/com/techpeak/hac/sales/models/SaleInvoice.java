@@ -32,12 +32,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Entity(name = "SaleOrder")
-@Table(name = "sale_orders", indexes = {
-        @Index(name = "idx_sales_order_date", columnList = "date"),
-        @Index(name = "idx_order_customer_id", columnList = "customer_id"),
-        @Index(name = "idx_order_currency_id", columnList = "currency_id"),
-        @Index(name = "idx_sale_order_number", columnList = "number")
+@Entity(name = "SaleInvoice")
+@Table(name = "sale_invoices", indexes = {
+        @Index(name = "idx_sales_invoice_date", columnList = "date"),
+        @Index(name = "idx_invoice_customer_id", columnList = "customer_id"),
+        @Index(name = "idx_invoice_currency_id", columnList = "currency_id"),
+        @Index(name = "idx_sale_invoice_number", columnList = "number")
 })
 @Getter
 @Setter
@@ -45,7 +45,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SaleOrder extends BaseEntity {
+public class SaleInvoice extends BaseEntity {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -72,8 +72,8 @@ public class SaleOrder extends BaseEntity {
     @Column(name = "date", nullable = false)
     private LocalDate date;
 
-    @Column(name = "delivery_date")
-    private LocalDate deliveryDate;
+    @Column(name = "due_date")
+    private LocalDate dueDate;
 
     @Column(name = "payment_terms")
     @Enumerated(EnumType.STRING)
@@ -94,9 +94,9 @@ public class SaleOrder extends BaseEntity {
     @ToString.Exclude
     private Customer customer;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "saleOrder", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "saleInvoice", fetch = FetchType.LAZY)
     @ToString.Exclude
-    private Set<SaleOrderLine> lines = new HashSet<>();
+    private Set<SaleInvoiceLine> lines = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -107,9 +107,9 @@ public class SaleOrder extends BaseEntity {
     @ToString.Exclude
     private Set<UserHistory> userHistories = new HashSet<>();
 
-    public void setLines(Set<SaleOrderLine> lines) {
+    public void setLines(Set<SaleInvoiceLine> lines) {
         this.lines = new HashSet<>();
-        lines.forEach(l -> l.setSaleOrder(this));
+        lines.forEach(l -> l.setSaleInvoice(this));
         this.lines.addAll(lines);
     }
 
@@ -117,7 +117,7 @@ public class SaleOrder extends BaseEntity {
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof SaleOrder that))
+        if (!(o instanceof SaleInvoice that))
             return false;
         return Objects.equals(getId(), that.getId());
     }

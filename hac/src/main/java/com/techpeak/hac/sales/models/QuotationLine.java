@@ -1,11 +1,23 @@
 package com.techpeak.hac.sales.models;
 
+import java.math.BigDecimal;
+
 import com.techpeak.hac.core.models.BaseEntity;
 import com.techpeak.hac.inventory.models.Product;
-import jakarta.persistence.*;
-import lombok.*;
 
-import java.math.BigDecimal;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "QuotationLine")
 @Table(name = "quotation_lines", indexes = {
@@ -45,5 +57,4 @@ public class QuotationLine extends BaseEntity {
     @ToString.Exclude
     private Quotation quotation;
 
-   
 }
