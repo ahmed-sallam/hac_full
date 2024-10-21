@@ -1,1 +1,404 @@
-<p>create-quotation works!</p>
+@if (selectLanguage$ | async; as language) {
+<app-main-content
+  [language]="language"
+  [headerText]="'Add  Quotation' | translate : language?.lang"
+  [noDataMessage]="'There is no data to show' | translate : language?.lang"
+  [noData]="false"
+>
+  <div headerActions>
+    <button
+      class="border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10"
+    >
+      {{ "Cancel" | translate : language?.lang }}
+    </button>
+    <button
+      (click)="onSubmitForm()"
+      class="bg-secondary/70 text-white font-medium w-40 p-4 ms-3 my-1 hover:bg-secondary/60 disabled:bg-secondary/60"
+    >
+      {{ "Save" | translate : language?.lang }}
+    </button>
+  </div>
+
+  <div contentWithData class="h-full min-h-max w-full p-8 relative">
+    <form [formGroup]="formGroup">
+      <div class="flex w-full items-start justify-start gap-1">
+        <div class="flex flex-col max-w-md w-full">
+          <div class="mb-5 max-w-96 w-full mt-2 flex gap-1.5">
+            <div class="max-w-96 w-full">
+              <label
+                for="date"
+                class="block mb-2 text-sm font-medium text-secondary/90"
+                >{{ "Date" | translate : language.lang }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                formControlName="date"
+                type="date"
+                id="date"
+                class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+                [ngModel]="formGroup.get('date')?.value | date : 'yyyy-MM-dd'"
+              />
+              @if (formGroup.get('date')?.touched &&
+              formGroup.get('date')?.errors) {
+              <p class="text-xs text-danger font-light">
+                {{ "Date" | translate : language.lang }}
+                {{ "has errors" | translate : language.lang }}
+              </p>
+              }
+            </div>
+            <div class="max-w-96 w-full">
+              <label
+                for="validUntil"
+                class="block mb-2 text-sm font-medium text-secondary/90"
+                >{{ "Valid until" | translate : language.lang }}
+                <span class="text-danger">*</span></label
+              >
+              <input
+                formControlName="validUntil"
+                type="date"
+                min="{{ formGroup.get('date')?.value }}"
+                id="validUntil"
+                class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+              />
+              @if (formGroup.get('validUntil')?.touched &&
+              formGroup.get('validUntil')?.errors) {
+              <p class="text-xs text-danger font-light">
+                {{ "Valid to" | translate : language.lang }}
+                {{ "has errors" | translate : language.lang }}
+              </p>
+              }
+            </div>
+          </div>
+          <div class="mb-5 max-w-96 w-full mt-2 flex gap-1.5">
+            <div class="max-w-96 w-full">
+              <label class="block mb-2 text-sm font-medium text-secondary/90"
+                >{{ "Customer" | translate : language.lang }}
+                <span class="text-danger">*</span></label
+              >
+              <app-select-with-search
+                [language]="language.lang"
+                (searchInput)="searchCustomers($event)"
+                [searchOptions]="customers$ | async"
+                (selectedItem)="onCustomerSelect($event)"
+              />
+              @if (formGroup.get('customer')?.touched &&
+              formGroup.get('customer')?.errors) {
+              <p class="text-xs text-danger font-light">
+                {{ "Customer" | translate : language.lang }}
+                {{ "has errors" | translate : language.lang }}
+              </p>
+              }
+            </div>
+            <div class="max-w-96 w-full">
+              <label
+                for="paymentTerms"
+                class="block mb-2 text-sm font-medium text-secondary/90"
+                >{{ "Payment Terms" | translate : language.lang }}
+                <span class="text-danger">*</span></label
+              >
+              <select
+                formControlName="paymentTerms"
+                id="paymentTerms"
+                class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+              >
+                @for (key of paymentTermsKeys; track key) {
+                <option [value]="key">{{ getPaymentTermValue(key) }}</option>
+                }
+              </select>
+              @if (formGroup.get('paymentTerms')?.touched &&
+              formGroup.get('paymentTerms')?.errors) {
+              <p class="text-xs text-danger font-light">
+                {{ "Payment Terms" | translate : language.lang }}
+                {{ "has errors" | translate : language.lang }}
+              </p>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="flex flex-col max-w-md w-full">
+          <div class="w-full max-w-96 flex items-center justify-start gap-1">
+            <div class="mb-5 max-w-96 w-full mt-2">
+              <label
+                for="currency"
+                class="block mb-2 text-sm font-medium text-secondary/90"
+                >{{ "Currency" | translate : language.lang }}
+                <span class="text-danger">*</span></label
+              >
+              <select
+                formControlName="currency"
+                id="currency"
+                class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+              >
+                @for (item of currencies$ | async; track $index) {
+                <option [value]="item.id">{{ item.code }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          <div>
+            <div class="w-full max-w-96 flex items-center justify-start gap-1">
+              <div class="max-w-96 w-full">
+                @if (formGroup.get('currency')?.touched &&
+                formGroup.get('currency')?.errors) {
+                <p class="text-xs text-danger font-light">
+                  {{ "Currency" | translate : language.lang }}
+                  {{ "has errors" | translate : language.lang }}
+                </p>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5 max-w-96 w-full mt-2">
+            <label
+              for="Notes"
+              class="block mb-2 text-sm font-medium text-secondary/90"
+              >{{ "Notes" | translate : language.lang }}
+            </label>
+            <textarea
+              rows="3"
+              formControlName="notes"
+              id="notes"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5"
+            ></textarea>
+            @if (formGroup.get('notes')?.touched &&
+            formGroup.get('notes')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Notes" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+        </div>
+      </div>
+      <!-- quotaton lines -->
+      <div
+        class="w-full shadow-sm-light shadow-secondary/20 p-2 mt-4"
+        formArrayName="lines"
+      >
+        <h3 class="text-lg font-semibold underline">
+          {{ "Products" | translate : language.lang }}
+        </h3>
+        <!--                Lines Header -->
+        <div
+          class="w-full flex items-center gap-1.5 justify-start text-secondary/50 bg-secondary/10 my-2.5"
+        >
+          <div class="px-3 py-2">{{ "#" }}</div>
+          <div class="w-[350px]">{{ "Product" | translate : language }}</div>
+          <div class="w-[100px]">{{ "Quantity" | translate : language }}</div>
+          <div class="w-[100px]">{{ "Price" | translate : language }}</div>
+          <div class="w-[100px]">{{ "Discount" | translate : language }}</div>
+          <div class="w-[100px]">{{ "Total" | translate : language }}</div>
+          <div class="w-[350px]">{{ "Notes" | translate : language }}</div>
+          <div class="w-[50px]">{{ "Action" | translate : language }}</div>
+        </div>
+        <!--                End Lines Header -->
+        @if (formGroup.get('lines')) { @for (product of lines.controls; track
+        $index) {
+        <div
+          class="w-full flex items-center gap-1.5 justify-start mt-1"
+          [formGroupName]="$index"
+        >
+          <div class="px-3 py-2 bg-secondary/5">{{ $index + 1 }}</div>
+          <div class="w-[350px]">
+            <app-select-product-with-search
+              [language]="language.lang"
+              (searchInput)="searchProduct($event)"
+              [searchOptions]="products$ | async"
+              (selectedItem)="onLineSelected($event, $index)"
+              [inputValue]="lines.at($index).get('v')?.value"
+            />
+          </div>
+          <div class="w-[100px]">
+            <input
+              [formControlName]="'quantity'"
+              type="number"
+              min="1"
+              id="quantity"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5 ring-0"
+              (change)="changeTotals($index)"
+            />
+          </div>
+          <div class="w-[100px]">
+            <input
+              [formControlName]="'price'"
+              type="number"
+              min="0"
+              id="price"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5 ring-0"
+              (change)="changeTotals($index)"
+            />
+          </div>
+          <div class="w-[100px]">
+            <input
+              [formControlName]="'discount'"
+              type="number"
+              min="0"
+              id="discount"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5 ring-0"
+              (change)="changeTotals($index)"
+            />
+          </div>
+
+          <div
+            class="w-[100px] bg-accent/5 border-0 text-secondary/70 text-sm p-2.5"
+          >
+            <p>{{ lines.at($index).get("total")?.value | number : "0.00" }}</p>
+          </div>
+          <div class="w-[350px]">
+            <input
+              [formControlName]="'notes'"
+              type="text"
+              min="1"
+              class="bg-accent/5 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5 ring-0"
+              [placeholder]="'Notes' | translate : language"
+            />
+          </div>
+          <div class="w-[50px]">
+            @if (lines.length > 1) {
+
+            <svg
+              class="w-8 h-8 text-danger/70 cursor-pointer"
+              (click)="removeLine($index)"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm7.707-3.707a1 1 0 0 0-1.414 1.414L10.586 12l-2.293 2.293a1 1 0 1 0 1.414 1.414L12 13.414l2.293 2.293a1 1 0 0 0 1.414-1.414L13.414 12l2.293-2.293a1 1 0 0 0-1.414-1.414L12 10.586 9.707 8.293Z"
+                clip-rule="evenodd"
+              />
+            </svg>
+            }
+          </div>
+        </div>
+        <div class="w-full flex items-center gap-1.5 justify-start mt-0.5">
+          <div class="w-[37px]"></div>
+          <div class="w-[350px]">
+            @if (lines.at($index).get('productId')?.touched &&
+            lines.at($index).get('productId')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Product" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="w-[100px]">
+            @if (lines.at($index).get('quantity')?.touched &&
+            lines.at($index).get('quantity')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Quantity" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="w-[100px]">
+            @if (lines.at($index).get('price')?.touched &&
+            lines.at($index).get('price')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Price" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="w-[140px]">
+            @if (lines.at($index).get('discount')?.touched &&
+            lines.at($index).get('discount')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Discount" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="w-[100px]">
+            @if (lines.at($index).get('vat')?.touched &&
+            lines.at($index).get('vat')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Vat" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="w-[100px]">
+            @if (lines.at($index).get('total')?.touched &&
+            lines.at($index).get('total')?.errors) {
+            <p class="text-xs text-danger font-light">
+              {{ "Total" | translate : language.lang }}
+              {{ "has errors" | translate : language.lang }}
+            </p>
+            }
+          </div>
+          <div class="w-[350px]"></div>
+          <div class="w-[50px]"></div>
+        </div>
+        } }
+        <div
+          (click)="addNewLine()"
+          class="p-2 cursor-pointer bg-secondary/5 w-fit mt-2"
+        >
+          <svg
+            aria-hidden="true"
+            class="w-6 h-6 text-gray-800 dark:text-white"
+            fill="none"
+            height="24"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5 12h14m-7 7V5"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+      </div>
+      <!-- form footer -->
+      <div
+        class="flex justify-start items-start flex-col gap-3 bg-secondary/10 p-2 my-4 min-w-fit w-96"
+      >
+        <div class="flex items-center gap-3 justify-between w-full">
+          <div>{{ "Sub total" | translate : language.lang }}</div>
+          <div>{{ formGroup.get("subTotal")?.value | number : "0.00" }}</div>
+        </div>
+        <div class="flex items-center gap-3 justify-between w-full">
+          <div class="flex-1">{{ "Discount" | translate : language.lang }}</div>
+          <div class="w-full max-w-20">
+            <input
+              type="number"
+              formControlName="discount"
+              value="0"
+              min="0"
+              class="text-center bg-secondary/30 border-0 text-secondary/70 text-sm focus:border-0 ring-transparent block w-full p-2.5 ring-0"
+              (change)="changeDiscount()"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-3 justify-between w-full">
+          <div>{{ "Vat" | translate : language.lang }}</div>
+          <div>{{ formGroup.get("vat")?.value | number : "0.00" }}</div>
+        </div>
+        <!-- <div class="flex items-center gap-3 justify-between w-full">
+          <div>{{ "Total Expenses" | translate : language.lang }}</div>
+          <div>
+            {{ formGroup.get("totalExpenses")?.value | number : "0.00" }}
+          </div>
+        </div> -->
+        <div
+          class="flex font-semibold items-center gap-3 justify-between bg-secondary/50 text-white relative left-[-7px] p-4 rounded-b bottom-[-7px] w-[calc(100%+15px)]"
+        >
+          <div>{{ "Total" | translate : language.lang }}</div>
+          <div>{{ formGroup.get("total")?.value | number : "0.00" }}</div>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-main-content>
+
+}

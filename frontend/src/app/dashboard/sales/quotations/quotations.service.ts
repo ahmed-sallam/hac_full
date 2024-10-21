@@ -10,10 +10,7 @@ import { CreateQuotation } from "./interfaces/CreateQuotation";
   providedIn: "root",
 })
 export class QuotationsService {
-  constructor(
-    private http: HttpClient,
-    private appService: AppService,
-  ) {}
+  constructor(private http: HttpClient, private appService: AppService) {}
 
   getQuotations(
     page: number,
@@ -23,7 +20,7 @@ export class QuotationsService {
     ref?: number,
     user?: number,
     status?: string,
-    date?: string,
+    date?: string
   ): Observable<QuotationsResponse> {
     let link: string = `${this.appService.baseApi}/quotations?page=${page}`;
     if (sort) {
