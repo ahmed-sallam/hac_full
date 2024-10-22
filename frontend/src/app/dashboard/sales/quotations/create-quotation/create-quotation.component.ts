@@ -263,11 +263,18 @@ export class CreateQuotationComponent implements OnInit {
     this.quotationService.createQuotation(data).subscribe({
       next: (res) => {
         this.toastService.showSuccessToast();
-        this.router.navigate(["/dashboard/sales/quotations"]);
+        this.goToQuotations();
       },
       error: (err) => {
         this.toastService.showErrorToast();
       },
     });
+  }
+
+  goToQuotations() {
+    this.router.navigate(["/dashboard/sales/quotations"]);
+  }
+  cancelCreate() {
+    this.goToQuotations();
   }
 }

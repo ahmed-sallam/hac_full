@@ -1,10 +1,11 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+
 import { AppService } from "../../../app.service";
-import { Observable } from "rxjs";
-import { QuotationsResponse } from "./interfaces/QuotationsResponse";
-import { OneQuotation } from "./interfaces/OneQuotation";
 import { CreateQuotation } from "./interfaces/CreateQuotation";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { OneQuotation } from "./interfaces/OneQuotation";
+import { QuotationsResponse } from "./interfaces/QuotationsResponse";
 
 @Injectable({
   providedIn: "root",
@@ -68,4 +69,15 @@ export class QuotationsService {
   //   let link: string = `${this.appService.baseApi}/quotations/${id}`;
   //   return this.http.delete<any>(link);
   // }
+
+  updateQuotationStatus(id: number, status: string): Observable<any> {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/json",
+    });
+    let link: string = `${this.appService.baseApi}/quotations/${id}`;
+    return this.http.patch<any>(link, JSON.stringify(status), {
+      headers,
+      withCredentials: true,
+    });
+  }
 }

@@ -1,17 +1,18 @@
-import { Component } from "@angular/core";
-import { Observable } from "rxjs";
-import { LangState } from "../../../../state/reducers/lang.reducer";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { selectLanguage } from "../../../../state/selectors/lang.selectors";
-import { LoaderService } from "../../../components/loader/loader.service";
-import { OneQuotation } from "../interfaces/OneQuotation";
-import { State } from "../../../../state/reducers";
-import { QuotationsService } from "../quotations.service";
 import { AsyncPipe, DatePipe } from "@angular/common";
-import { TranslatePipe } from "../../../../pipes/translate.pipe";
+
+import { Component } from "@angular/core";
 import { HistorySectionComponent } from "../../../components/history-section/history-section.component";
+import { LangState } from "../../../../state/reducers/lang.reducer";
+import { LoaderService } from "../../../components/loader/loader.service";
 import { MainContentComponent } from "../../../components/main-content/main-content.component";
+import { Observable } from "rxjs";
+import { OneQuotation } from "../interfaces/OneQuotation";
+import { QuotationsService } from "../quotations.service";
+import { State } from "../../../../state/reducers";
+import { Store } from "@ngrx/store";
+import { TranslatePipe } from "../../../../pipes/translate.pipe";
+import { selectLanguage } from "../../../../state/selectors/lang.selectors";
 
 @Component({
   selector: "app-one-quotation",
@@ -46,7 +47,7 @@ export class OneQuotationComponent {
     private loaderService: LoaderService,
     private store: Store<State>,
     private activeRouter: ActivatedRoute,
-    private quotationsService: QuotationsService,
+    private quotationsService: QuotationsService
   ) {
     this.loader$ = this.loaderService.isLoading;
     this.selectLanguage$ = this.store.select(selectLanguage);
@@ -73,5 +74,15 @@ export class OneQuotationComponent {
       this.quotationId = params["id"];
       this.quotationId && this.getData();
     });
+  }
+
+  updateQuotationStatus(status: string) {
+    this.quotationsService
+      .updateQuotationStatus(this.quotationId, status)
+      .subscribe({
+        next: () => {
+          this.getData();
+        },
+      });
   }
 }

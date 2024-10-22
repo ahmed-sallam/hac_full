@@ -141,18 +141,22 @@ public class QuotationServiceImpl implements QuotationService {
 
     @Override
     public void updateStatus(Long id, RequestStatus status, User user) {
-        // // implement logic to update quotation status and create sale order draft if
-        // status is approved
 
-        // Optional<Quotation> quotation = repository.findById(id);
-        // if (quotation.isPresent()) {
-        // quotation.get().setRequestStatus(status);
-        // repository.save(quotation.get());
-        // }
-        // // create sale order draft
-        // if(status == RequestStatus.APPROVED) {
-        // // create sale order draft
-        // SaleOrder saleOrder = saleOrderService.crea;
-        // }
+        Quotation quotation = getOrElseThrow(id);
+        quotation.setStatus(status);
+        repository.save(quotation);
+
+        // create sale order draft
+        if (status.name().equals(RequestStatus.APPROVED.name())) {
+            saleOrderService.createInternal(quotation, user);
+        }
+        Quotation saved = repository.save(quotation);
+        String actionDetails = "Update Quotation with number: " + saved.getNumber() + " and internal id: "
+                + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
+        userHistoryService.createUserHistory(user, saved.getId(), actionDetails, "quotations");
+    }
+
+    private Quotation getOrElseThrow(Long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Quotation not found with id " + id));
     }
 }

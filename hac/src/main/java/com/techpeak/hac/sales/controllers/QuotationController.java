@@ -1,9 +1,11 @@
 package com.techpeak.hac.sales.controllers;
 
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.utils.AuthUtils;
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.sales.dtos.CreateQuotationRequest;
 import com.techpeak.hac.sales.dtos.QuotationResponse;
 import com.techpeak.hac.sales.dtos.QuotationResponseShort;
@@ -52,6 +55,15 @@ public class QuotationController {
             @RequestParam(name = "date", required = false) String date,
             @RequestParam(name = "quotation", required = false) String quotation) {
         return ResponseEntity.ok(quotationService.search(page, size, sort, ref, customer, user, date, quotation));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Resource> updateStatus(@RequestBody RequestStatus status,
+            @PathVariable("id") Long id) {
+
+        User user = AuthUtils.getCurrentUser();
+        quotationService.updateStatus(id, status, user);
+        return ResponseEntity.ok().build();
     }
 
 }

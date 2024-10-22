@@ -8,6 +8,7 @@
   <div headerActions>
     <button
       class="border-danger/80 border -p-1 hover:bg-danger/80 hover:text-white bg-white text-danger/80 font-medium w-40 p-4 my-1 ms-3 disabled:bg-danger/10"
+      (click)="cancelCreate()"
     >
       {{ "Cancel" | translate : language?.lang }}
     </button>
@@ -385,11 +386,11 @@
           <div>{{ formGroup.get("vat")?.value | number : "0.00" }}</div>
         </div>
         <!-- <div class="flex items-center gap-3 justify-between w-full">
-          <div>{{ "Total Expenses" | translate : language.lang }}</div>
-          <div>
-            {{ formGroup.get("totalExpenses")?.value | number : "0.00" }}
-          </div>
-        </div> -->
+            <div>{{ "Total Expenses" | translate : language.lang }}</div>
+            <div>
+              {{ formGroup.get("totalExpenses")?.value | number : "0.00" }}
+            </div>
+          </div> -->
         <div
           class="flex font-semibold items-center gap-3 justify-between bg-secondary/50 text-white relative left-[-7px] p-4 rounded-b bottom-[-7px] w-[calc(100%+15px)]"
         >
