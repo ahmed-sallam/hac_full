@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface StoreRepository extends JpaRepository<Store, Long> {
-    @Query("SELECT s FROM Store s WHERE s.isActive = :isActive AND (LOWER(s.nameAr) LIKE %:nameAr% OR LOWER(s.nameEn) LIKE %:nameEn%)")
+    @Query("SELECT s FROM Store s WHERE s.isActive = :isActive AND s.isVirtual = false AND (LOWER(s.nameAr) LIKE %:nameAr% OR LOWER(s.nameEn) LIKE %:nameEn%)")
     Page<Store> findByIsActiveAndNameArContainingIgnoreCaseOrNameEnContainingIgnoreCase(
             @Param("isActive") boolean isActive,
             @Param("nameAr") String nameAr,

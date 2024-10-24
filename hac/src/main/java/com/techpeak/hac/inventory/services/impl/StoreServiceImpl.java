@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
     private final StoreRepository storeRepository;
+
     @Override
     public void create(CreateStore createStore) {
         Store store = StoreMapper.toEntity(createStore);
+        store.setIsVirtual(false);
         storeRepository.save(store);
     }
 
