@@ -10,7 +10,7 @@ import com.techpeak.hac.core.models.BaseEntity;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
-import com.techpeak.hac.core.models.UserHistory;
+import com.techpeak.hac.inventory.models.Store;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 
@@ -50,6 +50,10 @@ public class SaleOrder extends BaseEntity {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private RequestStatus status = RequestStatus.DRAFT;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id", nullable = true)
+    private Store store;
 
     @Column(name = "number", nullable = false, unique = true)
     private String number;
@@ -103,9 +107,9 @@ public class SaleOrder extends BaseEntity {
     @ToString.Exclude
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<UserHistory> userHistories = new HashSet<>();
+    // @OneToMany(fetch = FetchType.LAZY)
+    // @ToString.Exclude
+    // private Set<UserHistory> userHistories = new HashSet<>();
 
     public void setLines(Set<SaleOrderLine> lines) {
         this.lines = new HashSet<>();
@@ -125,5 +129,6 @@ public class SaleOrder extends BaseEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getId());
+
     }
 }

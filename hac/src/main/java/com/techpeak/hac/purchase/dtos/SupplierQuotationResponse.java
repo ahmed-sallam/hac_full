@@ -6,7 +6,8 @@ import com.techpeak.hac.core.dtos.UserHistoryResponse;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
 import com.techpeak.hac.purchase.enums.ReceiveTypes;
 import lombok.Builder;
-import lombok.Value;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -16,7 +17,8 @@ import java.util.Set;
 /**
  * DTO for {@link com.techpeak.hac.purchase.models.SupplierQuotation}
  */
-@Value
+@Getter
+@Setter
 @Builder
 public class SupplierQuotationResponse implements Serializable {
     Long id;
@@ -44,10 +46,10 @@ public class SupplierQuotationResponse implements Serializable {
     Set<SupplierQuotationLineDto> lines;
     Set<UserHistoryResponse> userHistories;
 
-//    public void setUserHistories(Set<UserHistoryResponse> userHistories) {
-//        for (UserHistoryResponse userHistory : userHistories) {
-//            userHistory.setRecordId(this.id);
-//        }
-//    }
-}
 
+    // public void setUserHistories(Set<UserHistoryResponse> userHistories) {
+    // for (UserHistoryResponse userHistory : userHistories) {
+    // userHistory.setRecordId(this.id);
+    // }
+    // }
+}

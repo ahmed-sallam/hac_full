@@ -31,6 +31,10 @@ public class CreateSaleOrder implements Serializable {
     @Size(max = 255, message = "Notes cannot exceed 255 characters")
     private String notes;
 
+    @NotNull(message = "Store ID cannot be null")
+    @Positive(message = "Store ID must be a positive number")
+    private Long store;
+
     @NotNull(message = "Order Date cannot be null")
     @PastOrPresent(message = "Order Date must be in the past or present")
     private LocalDate date = LocalDate.now();

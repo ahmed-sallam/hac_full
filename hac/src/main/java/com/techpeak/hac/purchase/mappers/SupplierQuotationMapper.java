@@ -1,5 +1,9 @@
 package com.techpeak.hac.purchase.mappers;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,14 +13,14 @@ import com.techpeak.hac.core.mappers.UserMapper;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
-import com.techpeak.hac.purchase.dtos.*;
+import com.techpeak.hac.purchase.dtos.ProductQuotationDto;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationGroubBySupplier;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationRequest;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationResponse;
+import com.techpeak.hac.purchase.dtos.SupplierQuotationResponseShort;
 import com.techpeak.hac.purchase.models.RFPQ;
 import com.techpeak.hac.purchase.models.Supplier;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class SupplierQuotationMapper {
     private SupplierQuotationMapper() {
@@ -45,11 +49,10 @@ public class SupplierQuotationMapper {
                 .user(user)
                 .rfpq(rfpq)
                 .supplier(supplier)
-//                .expenses(request.getExpenses().stream().map(SupplierQuotationExpensesMapper::mapToSupplierQuotationExpenses).collect(Collectors.toSet()))
-//                .lines(request.getLines().stream().map((l)->SupplierQuotationLineMapper.mapToSupplierQuotationLine(l)).collect(Collectors.toSet()))
+                // .expenses(request.getExpenses().stream().map(SupplierQuotationExpensesMapper::mapToSupplierQuotationExpenses).collect(Collectors.toSet()))
+                // .lines(request.getLines().stream().map((l)->SupplierQuotationLineMapper.mapToSupplierQuotationLine(l)).collect(Collectors.toSet()))
                 .build();
     }
-
 
     public static SupplierQuotationResponseShort mapToResponseShort(SupplierQuotation supplierQuotation) {
         return SupplierQuotationResponseShort.builder()
@@ -67,7 +70,6 @@ public class SupplierQuotationMapper {
                 .supplier(SupplierMapper.mapToSupplierResponseName(supplierQuotation.getSupplier()))
                 .build();
     }
-
 
     public static SupplierQuotationResponse mapToResponse(SupplierQuotation supplierQuotation) {
         return SupplierQuotationResponse.builder()
@@ -92,14 +94,16 @@ public class SupplierQuotationMapper {
                 .user(UserMapper.toDtoShort(supplierQuotation.getUser()))
                 .rfpq(RFPQMapper.mapToRFPQResponseNumber(supplierQuotation.getRfpq()))
                 .supplier(SupplierMapper.mapToSupplierResponseName(supplierQuotation.getSupplier()))
-                .expenses(supplierQuotation.getExpenses().stream().map(PurchaseExpensesMapper::mapToDto).collect(Collectors.toSet()))
-                .lines(supplierQuotation.getLines().stream().map(SupplierQuotationLineMapper::mapToDto).collect(Collectors.toSet()))
-                .userHistories(supplierQuotation.getUserHistories().stream().map(UserHistoryMapper::mapToDto).collect(Collectors.toSet()))
+                .expenses(supplierQuotation.getExpenses().stream().map(PurchaseExpensesMapper::mapToDto)
+                        .collect(Collectors.toSet()))
+                .lines(supplierQuotation.getLines().stream().map(SupplierQuotationLineMapper::mapToDto)
+                        .collect(Collectors.toSet()))
+
                 .build();
     }
 
-
-    public static SupplierQuotationGroubBySupplier mapToSupplierQuotationGroubBySupplier(Object[] obj) throws IOException {
+    public static SupplierQuotationGroubBySupplier mapToSupplierQuotationGroubBySupplier(Object[] obj)
+            throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         ObjectReader reader = objectMapper.readerFor(new TypeReference<List<ProductQuotationDto>>() {
@@ -109,8 +113,7 @@ public class SupplierQuotationMapper {
                 (Long) obj[0],
                 (String) obj[1],
                 (String) obj[2],
-                reader.readValue(historyN)
-        );
+                reader.readValue(historyN));
     }
 
 }

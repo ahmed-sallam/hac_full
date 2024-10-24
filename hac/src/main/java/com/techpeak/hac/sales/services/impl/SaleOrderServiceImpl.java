@@ -1,20 +1,5 @@
 package com.techpeak.hac.sales.services.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.User;
@@ -22,8 +7,10 @@ import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.core.services.CurrencyService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.services.ProductService;
+import com.techpeak.hac.inventory.services.StoreService;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.enums.RequestStatus;
+import com.techpeak.hac.purchase.mappers.UserHistoryMapper;
 import com.techpeak.hac.sales.dtos.CreateSaleOrder;
 import com.techpeak.hac.sales.dtos.SaleOrderResponse;
 import com.techpeak.hac.sales.dtos.SaleOrderResponseShort;
@@ -35,9 +22,22 @@ import com.techpeak.hac.sales.models.SaleOrderLine;
 import com.techpeak.hac.sales.repositories.SaleOrderRepository;
 import com.techpeak.hac.sales.services.CustomerService;
 import com.techpeak.hac.sales.services.SaleOrderService;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +47,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
     private final ProductService productService;
     private final UserHistoryService userHistoryService;
     private final CustomerService customerService;
+    private final StoreService storeService;
 
     @Override
     @Transactional
@@ -70,7 +71,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
         saleOrder.setTotal(total);
         saleOrder.setDate(LocalDate.now());
         saleOrder.setNumber(number);
-
+        saleOrder.setStore(storeService.getOrElseThrow(request.getStore()));
         SaleOrder saved = repository.save(saleOrder);
         String actionDetails = "Created a new Sale Order related to customer id: " + saved.getCustomer().getId();
         userHistoryService.createUserHistory(user, saved.getId(), actionDetails, "sale_orders");
@@ -88,13 +89,16 @@ public class SaleOrderServiceImpl implements SaleOrderService {
         for (Object[] r : result) {
             userHistories.add((UserHistory) r[1]);
         }
-        saleOrder.setUserHistories(userHistories);
-        return SaleOrderMapper.toSaleOrderResponse(saleOrder);
+        SaleOrderResponse res = SaleOrderMapper.toSaleOrderResponse(saleOrder);
+        res.setUserHistories(
+                (userHistories.stream().map(UserHistoryMapper::mapToDto
+                ).collect(Collectors.toSet())));
+        return res;
     }
 
     @Override
     public Page<SaleOrderResponseShort> search(int page, int size, String sort, Long ref, Long customer, Long user,
-            String date, String order) {
+                                               String date, String order) {
         Specification<SaleOrder> spec = Specification.where(null);
         if (ref != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("internalRef").get("id"), ref));

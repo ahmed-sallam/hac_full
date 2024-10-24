@@ -91,9 +91,9 @@ public class QuotationMapper {
                 .lines(quotation.getLines().stream()
                         .map(QuotationMapper::toQuotationLineDto)
                         .collect(Collectors.toSet()))
-                .userHistories(quotation.getUserHistories().stream()
-                        .map(QuotationMapper::toUserHistoryResponse)
-                        .collect(Collectors.toSet()))
+                // .userHistories(quotation.getUserHistories().stream()
+                // .map(QuotationMapper::toUserHistoryResponse)
+                // .collect(Collectors.toSet()))
                 .build();
     }
 

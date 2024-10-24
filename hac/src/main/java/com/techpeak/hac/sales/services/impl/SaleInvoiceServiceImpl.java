@@ -1,20 +1,5 @@
 package com.techpeak.hac.sales.services.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.User;
@@ -23,6 +8,7 @@ import com.techpeak.hac.core.services.CurrencyService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
+import com.techpeak.hac.purchase.mappers.UserHistoryMapper;
 import com.techpeak.hac.sales.dtos.CreateSaleInvoiceRequest;
 import com.techpeak.hac.sales.dtos.SaleInvoiceResponse;
 import com.techpeak.hac.sales.dtos.SaleInvoiceResponseShort;
@@ -33,9 +19,22 @@ import com.techpeak.hac.sales.models.SaleInvoiceLine;
 import com.techpeak.hac.sales.repositories.SaleInvoiceRepository;
 import com.techpeak.hac.sales.services.CustomerService;
 import com.techpeak.hac.sales.services.SaleInvoiceService;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -87,13 +86,16 @@ public class SaleInvoiceServiceImpl implements SaleInvoiceService {
         for (Object[] r : result) {
             userHistories.add((UserHistory) r[1]);
         }
-        saleInvoice.setUserHistories(userHistories);
-        return SaleInvoiceMapper.toSaleInvoiceResponse(saleInvoice);
+        SaleInvoiceResponse res = SaleInvoiceMapper.toSaleInvoiceResponse(saleInvoice);
+        res.setUserHistories(
+                (userHistories.stream().map(UserHistoryMapper::mapToDto
+                ).collect(Collectors.toSet())));
+        return res;
     }
 
     @Override
     public Page<SaleInvoiceResponseShort> search(int page, int size, String sort, Long ref, Long customer, Long user,
-            String date, String invoice) {
+                                                 String date, String invoice) {
         Specification<SaleInvoice> spec = Specification.where(null);
         if (ref != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("internalRef").get("id"), ref));

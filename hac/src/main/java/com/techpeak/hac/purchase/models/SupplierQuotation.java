@@ -1,14 +1,32 @@
 package com.techpeak.hac.purchase.models;
 
-import com.techpeak.hac.core.models.*;
-import com.techpeak.hac.purchase.enums.PaymentTerms;
-import com.techpeak.hac.purchase.enums.ReceiveTypes;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.techpeak.hac.core.models.BaseEntity;
+import com.techpeak.hac.core.models.CurrencyEntity;
+import com.techpeak.hac.core.models.InternalRef;
+import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.purchase.enums.PaymentTerms;
+import com.techpeak.hac.purchase.enums.ReceiveTypes;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "SupplierQuotation")
 @Table(name = "supplier_quotations", indexes = {
@@ -72,9 +90,9 @@ public class SupplierQuotation extends BaseEntity {
     @OneToMany(mappedBy = "supplierQuotation", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<SupplierQuotationLine> lines = new HashSet<>();
-    @OneToMany
-    @ToString.Exclude
-    private Set<UserHistory> userHistories = new HashSet<>();
+    // @OneToMany
+    // @ToString.Exclude
+    // private Set<UserHistory> userHistories = new HashSet<>();
 
     public void setLines(Set<SupplierQuotationLine> lines) {
         this.lines = new HashSet<>();
@@ -82,10 +100,10 @@ public class SupplierQuotation extends BaseEntity {
         this.lines.addAll(lines);
     }
 
-    public void setUserHistories(Set<UserHistory> userHistories) {
-        this.userHistories = new HashSet<>();
-        userHistories.forEach(uh -> uh.setRecordId(this.getId()));
-        this.userHistories.addAll(userHistories);
-    }
+    // public void setUserHistories(Set<UserHistory> userHistories) {
+    // this.userHistories = new HashSet<>();
+    // userHistories.forEach(uh -> uh.setRecordId(this.getId()));
+    // this.userHistories.addAll(userHistories);
+    // }
 
 }

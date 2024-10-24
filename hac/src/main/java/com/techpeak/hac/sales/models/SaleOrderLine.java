@@ -21,7 +21,7 @@ import lombok.ToString;
 
 @Entity(name = "SaleOrderLine")
 @Table(name = "sale_order_lines", indexes = {
-        @Index(name = "idx_sales_product_id", columnList = "product_id"),
+        @Index(name = "idx_sales__order_product_id", columnList = "product_id"),
         @Index(name = "idx_sales_order_id", columnList = "sale_order_id")
 })
 @Getter

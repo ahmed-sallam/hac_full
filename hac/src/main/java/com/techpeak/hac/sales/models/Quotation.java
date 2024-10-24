@@ -1,16 +1,35 @@
 package com.techpeak.hac.sales.models;
 
-import com.techpeak.hac.core.models.*;
-import com.techpeak.hac.purchase.enums.PaymentTerms;
-import com.techpeak.hac.purchase.enums.RequestStatus;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import com.techpeak.hac.core.models.BaseEntity;
+import com.techpeak.hac.core.models.CurrencyEntity;
+import com.techpeak.hac.core.models.InternalRef;
+import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.purchase.enums.PaymentTerms;
+import com.techpeak.hac.purchase.enums.RequestStatus;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity(name = "Quotation")
 @Table(name = "quotations", indexes = {
@@ -83,9 +102,9 @@ public class Quotation extends BaseEntity {
     @ToString.Exclude
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<UserHistory> userHistories = new HashSet<>();
+    // @OneToMany(fetch = FetchType.LAZY)
+    // @ToString.Exclude
+    // private Set<UserHistory> userHistories = new HashSet<>();
 
     public void setLines(Set<QuotationLine> lines) {
         this.lines = new HashSet<>();
@@ -95,8 +114,10 @@ public class Quotation extends BaseEntity {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Quotation that)) return false;
+        if (this == o)
+            return true;
+        if (!(o instanceof Quotation that))
+            return false;
         return Objects.equals(getId(), that.getId());
     }
 

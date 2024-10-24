@@ -20,6 +20,7 @@ import com.techpeak.hac.purchase.dtos.bid_summary.GenerateBidSummaryDto;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationExpensesMapper;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationLineMapper;
 import com.techpeak.hac.purchase.mappers.SupplierQuotationMapper;
+import com.techpeak.hac.purchase.mappers.UserHistoryMapper;
 import com.techpeak.hac.purchase.models.RFPQ;
 import com.techpeak.hac.purchase.models.Supplier;
 import com.techpeak.hac.purchase.models.SupplierQuotation;
@@ -57,7 +58,8 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
     private final UserHistoryService userHistoryService;
 
     @Override
-    public Page<SupplierQuotationResponseShort> search(int page, int size, String sort, Long ref, Long supplier, Long user, String supplierRef, Boolean isLocal, String date, String rfpq) {
+    public Page<SupplierQuotationResponseShort> search(int page, int size, String sort, Long ref, Long supplier,
+                                                       Long user, String supplierRef, Boolean isLocal, String date, String rfpq) {
         Specification<SupplierQuotation> spec = Specification.where(null);
         if (ref != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("internalRef").get("id"), ref));
@@ -88,7 +90,7 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
 
     @Override
     public Page<SupplierQuotationResponseShort> getAllActiveSupplierQuotations() {
-//        return supplierQuotationRepository.findAllByIsActive(true);
+        // return supplierQuotationRepository.findAllByIsActive(true);
 
         return null;
     }
@@ -100,27 +102,28 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         RFPQ rfpq = rfpqService.getOrElseThrow(request.getRfpqId());
         InternalRef internalRefById = rfpq.getInternalRef();
         Supplier supplier = supplierService.get(request.getSupplierId());
-        SupplierQuotation supplierQuotation = SupplierQuotationMapper.mapToSupplierQuotation(request, user, currencyById, internalRefById, rfpq, supplier);
+        SupplierQuotation supplierQuotation = SupplierQuotationMapper.mapToSupplierQuotation(request, user,
+                currencyById, internalRefById, rfpq, supplier);
         Set<SupplierQuotationLineRequest> lines = request.getLines();
         supplierQuotation.setLines(lines
                 .stream()
-                .map(l ->
-                        SupplierQuotationLineMapper
-                                .mapToSupplierQuotationLine(l,
-                                        productService
-                                                .getProductOrThrow(l.getProductId())))
+                .map(l -> SupplierQuotationLineMapper
+                        .mapToSupplierQuotationLine(l,
+                                productService
+                                        .getProductOrThrow(l.getProductId())))
                 .collect(Collectors.toSet()));
         Set<SupplierQuotationExpensesRequest> expenses = request.getExpenses();
-        if (!expenses.isEmpty()) supplierQuotation.setExpenses(expenses
-                .stream()
-                .map(e ->
-                        SupplierQuotationExpensesMapper
-                                .mapToSupplierQuotationExpenses(e,
-                                        purchaseExpensesTitleService.get(e.getExpensesTitleId())))
-                .collect(Collectors.toSet()));
+        if (!expenses.isEmpty())
+            supplierQuotation.setExpenses(expenses
+                    .stream()
+                    .map(e -> SupplierQuotationExpensesMapper
+                            .mapToSupplierQuotationExpenses(e,
+                                    purchaseExpensesTitleService.get(e.getExpensesTitleId())))
+                    .collect(Collectors.toSet()));
         // add to user history
         SupplierQuotation saved = supplierQuotationRepository.save(supplierQuotation);
-        String actionDetails = "Created a new Supplier Quotation  related to internal id: " + saved.getInternalRef().getId();
+        String actionDetails = "Created a new Supplier Quotation  related to internal id: "
+                + saved.getInternalRef().getId();
         userHistoryService.createUserHistory(user, saved.getId(), actionDetails, "supplier_quotations");
         return saved;
 
@@ -137,12 +140,16 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         for (Object[] r : result) {
             userHistories.add((UserHistory) r[1]);
         }
-        supplierQuotation.setUserHistories(userHistories);
-        return SupplierQuotationMapper.mapToResponse(supplierQuotation);
+        SupplierQuotationResponse res = SupplierQuotationMapper.mapToResponse(supplierQuotation);
+        res.setUserHistories(userHistories.stream()
+                .map(UserHistoryMapper::mapToDto)
+                .collect(Collectors.toSet()));
+        return res;
     }
 
     @Override
-    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(LocalDate fromDate, String productNumber, List<String> numbers) {
+    public List<SupplierQuotationGroubBySupplier> getSupplierQuotationsGroupBySupplier(LocalDate fromDate,
+                                                                                       String productNumber, List<String> numbers) {
         // todo
         List<Object[]> all = new ArrayList<>();
         if (productNumber == null) {
@@ -151,19 +158,18 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         } else {
             all = supplierQuotationRepository.getSupplierQuotationsGroupBySupplier(productNumber, fromDate);
         }
-        // map supplierQuotationsGroupBySupplier to List<SupplierQuotationGroubBySupplier>
+        // map supplierQuotationsGroupBySupplier to
+        // List<SupplierQuotationGroubBySupplier>
         if (all.isEmpty()) {
             return new ArrayList<>();
         }
-        return all.stream().map(supplierQuotation ->
-                {
-                    try {
-                        return SupplierQuotationMapper.mapToSupplierQuotationGroubBySupplier(supplierQuotation);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        ).toList();
+        return all.stream().map(supplierQuotation -> {
+            try {
+                return SupplierQuotationMapper.mapToSupplierQuotationGroubBySupplier(supplierQuotation);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).toList();
     }
 
     @Override
@@ -182,7 +188,6 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
             throw new RuntimeException(e);
         }
 
-
         try {
             System.out.println("allll " + readerPS.readValue(historyN));
             generateBidSummaryDto = readerPS.readValue(historyN);
@@ -193,11 +198,10 @@ public class SupplierQuotationServiceImpl implements SupplierQuotationService {
         return generateBidSummaryDto;
     }
 
-
     @Override
     public SupplierQuotation getSupplierQuotation(Long id) {
-        return supplierQuotationRepository.findById(id).orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id));
+        return supplierQuotationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Supplier quotation not found with id " + id));
     }
-
 
 }

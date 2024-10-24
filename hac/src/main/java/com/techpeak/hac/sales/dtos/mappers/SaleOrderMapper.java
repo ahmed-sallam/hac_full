@@ -1,32 +1,28 @@
 package com.techpeak.hac.sales.dtos.mappers;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.stream.Collectors;
-
 import com.techpeak.hac.core.dtos.UserHistoryResponse;
 import com.techpeak.hac.core.mappers.UserMapper;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.inventory.mappers.ProductMapper;
+import com.techpeak.hac.inventory.mappers.StoreMapper;
 import com.techpeak.hac.inventory.models.Product;
 import com.techpeak.hac.purchase.mappers.InternalRefMapper;
-import com.techpeak.hac.sales.dtos.CreateSaleOrder;
-import com.techpeak.hac.sales.dtos.CreateSaleOrderLine;
-import com.techpeak.hac.sales.dtos.CustomerResponseName;
-import com.techpeak.hac.sales.dtos.SaleOrderLineDto;
-import com.techpeak.hac.sales.dtos.SaleOrderResponse;
-import com.techpeak.hac.sales.dtos.SaleOrderResponseShort;
+import com.techpeak.hac.sales.dtos.*;
 import com.techpeak.hac.sales.models.Customer;
 import com.techpeak.hac.sales.models.SaleOrder;
 import com.techpeak.hac.sales.models.SaleOrderLine;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.stream.Collectors;
+
 public class SaleOrderMapper {
 
     public static SaleOrder toSaleOrder(CreateSaleOrder request,
-            Customer customer,
-            CurrencyEntity currency, User user) {
+                                        Customer customer,
+                                        CurrencyEntity currency, User user) {
         if (request == null) {
             return null;
         }
@@ -73,6 +69,7 @@ public class SaleOrderMapper {
                 .updatedAt(saleOrder.getUpdatedAt())
                 .isActive(saleOrder.getIsActive())
                 .status(saleOrder.getStatus())
+                .store(saleOrder.getStore() != null ? StoreMapper.toShort(saleOrder.getStore()) : null)
                 .number(saleOrder.getNumber())
                 .subTotal(saleOrder.getSubTotal())
                 .discount(saleOrder.getDiscount())
@@ -88,9 +85,9 @@ public class SaleOrderMapper {
                 .lines(saleOrder.getLines().stream()
                         .map(SaleOrderMapper::toSaleOrderLineDto)
                         .collect(Collectors.toSet()))
-                .userHistories(saleOrder.getUserHistories().stream()
-                        .map(SaleOrderMapper::toUserHistoryResponse)
-                        .collect(Collectors.toSet()))
+//                .userHistories(saleOrder.getUserHistories().stream()
+//                        .map(SaleOrderMapper::toUserHistoryResponse)
+//                        .collect(Collectors.toSet()))
                 .build();
     }
 

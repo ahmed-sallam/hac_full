@@ -10,7 +10,6 @@ import com.techpeak.hac.core.models.BaseEntity;
 import com.techpeak.hac.core.models.CurrencyEntity;
 import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
-import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.purchase.enums.PaymentTerms;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 
@@ -103,9 +102,9 @@ public class SaleInvoice extends BaseEntity {
     @ToString.Exclude
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<UserHistory> userHistories = new HashSet<>();
+    // @OneToMany(fetch = FetchType.LAZY)
+    // @ToString.Exclude
+    // private Set<UserHistory> userHistories = new HashSet<>();
 
     public void setLines(Set<SaleInvoiceLine> lines) {
         this.lines = new HashSet<>();

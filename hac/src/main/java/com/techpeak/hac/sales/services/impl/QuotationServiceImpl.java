@@ -1,20 +1,5 @@
 package com.techpeak.hac.sales.services.impl;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-
 import com.techpeak.hac.core.enums.InternalPhase;
 import com.techpeak.hac.core.exception.NotFoundException;
 import com.techpeak.hac.core.models.CurrencyEntity;
@@ -27,6 +12,7 @@ import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.enums.RequestStatus;
+import com.techpeak.hac.purchase.mappers.UserHistoryMapper;
 import com.techpeak.hac.sales.dtos.CreateQuotationRequest;
 import com.techpeak.hac.sales.dtos.CreateQuotationRequestLine;
 import com.techpeak.hac.sales.dtos.QuotationResponse;
@@ -39,9 +25,22 @@ import com.techpeak.hac.sales.repositories.QuotationRepository;
 import com.techpeak.hac.sales.services.CustomerService;
 import com.techpeak.hac.sales.services.QuotationService;
 import com.techpeak.hac.sales.services.SaleOrderService;
-
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,15 +68,15 @@ public class QuotationServiceImpl implements QuotationService {
                 currencyById, user);
         quotation.setInternalRef(internalRefById);
         Set<CreateQuotationRequestLine> lines = request.getLines();
-        final BigDecimal[] subTotal = { BigDecimal.ZERO };
+        final BigDecimal[] subTotal = {BigDecimal.ZERO};
         quotation.setLines(lines.stream().map(l -> {
-            QuotationLine line = QuotationMapper.toQuotationLine(
-                    l,
-                    productService.getProductOrThrow(l.getProductId()));
-            subTotal[0] = subTotal[0].add(line.getLineTotal());
-            line.setQuotation(quotation);
-            return line;
-        }
+                    QuotationLine line = QuotationMapper.toQuotationLine(
+                            l,
+                            productService.getProductOrThrow(l.getProductId()));
+                    subTotal[0] = subTotal[0].add(line.getLineTotal());
+                    line.setQuotation(quotation);
+                    return line;
+                }
 
         ).collect(Collectors.toSet()));
         quotation.setSubTotal(subTotal[0]);
@@ -105,14 +104,16 @@ public class QuotationServiceImpl implements QuotationService {
         for (Object[] r : result) {
             userHistories.add((UserHistory) r[1]);
         }
-        quotation.setUserHistories(userHistories);
-        return QuotationMapper.toQuotationResponse(quotation);
+        QuotationResponse res = QuotationMapper.toQuotationResponse(quotation);
+        res.setUserHistories(
+                (userHistories.stream().map(UserHistoryMapper::mapToDto).collect(Collectors.toSet())));
+        return res;
     }
 
     @Override
     public Page<QuotationResponseShort> search(int page, int size,
-            String sort, Long ref,
-            Long customer, Long user, String date, String quotation) {
+                                               String sort, Long ref,
+                                               Long customer, Long user, String date, String quotation) {
         Specification<Quotation> spec = Specification.where(null);
         if (ref != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("internalRef").get("id"), ref));
@@ -140,16 +141,16 @@ public class QuotationServiceImpl implements QuotationService {
     }
 
     @Override
+    @Transactional
     public void updateStatus(Long id, RequestStatus status, User user) {
 
         Quotation quotation = getOrElseThrow(id);
-        quotation.setStatus(status);
-        repository.save(quotation);
 
         // create sale order draft
         if (status.name().equals(RequestStatus.APPROVED.name())) {
             saleOrderService.createInternal(quotation, user);
         }
+        quotation.setStatus(status);
         Quotation saved = repository.save(quotation);
         String actionDetails = "Update Quotation with number: " + saved.getNumber() + " and internal id: "
                 + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";

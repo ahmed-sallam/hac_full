@@ -1,9 +1,5 @@
 package com.techpeak.hac.sales.dtos.mappers;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.stream.Collectors;
-
 import com.techpeak.hac.core.dtos.UserHistoryResponse;
 import com.techpeak.hac.core.mappers.UserMapper;
 import com.techpeak.hac.core.models.CurrencyEntity;
@@ -12,21 +8,20 @@ import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.inventory.mappers.ProductMapper;
 import com.techpeak.hac.inventory.models.Product;
 import com.techpeak.hac.purchase.mappers.InternalRefMapper;
-import com.techpeak.hac.sales.dtos.CreateSaleInvoiceRequest;
-import com.techpeak.hac.sales.dtos.CreateSaleInvoiceRequestLine;
-import com.techpeak.hac.sales.dtos.CustomerResponseName;
-import com.techpeak.hac.sales.dtos.SaleInvoiceLineDto;
-import com.techpeak.hac.sales.dtos.SaleInvoiceResponse;
-import com.techpeak.hac.sales.dtos.SaleInvoiceResponseShort;
+import com.techpeak.hac.sales.dtos.*;
 import com.techpeak.hac.sales.models.Customer;
 import com.techpeak.hac.sales.models.SaleInvoice;
 import com.techpeak.hac.sales.models.SaleInvoiceLine;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.stream.Collectors;
+
 public class SaleInvoiceMapper {
 
     public static SaleInvoice toSaleInvoice(CreateSaleInvoiceRequest request,
-            Customer customer,
-            CurrencyEntity currency, User user) {
+                                            Customer customer,
+                                            CurrencyEntity currency, User user) {
         if (request == null) {
             return null;
         }
@@ -88,9 +83,9 @@ public class SaleInvoiceMapper {
                 .lines(saleInvoice.getLines().stream()
                         .map(SaleInvoiceMapper::toSaleInvoiceLineDto)
                         .collect(Collectors.toSet()))
-                .userHistories(saleInvoice.getUserHistories().stream()
-                        .map(SaleInvoiceMapper::toUserHistoryResponse)
-                        .collect(Collectors.toSet()))
+//                .userHistories(saleInvoice.getUserHistories().stream()
+//                        .map(SaleInvoiceMapper::toUserHistoryResponse)
+//                        .collect(Collectors.toSet()))
                 .build();
     }
 
