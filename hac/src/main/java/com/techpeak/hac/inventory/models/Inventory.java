@@ -35,7 +35,18 @@ public class Inventory extends BaseEntity {
     @JoinColumn(name = "location_id")
     private StoreLocation location;
 
+    @Version
+    private Long version;
+
+    @Column(name = "reserved_quantity", nullable = false, columnDefinition = "bigint default 0")
+    private Integer reservedQuantity = 0;
+
     public Inventory(Integer quantity, Product product, Store store) {
+        super();
+    }
+
+    public Inventory(Integer quantity, Product product, Store store,
+                     StoreLocation location) {
         super();
     }
 }
