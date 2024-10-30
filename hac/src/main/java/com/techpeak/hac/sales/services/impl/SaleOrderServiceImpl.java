@@ -147,6 +147,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
                 .vat(quotation.getVat())
                 .total(quotation.getTotal())
                 .internalRef(quotation.getInternalRef())
+                .paymentTerms(quotation.getPaymentTerms())
                 .build();
 
         // Map QuotationLines to SaleOrderLines
