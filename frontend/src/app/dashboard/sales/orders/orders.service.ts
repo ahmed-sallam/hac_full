@@ -1,5 +1,5 @@
 import {AppService} from "../../../app.service";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {SaleOrdersResponse} from "./interfaces/SaleOrdersResponse";
@@ -63,5 +63,16 @@ export class OrdersService {
     getOneSaleOrder(id: number): Observable<OneSaleOrder> {
         let link: string = `${this.appService.baseApi}/sale-orders/${id}`;
         return this.http.get<OneSaleOrder>(link);
+    }
+
+    updateSaleOrder(id: number, status: string): Observable<any> {
+        const headers = new HttpHeaders({
+            "Content-Type": "application/json",
+        });
+        let link: string = `${this.appService.baseApi}/sale-orders/${id}`;
+        return this.http.patch<any>(link, JSON.stringify(status), {
+            headers,
+            withCredentials: true,
+        });
     }
 }
