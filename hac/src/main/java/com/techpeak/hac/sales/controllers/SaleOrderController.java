@@ -2,6 +2,7 @@ package com.techpeak.hac.sales.controllers;
 
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.utils.AuthUtils;
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import com.techpeak.hac.sales.dtos.CreateSaleOrder;
 import com.techpeak.hac.sales.dtos.SaleOrderResponse;
 import com.techpeak.hac.sales.dtos.SaleOrderResponseShort;
@@ -9,6 +10,7 @@ import com.techpeak.hac.sales.services.SaleOrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -47,9 +49,16 @@ public class SaleOrderController {
         return ResponseEntity.ok(saleOrderService.search(page, size, sort, ref, customer, user, date, order));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Resource> updateStatus(@RequestBody RequestStatus status, @PathVariable("id") Long id) {
+        User user = AuthUtils.getCurrentUser();
+        saleOrderService.updateStatus(id, status, user);
+        return ResponseEntity.ok().build();
+    }
+
 //    @GetMapping("/active")
 //    public ResponseEntity<Page<SaleOrderResponseShort>> getAllActiveSaleOrders() {
 //        return ResponseEntity.ok(saleOrderService.getAllActiveSaleOrders());
 //    }
-    
+
 }
