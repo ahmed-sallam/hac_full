@@ -11,7 +11,7 @@ import {OrdersService} from "./orders.service";
 import {
     SaleOrderContent,
     SaleOrdersResponse
-} from "../quotations/interfaces/SaleOrdersResponse";
+} from "./interfaces/SaleOrdersResponse";
 import {AsyncPipe, CurrencyPipe, DatePipe} from "@angular/common";
 import {
     MainContentComponent
