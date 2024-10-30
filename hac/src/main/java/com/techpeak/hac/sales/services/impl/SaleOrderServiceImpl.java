@@ -128,7 +128,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
 
     @Override
     @Transactional
-    public SaleOrder createInternal(Quotation quotation, User user) {
+    public void createInternal(Quotation quotation, User user) {
         // Generate a new sale order number
         Optional<SaleOrder> lastOne = repository.findTopByOrderByNumberDesc();
         String number = GenerateRequestNumber.generateRequestNumber("SALORD",
@@ -169,6 +169,23 @@ public class SaleOrderServiceImpl implements SaleOrderService {
         String actionDetails = "Created a new Sale Order from Quotation with number: " + savedSaleOrder.getNumber();
         userHistoryService.createUserHistory(user, savedSaleOrder.getId(), actionDetails, "sale_orders");
 
-        return savedSaleOrder;
+    }
+
+    @Override
+    public void updateStatus(Long id, RequestStatus status, User user) {
+        SaleOrder saleOrder = getOrElseThrow(id);
+        if (status.name().equals(RequestStatus.PROCESSING.name())) {
+            // todo create internal inventory transaction
+        }
+        saleOrder.setStatus(RequestStatus.PROCESSING);
+        SaleOrder saved = repository.save(saleOrder);
+        String actionDetails = "Update Sale Order with number: " + saved.getNumber() + " and internal id: "
+                + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
+        userHistoryService.createUserHistory(user, saved.getId(), actionDetails, "sale_orders");
+    }
+
+    private SaleOrder getOrElseThrow(Long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Sale " +
+                "Order with id " + id + " not found"));
     }
 }

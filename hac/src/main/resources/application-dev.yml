@@ -20,6 +20,9 @@ spring:
     livereload:
       enabled: true
       additional-paths: src/main/java
+app:
+  jwt-secret: "KpmEgF/39ZnTZK63C5y7DOJKYN0f5Iwf0YwFYMQyyYY="
+  jwt-expiration-milliseconds: 32000000000
 logging:
   level:
     org:

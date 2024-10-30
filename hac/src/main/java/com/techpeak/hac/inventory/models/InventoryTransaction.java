@@ -1,10 +1,13 @@
 package com.techpeak.hac.inventory.models;
 
 import com.techpeak.hac.core.models.BaseEntity;
+import com.techpeak.hac.core.models.InternalRef;
+import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.inventory.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity(name = "InventoryTransaction")
@@ -26,21 +29,30 @@ public class InventoryTransaction extends BaseEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
     private StoreLocation location;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "des_store_id", nullable = false)
     private Store desiStore;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "des_location_id")
     private StoreLocation desLocation;
-// todo status
-    @Column( name = "transaction_date")
+    // todo status
+    @Column(name = "transaction_date")
     private LocalDateTime transactionDate; // Better to use UTC
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "internal_ref_id", nullable = false)
+    private InternalRef internalRef;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @Column(name = "cost", nullable = false)
+    private BigDecimal cost;
 }
