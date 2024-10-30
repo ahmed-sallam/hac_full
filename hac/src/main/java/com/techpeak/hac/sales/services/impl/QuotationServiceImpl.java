@@ -149,6 +149,10 @@ public class QuotationServiceImpl implements QuotationService {
         // create sale order draft
         if (status.name().equals(RequestStatus.APPROVED.name())) {
             saleOrderService.createInternal(quotation, user);
+            InternalRef internalRef = quotation.getInternalRef();
+            if (internalRef != null) {
+                internalRef.setCurrentPhase(InternalPhase.SALES_ORDER);
+            }
         }
         quotation.setStatus(status);
         Quotation saved = repository.save(quotation);
