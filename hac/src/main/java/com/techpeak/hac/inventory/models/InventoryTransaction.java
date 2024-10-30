@@ -31,17 +31,21 @@ public class InventoryTransaction extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id", nullable = false)
+    @ToString.Exclude
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
+    @ToString.Exclude
     private StoreLocation location;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "des_store_id", nullable = false)
+    @ToString.Exclude
     private Store desiStore;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "des_location_id")
+    @ToString.Exclude
     private StoreLocation desLocation;
     // todo status
     @Column(name = "transaction_date")
@@ -51,6 +55,7 @@ public class InventoryTransaction extends BaseEntity {
     private InternalRef internalRef;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
     private User user;
 
     @Column(name = "cost", nullable = false)

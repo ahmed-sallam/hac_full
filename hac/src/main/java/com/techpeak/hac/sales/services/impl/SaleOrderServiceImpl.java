@@ -53,7 +53,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
     @Transactional
     public Long createSaleOrder(CreateSaleOrder request, User user) {
         Optional<SaleOrder> lastOne = repository.findTopByOrderByNumberDesc();
-        String number = GenerateRequestNumber.generateRequestNumber("SALORD",
+        String number = GenerateRequestNumber.generateRequestNumber("SO",
                 lastOne.map(SaleOrder::getNumber).orElse(null));
 
         CurrencyEntity currencyById = currencyService.getCurrencyById(request.getCurrency());
@@ -131,7 +131,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
     public void createInternal(Quotation quotation, User user) {
         // Generate a new sale order number
         Optional<SaleOrder> lastOne = repository.findTopByOrderByNumberDesc();
-        String number = GenerateRequestNumber.generateRequestNumber("SALORD",
+        String number = GenerateRequestNumber.generateRequestNumber("SO",
                 lastOne.map(SaleOrder::getNumber).orElse(null));
 
         // Create a new SaleOrder object
