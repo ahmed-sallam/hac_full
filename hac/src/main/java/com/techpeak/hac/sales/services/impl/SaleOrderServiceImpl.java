@@ -6,6 +6,10 @@ import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.models.UserHistory;
 import com.techpeak.hac.core.services.CurrencyService;
 import com.techpeak.hac.core.services.UserHistoryService;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionLineRequest;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionRequest;
+import com.techpeak.hac.inventory.enums.TransactionType;
+import com.techpeak.hac.inventory.services.InventoryTransactionService;
 import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.inventory.services.StoreService;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
@@ -48,6 +52,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
     private final UserHistoryService userHistoryService;
     private final CustomerService customerService;
     private final StoreService storeService;
+    private final InventoryTransactionService inventoryTransactionService;
 
     @Override
     @Transactional
@@ -173,10 +178,23 @@ public class SaleOrderServiceImpl implements SaleOrderService {
     }
 
     @Override
+    @Transactional
     public void updateStatus(Long id, RequestStatus status, User user) {
         SaleOrder saleOrder = getOrElseThrow(id);
         if (status.name().equals(RequestStatus.PROCESSING.name())) {
-            // todo create internal inventory transaction
+            InventoryTransactionRequest request =
+                    new InventoryTransactionRequest(saleOrder.getDate().atStartOfDay(),
+                            saleOrder.getStore().getId(),
+                            storeService.getOrElseThrow(1L).getId(),
+                            TransactionType.SALE.name(),
+                            RequestStatus.PENDING.name(),
+                            saleOrder.getInternalRef().getId(),
+                            saleOrder.getLines().stream().map(l -> new InventoryTransactionLineRequest(l.getProduct().getId(), l.getQuantity(), l.getPrice())).collect(Collectors.toSet()));
+            inventoryTransactionService.createInventoryTransaction(request, user);
+        } else if (status.name().equals(RequestStatus.CANCELED.name())) {
+            // get all inventory transaction related to this sale order and set
+            // status to canceled by related by internal ref id
+            inventoryTransactionService.cancelInventoryTransaction(saleOrder.getInternalRef().getId(), user);
         }
         saleOrder.setStatus(RequestStatus.PROCESSING);
         SaleOrder saved = repository.save(saleOrder);

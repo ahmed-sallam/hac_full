@@ -275,6 +275,9 @@ VALUES ('customers', 'customers', 'virtual', 'virtual', NOW(), NOW(),
        ('vendors', 'vendors', 'virtual', 'virtual', NOW(), NOW(),
         TRUE, TRUE),
        ('scrap', 'scrap', 'virtual', 'virtual', NOW(), NOW(),
+        TRUE, TRUE),
+       ('adjustments', 'adjustments', 'virtual', 'virtual', NOW(),
+        NOW(),
         TRUE, TRUE);
 -- Inserting data into the stores table
 INSERT INTO stores (name_ar,
