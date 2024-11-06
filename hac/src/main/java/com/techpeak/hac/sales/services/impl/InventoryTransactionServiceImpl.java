@@ -87,8 +87,10 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
         userHistoryService.createUserHistory(user, inventoryTransaction.get().getId(), actionDetails, "inventory_transactions");
         // updated inventory
         inventoryTransaction.get().getLines().forEach(line -> {
-            inventoryService.updateReservedQuantity(line.getProduct(), inventoryTransaction.get().getStore(), line.getQuantity());
-            inventoryService.updateReservedQuantity(line.getProduct(), inventoryTransaction.get().getDesiStore(), line.getQuantity() * -1);
+            inventoryService.updateReservedQuantity(line.getProduct(),
+                    inventoryTransaction.get().getStore(),
+                    line.getQuantity() * -1);
+            inventoryService.updateReservedQuantity(line.getProduct(), inventoryTransaction.get().getDesiStore(), line.getQuantity());
         });
 
     }

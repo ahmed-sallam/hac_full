@@ -196,7 +196,7 @@ public class SaleOrderServiceImpl implements SaleOrderService {
             // status to canceled by related by internal ref id
             inventoryTransactionService.cancelInventoryTransaction(saleOrder.getInternalRef().getId(), user);
         }
-        saleOrder.setStatus(RequestStatus.PROCESSING);
+        saleOrder.setStatus(status);
         SaleOrder saved = repository.save(saleOrder);
         String actionDetails = "Update Sale Order with number: " + saved.getNumber() + " and internal id: "
                 + saved.getInternalRef().getId() + " status >> (" + saved.getStatus().name() + ") ";
