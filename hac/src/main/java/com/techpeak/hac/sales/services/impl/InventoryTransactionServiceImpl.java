@@ -136,4 +136,81 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
         return InventoryTransactionMapper.toDetailedResponse(transaction, userHistories);
     }
 
+    @Override
+    @Transactional
+    public void changeStatus(Long id, RequestStatus status, User user) {
+        InventoryTransaction transaction = getOrElseThrow(id);
+
+
+        RequestStatus oldStatus = transaction.getStatus();
+
+        // Prevent changing status if already in target status
+        if (oldStatus == status) {
+            throw new IllegalStateException("Transaction is already in " + status + " status");
+        }
+
+        // Update transaction status
+        transaction.setStatus(status);
+
+        // Handle inventory updates based on status change
+        switch (status) {
+            case CANCELED -> handleCancelStatus(transaction);
+            case COMPLETED -> handleCompleteStatus(transaction);
+            default ->
+                    throw new IllegalArgumentException("Status change to " + status + " is not supported");
+        }
+
+        // Save the updated transaction
+        repository.save(transaction);
+
+        // Create user history entry
+        String actionDetails =
+                "Changed status from " + oldStatus + " to " + status;
+        userHistoryService.createUserHistory(user, id, actionDetails, "inventory_transactions");
+    }
+
+    private InventoryTransaction getOrElseThrow(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Inventory Transaction not found with id: " + id));
+    }
+
+    private void handleCancelStatus(InventoryTransaction transaction) {
+        // Reverse any inventory changes
+        transaction.getLines().forEach(line -> {
+            inventoryService.updateReservedQuantity(
+                    line.getProduct(),
+                    transaction.getStore(),
+                    line.getQuantity() * -1
+            );
+            if (transaction.getDesiStore() != null) {
+                inventoryService.updateReservedQuantity(
+                        line.getProduct(),
+                        transaction.getDesiStore(),
+                        line.getQuantity()
+                );
+            }
+        });
+    }
+
+    private void handleCompleteStatus(InventoryTransaction transaction) {
+        transaction.getLines().forEach(line -> {
+            // Update done quantity
+            line.setDoneQuantity(line.getQuantity());
+
+            // Update actual inventory quantities
+            inventoryService.create(
+                    line.getProduct(),
+                    transaction.getStore(),
+                    line.getQuantity() * -1
+            );
+
+            if (transaction.getDesiStore() != null) {
+                inventoryService.create(
+                        line.getProduct(),
+                        transaction.getDesiStore(),
+                        line.getQuantity()
+                );
+            }
+        });
+    }
 }

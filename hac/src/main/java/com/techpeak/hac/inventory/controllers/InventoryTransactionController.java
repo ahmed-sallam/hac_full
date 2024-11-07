@@ -1,8 +1,11 @@
 package com.techpeak.hac.inventory.controllers;
 
+import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.core.utils.AuthUtils;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponse;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
 import com.techpeak.hac.inventory.services.InventoryTransactionService;
+import com.techpeak.hac.purchase.enums.RequestStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,5 +47,16 @@ public class InventoryTransactionController {
     public ResponseEntity<InventoryTransactionResponse> findById(
             @Parameter(description = "Inventory Transaction ID") @PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "Change inventory transaction status")
+    public ResponseEntity<Void> changeStatus(
+            @Parameter(description = "Inventory Transaction ID") @PathVariable Long id,
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "New status (CANCELED or COMPLETED)") @RequestBody RequestStatus status
+    ) {
+        User user = AuthUtils.getCurrentUser();
+        service.changeStatus(id, status, user);
+        return ResponseEntity.ok().build();
     }
 }
