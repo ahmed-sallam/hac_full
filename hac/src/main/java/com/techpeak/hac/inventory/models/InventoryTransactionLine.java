@@ -24,6 +24,9 @@ public class InventoryTransactionLine extends BaseEntity {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
+    @Column(name = "done_quantity")
+    private Integer doneQuantity = 0;
+
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;

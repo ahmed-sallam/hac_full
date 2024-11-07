@@ -1,5 +1,6 @@
 package com.techpeak.hac.inventory.controllers;
 
+import com.techpeak.hac.inventory.dtos.InventoryTransactionResponse;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
 import com.techpeak.hac.inventory.services.InventoryTransactionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -8,10 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/inventory-transactions")
@@ -35,9 +33,16 @@ public class InventoryTransactionController {
             @Parameter(description = "Transaction type") @RequestParam(required = false) String transactionType,
             @Parameter(description = "Transaction date") @RequestParam(required = false) String transactionDate,
             @Parameter(description = "Destination store ID") @RequestParam(required = false) Long desStore) {
-        
+
         return ResponseEntity.ok(service.search(
                 page, size, sort, search, ref, store, user,
                 status, transactionType, transactionDate, desStore));
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "Get inventory transaction by ID with lines and history")
+    public ResponseEntity<InventoryTransactionResponse> findById(
+            @Parameter(description = "Inventory Transaction ID") @PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 }

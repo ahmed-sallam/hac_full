@@ -6,6 +6,7 @@ import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionRequest;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionResponse;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
 import com.techpeak.hac.inventory.enums.TransactionType;
 import com.techpeak.hac.inventory.mappers.InventoryTransactionMapper;
@@ -27,6 +28,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -116,6 +118,22 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
 
         return repository.findAll(specification, pageRequest)
                 .map(InventoryTransactionMapper::toResponse);
+    }
+
+    @Override
+    public InventoryTransactionResponse findById(Long id) {
+        List<Object[]> result = repository.findByIdWithLines(id);
+        if (result.isEmpty()) {
+            throw new NotFoundException("Inventory Transaction not found with id: " + id);
+        }
+
+        InventoryTransaction transaction = (InventoryTransaction) result.get(0)[0];
+        List<Object> userHistories = result.stream()
+                .filter(row -> row[1] != null)
+                .map(row -> row[1])
+                .collect(Collectors.toList());
+
+        return InventoryTransactionMapper.toDetailedResponse(transaction, userHistories);
     }
 
 }
