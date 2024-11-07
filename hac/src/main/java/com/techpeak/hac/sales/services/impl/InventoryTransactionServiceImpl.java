@@ -137,6 +137,7 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
         return InventoryTransactionMapper.toDetailedResponse(transaction, userHistories);
     }
 
+
     @Override
     @Transactional
     public void changeStatus(Long id, RequestStatus status, User user) {
@@ -193,6 +194,7 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
         });
     }
 
+
     @Override
     @Transactional
     public void editTransaction(Long id, InventoryTransactionEditRequest request, User user) {
@@ -204,41 +206,72 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
             throw new IllegalStateException("Cannot edit a " + transaction.getStatus() + " transaction");
         }
 
-        for (var lineEdit : request.lines()) {
-            var line = transaction.getLines().stream()
-                    .filter(l -> l.getId().equals(lineEdit.id()))
-                    .findFirst()
-                    .orElseThrow(() -> new NotFoundException("Line not found: " + lineEdit.id()));
+        // Handle existing line edits
+        if (request.lines() != null) {
+            for (var lineEdit : request.lines()) {
+                var line = transaction.getLines().stream()
+                        .filter(l -> l.getId().equals(lineEdit.id()))
+                        .findFirst()
+                        .orElseThrow(() -> new NotFoundException("Line not found: " + lineEdit.id()));
 
-            if (Boolean.TRUE.equals(lineEdit.remove())) {
-                // Remove line and update inventory
-                transaction.getLines().remove(line);
+                if (Boolean.TRUE.equals(lineEdit.remove())) {
+                    // Remove line and update inventory
+                    transaction.getLines().remove(line);
+                    inventoryService.updateReservedQuantity(
+                            line.getProduct(),
+                            transaction.getStore(),
+                            line.getQuantity() * -1
+                    );
+                    if (transaction.getDesiStore() != null) {
+                        inventoryService.updateReservedQuantity(
+                                line.getProduct(),
+                                transaction.getDesiStore(),
+                                line.getQuantity() * -1
+                        );
+                    }
+                } else if (lineEdit.doneQuantity() != null) {
+                    // Update done quantity
+                    if (lineEdit.doneQuantity() > line.getQuantity()) {
+                        throw new IllegalArgumentException(
+                                "Done quantity cannot exceed original quantity"
+                        );
+                    }
+                    line.setDoneQuantity(lineEdit.doneQuantity());
+                }
+            }
+        }
+        // Handle new lines
+        if (request.newLines() != null) {
+            System.out.println("New lines: " + request.newLines());
+            for (var newLine : request.newLines()) {
+                var product = productService.getProductOrThrow(newLine.productId());
+                var line = InventoryTransactionLine.builder()
+                        .quantity(newLine.quantity())
+                        .product(product)
+                        .inventoryTransaction(transaction)  // Set the parent reference
+                        .build();
+
+                transaction.getLines().add(line);
+
+                // Update reserved quantities for new lines
                 inventoryService.updateReservedQuantity(
-                        line.getProduct(),
+                        product,
                         transaction.getStore(),
-                        line.getQuantity() * -1
+                        newLine.quantity()
                 );
                 if (transaction.getDesiStore() != null) {
                     inventoryService.updateReservedQuantity(
-                            line.getProduct(),
+                            product,
                             transaction.getDesiStore(),
-                            line.getQuantity() * -1
+                            newLine.quantity()
                     );
                 }
-            } else if (lineEdit.doneQuantity() != null) {
-                // Update done quantity
-                if (lineEdit.doneQuantity() > line.getQuantity()) {
-                    throw new IllegalArgumentException(
-                            "Done quantity cannot exceed original quantity"
-                    );
-                }
-                line.setDoneQuantity(lineEdit.doneQuantity());
             }
         }
 
         repository.save(transaction);
 
-        String actionDetails = "Edited transaction lines";
+        String actionDetails = "Edited transaction lines and added new products";
         userHistoryService.createUserHistory(user, id, actionDetails, "inventory_transactions");
     }
 
