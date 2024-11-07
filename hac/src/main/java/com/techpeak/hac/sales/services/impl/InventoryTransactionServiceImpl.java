@@ -6,7 +6,9 @@ import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionRequest;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
 import com.techpeak.hac.inventory.enums.TransactionType;
+import com.techpeak.hac.inventory.mappers.InventoryTransactionMapper;
 import com.techpeak.hac.inventory.models.InventoryTransaction;
 import com.techpeak.hac.inventory.models.InventoryTransactionLine;
 import com.techpeak.hac.inventory.repositories.InventoryTransactionRepository;
@@ -14,9 +16,14 @@ import com.techpeak.hac.inventory.services.InventoryService;
 import com.techpeak.hac.inventory.services.InventoryTransactionService;
 import com.techpeak.hac.inventory.services.ProductService;
 import com.techpeak.hac.inventory.services.StoreService;
+import com.techpeak.hac.inventory.specifications.InventoryTransactionSpecification;
 import com.techpeak.hac.purchase.GenerateRequestNumber;
 import com.techpeak.hac.purchase.enums.RequestStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -93,6 +100,22 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
             inventoryService.updateReservedQuantity(line.getProduct(), inventoryTransaction.get().getDesiStore(), line.getQuantity());
         });
 
+    }
+
+    @Override
+    public Page<InventoryTransactionResponseShort> search(int page, int size, String sort,
+                                                          String search, Long ref, Long store, Long user, String status,
+                                                          String transactionType, String transactionDate, Long desStore) {
+
+        Specification<InventoryTransaction> specification = InventoryTransactionSpecification
+                .search(search, ref, store, user, status, transactionType, transactionDate, desStore);
+
+        PageRequest pageRequest = PageRequest.of(page, size,
+                Sort.by(sort.startsWith("-") ? Sort.Direction.DESC : Sort.Direction.ASC,
+                        sort.replace("-", "")));
+
+        return repository.findAll(specification, pageRequest)
+                .map(InventoryTransactionMapper::toResponse);
     }
 
 }
