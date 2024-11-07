@@ -1,5 +1,6 @@
 package com.techpeak.hac.inventory.dtos;
 
+import com.techpeak.hac.core.dtos.UserDtoShort;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,12 +10,13 @@ import lombok.*;
 @Setter
 public class InventoryTransactionResponseShort {
     private Long id;
+    private String number;
+    private Long internalRef;
+    private String currentPhase;
     private String transactionType;
-    private Integer quantity;
-    private ProductResponseShort product;
-    private StoreResponseShort store;
-    private String location;
-    private String desStore;
-    private String desLocation;
     private String transactionDate;
+    private StoreResponseShort store;
+    private StoreResponseShort desStore;
+    private String status;
+    private UserDtoShort user;
 }
