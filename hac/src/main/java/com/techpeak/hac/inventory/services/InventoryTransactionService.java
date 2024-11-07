@@ -1,6 +1,7 @@
 package com.techpeak.hac.inventory.services;
 
 import com.techpeak.hac.core.models.User;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionEditRequest;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionRequest;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponse;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
@@ -27,4 +28,6 @@ public interface InventoryTransactionService {
     InventoryTransactionResponse findById(Long id);
 
     void changeStatus(Long id, RequestStatus status, User user);
+
+    void editTransaction(Long id, InventoryTransactionEditRequest request, User user);
 }

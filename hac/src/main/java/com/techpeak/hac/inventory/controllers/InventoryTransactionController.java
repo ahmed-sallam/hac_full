@@ -2,6 +2,7 @@ package com.techpeak.hac.inventory.controllers;
 
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.utils.AuthUtils;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionEditRequest;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponse;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
 import com.techpeak.hac.inventory.services.InventoryTransactionService;
@@ -47,6 +48,16 @@ public class InventoryTransactionController {
     public ResponseEntity<InventoryTransactionResponse> findById(
             @Parameter(description = "Inventory Transaction ID") @PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Edit inventory transaction lines")
+    public ResponseEntity<Void> editTransaction(
+            @Parameter(description = "Inventory Transaction ID") @PathVariable Long id,
+            @RequestBody InventoryTransactionEditRequest request) {
+        User user = AuthUtils.getCurrentUser();
+        service.editTransaction(id, request, user);
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{id}")

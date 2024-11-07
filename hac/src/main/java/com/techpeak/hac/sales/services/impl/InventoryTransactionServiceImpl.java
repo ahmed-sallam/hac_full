@@ -5,6 +5,7 @@ import com.techpeak.hac.core.models.InternalRef;
 import com.techpeak.hac.core.models.User;
 import com.techpeak.hac.core.services.InternalRefService;
 import com.techpeak.hac.core.services.UserHistoryService;
+import com.techpeak.hac.inventory.dtos.InventoryTransactionEditRequest;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionRequest;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponse;
 import com.techpeak.hac.inventory.dtos.InventoryTransactionResponseShort;
@@ -190,6 +191,55 @@ public class InventoryTransactionServiceImpl implements InventoryTransactionServ
                 );
             }
         });
+    }
+
+    @Override
+    @Transactional
+    public void editTransaction(Long id, InventoryTransactionEditRequest request, User user) {
+        InventoryTransaction transaction = getOrElseThrow(id);
+
+        // Can only edit transactions that are not COMPLETED or CANCELED
+        if (transaction.getStatus() == RequestStatus.COMPLETED ||
+                transaction.getStatus() == RequestStatus.CANCELED) {
+            throw new IllegalStateException("Cannot edit a " + transaction.getStatus() + " transaction");
+        }
+
+        for (var lineEdit : request.lines()) {
+            var line = transaction.getLines().stream()
+                    .filter(l -> l.getId().equals(lineEdit.id()))
+                    .findFirst()
+                    .orElseThrow(() -> new NotFoundException("Line not found: " + lineEdit.id()));
+
+            if (Boolean.TRUE.equals(lineEdit.remove())) {
+                // Remove line and update inventory
+                transaction.getLines().remove(line);
+                inventoryService.updateReservedQuantity(
+                        line.getProduct(),
+                        transaction.getStore(),
+                        line.getQuantity() * -1
+                );
+                if (transaction.getDesiStore() != null) {
+                    inventoryService.updateReservedQuantity(
+                            line.getProduct(),
+                            transaction.getDesiStore(),
+                            line.getQuantity() * -1
+                    );
+                }
+            } else if (lineEdit.doneQuantity() != null) {
+                // Update done quantity
+                if (lineEdit.doneQuantity() > line.getQuantity()) {
+                    throw new IllegalArgumentException(
+                            "Done quantity cannot exceed original quantity"
+                    );
+                }
+                line.setDoneQuantity(lineEdit.doneQuantity());
+            }
+        }
+
+        repository.save(transaction);
+
+        String actionDetails = "Edited transaction lines";
+        userHistoryService.createUserHistory(user, id, actionDetails, "inventory_transactions");
     }
 
     private void handleCompleteStatus(InventoryTransaction transaction) {
