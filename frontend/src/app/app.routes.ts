@@ -48,6 +48,13 @@ export const routes: Routes = [
                     ),
             },
             {
+                path: "inventory/transactions",
+                loadComponent: () =>
+                    import("./dashboard/inventory/transactions/transactions.component").then(
+                        (c) => c.TransactionsComponent,
+                    ),
+            },
+            {
                 path: "inventory/stock/create",
                 loadComponent: () =>
                     import(
